@@ -3,50 +3,422 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Кабінет Волонтера — ДоброРазом</title>
+  <title>Кабінет Волонтера — VolunQuest</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+  <style>
+    /* Додаткові стилі кабінету (префікс vq-), щоб не чіпати style.css */
+    .vq-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+    .vq-tab{padding:10px 20px;border-radius:20px;border:2px solid transparent;background:#fff;font:inherit;font-weight:bold;color:#555;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:color .2s,transform .2s}
+    .vq-tab:hover{color:#8144fa;transform:translateY(-2px)}
+    .vq-tab[aria-current="page"]{background:linear-gradient(135deg,#8144fa,#05eb40);color:#fff;box-shadow:0 4px 15px rgba(129,68,250,.3)}
+    .vq-tab .vq-count{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:999px;background:rgba(0,0,0,.12);font-size:.8rem}
+
+    .vq-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+    .vq-search{flex:1;min-width:200px;padding:11px 14px;border-radius:12px;border:1.5px solid #e4def5;font:inherit}
+    .vq-search:focus{outline:none;border-color:#8144fa}
+    .vq-filters{display:flex;gap:8px;flex-wrap:wrap}
+    .vq-fb{padding:8px 14px;border-radius:999px;border:1.5px solid #e4def5;background:#fff;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
+    .vq-fb[aria-pressed="true"]{background:#8144fa;border-color:#8144fa;color:#fff}
+
+    .vq-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px;font-size:.88rem;color:#65617c;font-weight:500}
+    .vq-rw{background:#e8fff0;color:#056a1f;padding:2px 10px;border-radius:999px;font-weight:700}
+    .vq-badge{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:700;vertical-align:middle}
+    .vq-badge.go{background:#fff3c9;color:#7a5600}
+    .vq-badge.ok{background:#05eb40;color:#120924}
+    .vq-btns{display:flex;gap:8px;margin-top:10px}
+    .vq-btns .submit-btn{flex:1;padding:10px 12px}
+    .vq-btns .vq-ghost,.vq-ghost{background:#fff;color:#8144fa;border:2px solid #8144fa;box-shadow:none}
+    .vq-btns .vq-ghost:hover,.vq-ghost:hover{background:#8144fa;color:#fff;box-shadow:none}
+    .vq-btns .vq-green,.vq-green{background:#05eb40;color:#120924;box-shadow:0 4px 15px rgba(5,235,64,.35)}
+    .vq-empty{text-align:center;padding:40px 18px;border:1.5px dashed #d9d2ee;border-radius:18px;color:#65617c}
+    .vq-empty b{display:block;color:#120924;margin-bottom:6px}
+    .vq-h{margin:30px 0 14px;font-size:1.2rem}
+
+    /* профіль */
+    .vq-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,.05)}
+    .vq-prof{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+    .vq-ava{width:72px;height:72px;border-radius:22px;background:#8144fa;color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none;box-shadow:6px 6px 0 #05eb40}
+    .vq-prof-main{flex:1;min-width:220px}
+    .vq-name{font-size:1.25rem;font-weight:700}
+    .vq-edit{margin-left:8px;border:0;background:none;color:#8144fa;cursor:pointer;font:inherit;font-size:.85rem;text-decoration:underline}
+    .vq-bar{height:12px;border-radius:999px;background:#f1ebff;overflow:hidden;margin-top:10px}
+    .vq-bar i{display:block;height:100%;background:linear-gradient(90deg,#8144fa,#05eb40);border-radius:999px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+    .vq-sub{color:#65617c;font-size:.85rem;margin-top:5px}
+    .vq-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:20px;background:#120924;border-radius:12px;padding:20px 10px}
+    .vq-stat{text-align:center;padding:4px}
+    .vq-stat b{display:block;font-size:2rem;color:#05eb40}
+    .vq-stat span{font-size:.85rem;color:rgba(255,255,255,.8)}
+    .vq-grid2{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+    .vq-ach{display:flex;gap:12px;align-items:center}
+    .vq-ach .vq-ai{width:44px;height:44px;border-radius:50%;background:#05eb40;display:grid;place-items:center;font-size:1.25rem;flex:none}
+    .vq-ach.lock{opacity:.45}
+    .vq-ach.lock .vq-ai{background:#eceaf3;filter:grayscale(1)}
+    .vq-ach small{display:block;color:#65617c}
+    .vq-lb{display:flex;gap:12px;padding:10px 6px;border-bottom:1px solid #eee9f8}
+    .vq-lb:last-child{border:0}
+    .vq-lb .n{width:26px;font-weight:700;color:#65617c}
+    .vq-lb .nm{flex:1;font-weight:600}
+    .vq-lb.you{background:#e8fff0;border-radius:12px;border:0}
+    .vq-reset{margin-top:26px;text-align:center}
+    .vq-reset button{border:1.5px solid #e4def5;background:#fff;border-radius:999px;padding:8px 16px;font:inherit;cursor:pointer;color:#65617c}
+
+    /* модальні вікна */
+    .vq-ov{position:fixed;inset:0;background:rgba(23,20,43,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+    .vq-sheet{background:#fff;width:100%;max-width:540px;max-height:90vh;overflow:auto;border-radius:24px;padding:24px}
+    .vq-sheet h2{margin:8px 0}
+    .vq-x{float:right;width:36px;height:36px;border-radius:50%;border:0;background:#f3f2f7;cursor:pointer;font-size:1.1rem}
+    .vq-sheet ol{padding-left:20px}
+    .vq-res{text-align:center}
+    .vq-big{display:inline-block;margin:14px 0 6px;padding:2px 16px;border-radius:14px;background:#05eb40;color:#120924;font-size:2.2rem;font-weight:800}
+    .vq-note{margin-top:14px;padding:12px 14px;border-radius:14px;background:#e8fff0;color:#055a1b;font-weight:600}
+    .vq-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#120924;color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;z-index:120;max-width:90vw}
+    .vq-conf{position:fixed;top:-20px;width:10px;height:14px;border-radius:3px;z-index:130;pointer-events:none;animation:vqfall 1.8s ease-in forwards}
+    @keyframes vqfall{to{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+    @media(prefers-reduced-motion:reduce){.vq-conf{display:none}.vq-bar i{transition:none}}
+  </style>
 </head>
 <body class="dashboard-body">
 
   <header class="navbar">
     <div class="logo">
-      <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>ДоброРазом | Волонтер</span>
+      <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>VolunQuest | Волонтер</span>
     </div>
     <div class="nav-auth">
-      <span class="user-greeting">Привіт, Волонтере!</span>
-      <a href="index.html" class="auth-btn" style="background: #ff5c5c;">Вийти</a>
+      <span class="user-greeting" id="greet">Привіт, Волонтере!</span>
+      <a href="home.html" class="auth-btn" style="background: #ff5c5c;">Вийти</a>
     </div>
   </header>
 
   <main class="dashboard-container">
     <section class="dashboard-intro">
       <h2>Доступні завдання у Дніпрі</h2>
-      <p>Обирайте ініціативу, допомагайте місту та заробляйте бали активності.</p>
+      <p>Обирайте ініціативу, допомагайте місту та заробляйте бали активності. Кожне виконане завдання підвищує ваш рівень.</p>
     </section>
 
-    <div class="activities-grid">
-      <div class="activity-card">
-        <div class="card-img" style="background-image: url('images/activity1.jpg');"></div>
-        <div class="card-content">
-          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Соборний район</span>
-          <h3>Фасування продуктових наборів</h3>
-          <p>Необхідно допомогти з фасуванням їжі для внутрішньо переміщених осіб.</p>
-          <button class="submit-btn" onclick="alert('Ви успішно взяли завдання в роботу!')" style="margin-top:10px; padding:8px;">Взяти в роботу</button>
-        </div>
-      </div>
-
-      <div class="activity-card">
-        <div class="card-img" style="background-image: url('images/activity2.jpg');"></div>
-        <div class="card-content">
-          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Шевченківський район</span>
-          <h3>Плетіння маскувальних сіток</h3>
-          <p>Плетіння захисних сіток для підрозділів ТрО.</p>
-          <button class="submit-btn" onclick="alert('Ви успішно взяли завдання в роботу!')" style="margin-top:10px; padding:8px;">Взяти в роботу</button>
-        </div>
-      </div>
-    </div>
+    <nav class="vq-tabs" id="tabs" aria-label="Розділи кабінету"></nav>
+    <div id="view"></div>
   </main>
 
+  <div id="modal-root"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'volunquest.volunteer.v1';
+  var LEVELS = ['Новачок', 'Помічник', 'Активіст', 'Герой міста', 'Легенда Дніпра'];
+  var CATS = {
+    animals: { n: 'Тварини', e: '🐾' },
+    eco:     { n: 'Екологія', e: '🌳' },
+    aid:     { n: 'Гумдопомога', e: '📦' },
+    city:    { n: 'Місто', e: '🗺️' }
+  };
+
+  var QUESTS = [
+    { id: 1, img: 1, title: 'Фасування продуктових наборів', cat: 'aid', district: 'Соборний район', hours: 3, xp: 55, pts: 45, slots: 12, joined: 5, lvl: 'Легко',
+      short: 'Допомога у зборі та пакуванні гуманітарної допомоги для переселенців та літніх людей.',
+      desc: 'Збираємо набори для переселенців і літніх людей: крупи, консерви, олія. Працюємо за конвеєром, вистачить будь-якого темпу.',
+      steps: ['Прийдіть на пункт пакування', 'Станьте до свого етапу конвеєра', 'Перевірте комплектність наборів'] },
+    { id: 2, img: 2, title: 'Плетіння маскувальних сіток', cat: 'aid', district: 'Шевченківський район', hours: 3, xp: 60, pts: 50, slots: 20, joined: 11, lvl: 'Середньо',
+      short: 'Плетіння захисних сіток для підрозділів ТрО. Запрошуємо всіх охочих.',
+      desc: 'Допомагаємо виготовляти маскувальні сітки для військових. Навчимо на місці, потрібні лише вільні руки та бажання допомогти.',
+      steps: ['Прийдіть у майстерню та отримайте інструктаж', 'Сплетіть свою ділянку сітки', 'Здайте готову ділянку координатору'] },
+    { id: 3, img: 3, title: 'Адресна доставка допомоги', cat: 'aid', district: 'Самарський район', hours: 2, xp: 80, pts: 70, slots: 10, joined: 7, lvl: 'Складно',
+      short: 'Потрібні волонтери з авто для доставки важких пакунків маломобільним мешканцям.',
+      desc: 'Розвозимо пакунки з допомогою за списком адрес. Потрібне авто та фізична витривалість: пакунки важкі.',
+      steps: ['Заберіть пакунки та список адрес на складі', 'Доставте допомогу за маршрутом', 'Відмітьте кожну доставку в списку'] },
+    { id: 4, img: 1, title: 'Вигуляти собаку з притулку', cat: 'animals', district: 'Самарський район', hours: 2, xp: 40, pts: 30, slots: 6, joined: 3, lvl: 'Легко',
+      short: 'Притулку бракує рук, щоб кожен собака щодня виходив на прогулянку.',
+      desc: 'Ви берете одного пса на повідку й гуляєте з ним близько двох годин у вказаній зоні.',
+      steps: ['Прийдіть до притулку й отримайте собаку та повідок', 'Вигуляйте його у вказаній зоні', 'Поверніть собаку й повідомте волонтерам, як усе минуло'] },
+    { id: 5, img: 2, title: 'Прибрати парк', cat: 'eco', district: 'Центр', hours: 3, xp: 60, pts: 50, slots: 20, joined: 11, lvl: 'Середньо',
+      short: 'Спільне прибирання алей і газонів. Рукавички та мішки видаємо на місці.',
+      desc: 'Спільне прибирання парку. Рукавички та мішки на місці, потрібен лише зручний одяг.',
+      steps: ['Зустріч на вході в парк', 'Отримайте рукавички та мішки', 'Прибирайте свою ділянку', 'Здайте повні мішки координатору'] },
+    { id: 6, img: 3, title: 'Висадити дерева на набережній', cat: 'eco', district: 'Амур-Нижньодніпровський район', hours: 4, xp: 75, pts: 65, slots: 25, joined: 9, lvl: 'Середньо',
+      short: 'Висаджуємо саджанці вздовж набережної. Інструктор покаже, як правильно садити.',
+      desc: 'Висаджуємо саджанці вздовж набережної. Лопати видаємо на місці.',
+      steps: ['Інструктаж на місці', 'Посадіть своє дерево', 'Полийте й підпишіть табличку'] },
+    { id: 7, img: 1, title: 'Нагодувати безпритульних котів', cat: 'animals', district: 'Новокодацький район', hours: 1, xp: 25, pts: 20, slots: 8, joined: 2, lvl: 'Легко',
+      short: 'Короткий обхід з кормом за списком точок у дворах. Для тих, хто має лише годину.',
+      desc: 'Короткий обхід з кормом за списком точок у дворах.',
+      steps: ['Заберіть корм і маршрут', 'Обійдіть точки зі списку', 'Позначте, де кіт не прийшов'] },
+    { id: 8, img: 2, title: 'Читання дітям у бібліотеці', cat: 'city', district: 'Чечелівський район', hours: 2, xp: 45, pts: 35, slots: 6, joined: 1, lvl: 'Середньо',
+      short: 'Читаємо вголос казки для дітей з родин, які переїхали до міста.',
+      desc: 'Читаємо вголос казки для дітей з родин, які переїхали до міста. Книжки підготовлені.',
+      steps: ['Оберіть книжку з добірки', 'Прочитайте її групі дітей', 'Проведіть коротке обговорення'] }
+  ];
+
+  var ACH = [
+    { id: 'a1', e: '🌱', n: 'Перший крок',      d: 'Виконайте перше завдання',       t: function () { return S.done.length >= 1; } },
+    { id: 'a2', e: '🔥', n: 'Тріо добрих справ', d: 'Виконайте 3 завдання',           t: function () { return S.done.length >= 3; } },
+    { id: 'a3', e: '🐕', n: 'Друг тварин',      d: 'Завдання категорії «Тварини»',    t: function () { return hasCat('animals'); } },
+    { id: 'a4', e: '🌍', n: 'Чисте місто',      d: 'Завдання категорії «Екологія»',   t: function () { return hasCat('eco'); } },
+    { id: 'a5', e: '🤝', n: 'Рука допомоги',    d: 'Завдання категорії «Гумдопомога»', t: function () { return hasCat('aid'); } },
+    { id: 'a6', e: '⭐', n: 'Активіст',         d: 'Досягніть 3 рівня',              t: function () { return lvl(S.xp) >= 3; } },
+    { id: 'a7', e: '⏱️', n: '10 годин добра',   d: '10 годин волонтерської допомоги', t: function () { return hours() >= 10; } }
+  ];
+
+  var BOARD = [
+    { n: 'Олена К.', xp: 420 }, { n: 'Максим Р.', xp: 310 },
+    { n: 'Дарина П.', xp: 255 }, { n: 'Артем Л.', xp: 190 }
+  ];
+
+  /* ---------- стан ---------- */
+  function fresh() { return { name: 'Волонтер', xp: 0, points: 0, taken: [], done: [], tab: 'tasks', filter: 'all', q: '' }; }
+  function load() {
+    try { var s = localStorage.getItem(KEY); if (s) return Object.assign(fresh(), JSON.parse(s)); } catch (e) {}
+    return fresh();
+  }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  var S = load();
+  var modal = null;
+
+  /* ---------- допоміжні ---------- */
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function lvl(xp) { return Math.floor(xp / 100) + 1; }
+  function lvName(l) { return LEVELS[Math.min(l - 1, LEVELS.length - 1)]; }
+  function byId(id) { return QUESTS.filter(function (q) { return String(q.id) === String(id); })[0]; }
+  function isDone(id) { return S.done.some(function (d) { return String(d.id) === String(id); }); }
+  function isTaken(id) { return S.taken.some(function (t) { return String(t) === String(id); }); }
+  function hasCat(c) { return S.done.some(function (d) { var q = byId(d.id); return q && q.cat === c; }); }
+  function hours() { return S.done.reduce(function (a, d) { var q = byId(d.id); return a + (q ? q.hours : 0); }, 0); }
+  function unlocked() { return ACH.filter(function (a) { return a.t(); }).map(function (a) { return a.id; }); }
+  function $(id) { return document.getElementById(id); }
+
+  function toast(msg) {
+    var t = document.createElement('div');
+    t.className = 'vq-toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function () { t.remove(); }, 2300);
+  }
+  function burst() {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cols = ['#05eb40', '#8144fa', '#05eb40', '#b99aff'];
+    for (var i = 0; i < 42; i++) {
+      var c = document.createElement('i');
+      c.className = 'vq-conf';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = cols[i % cols.length];
+      c.style.animationDelay = Math.random() * 0.5 + 's';
+      c.style.animationDuration = (1.4 + Math.random() * 1.2) + 's';
+      document.body.appendChild(c);
+      setTimeout((function (el) { return function () { el.remove(); }; })(c), 3200);
+    }
+  }
+
+  /* ---------- відображення ---------- */
+  function greet() {
+    var l = lvl(S.xp);
+    $('greet').textContent = 'Привіт, ' + S.name + '! · Рівень ' + l + ' · ' + S.points + ' балів';
+  }
+
+  function tabs() {
+    var items = [['tasks', 'Завдання'], ['mine', 'Мої завдання'], ['profile', 'Профіль']];
+    $('tabs').innerHTML = items.map(function (i) {
+      var cnt = (i[0] === 'mine' && S.taken.length) ? '<span class="vq-count">' + S.taken.length + '</span>' : '';
+      return '<button type="button" class="vq-tab" data-a="tab" data-t="' + i[0] + '"' + (S.tab === i[0] ? ' aria-current="page"' : '') + '>' + i[1] + cnt + '</button>';
+    }).join('');
+  }
+
+  function badge(q) {
+    if (isDone(q.id)) return '<span class="vq-badge ok">Виконано</span>';
+    if (isTaken(q.id)) return '<span class="vq-badge go">У роботі</span>';
+    return '';
+  }
+
+  // Картка у тому ж стилі, що й на головній сторінці
+  function card(q, mode) {
+    var c = CATS[q.cat];
+    var img = "background-image:url('images/activity" + q.img + ".jpg'),linear-gradient(135deg,#8144fa,#05eb40);";
+    var btns;
+    if (mode === 'active') {
+      btns = '<div class="vq-btns"><button type="button" class="submit-btn vq-green" data-a="complete" data-id="' + q.id + '">Завершити</button>' +
+             '<button type="button" class="submit-btn vq-ghost" data-a="drop" data-id="' + q.id + '">Відмовитись</button></div>';
+    } else if (mode === 'done') {
+      btns = '';
+    } else {
+      var main = isDone(q.id) ? '<button type="button" class="submit-btn" disabled>Виконано</button>'
+               : isTaken(q.id) ? '<button type="button" class="submit-btn vq-green" data-a="complete" data-id="' + q.id + '">Завершити</button>'
+               : '<button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '">Взяти в роботу</button>';
+      btns = '<div class="vq-btns">' + main + '<button type="button" class="submit-btn vq-ghost" data-a="open" data-id="' + q.id + '">Деталі</button></div>';
+    }
+    return '<div class="activity-card">' +
+      '<div class="card-img" style="' + img + '"></div>' +
+      '<div class="card-content">' +
+        '<span class="district-tag"><i class="fa-solid fa-location-dot"></i> ' + esc(q.district) + '</span>' + badge(q) +
+        '<h3>' + esc(q.title) + '</h3>' +
+        '<p>' + esc(q.short) + '</p>' +
+        '<div class="vq-meta"><span>' + c.e + ' ' + c.n + '</span><span>⏱ ' + q.hours + ' год</span><span class="vq-rw">+' + q.xp + ' XP</span><span class="vq-rw">+' + q.pts + ' балів</span></div>' +
+        btns +
+      '</div></div>';
+  }
+
+  function listHtml() {
+    var q = S.q.trim().toLowerCase();
+    var list = QUESTS.filter(function (x) {
+      if (S.filter !== 'all' && x.cat !== S.filter) return false;
+      if (q && (x.title + ' ' + x.district + ' ' + x.short).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    if (!list.length) return '<div class="vq-empty"><b>Нічого не знайдено</b>Спробуйте іншу категорію або очистіть пошук.</div>';
+    return '<div class="activities-grid">' + list.map(function (x) { return card(x, 'list'); }).join('') + '</div>';
+  }
+
+  function tasksView() {
+    var f = [['all', 'Усі']].concat(Object.keys(CATS).map(function (k) { return [k, CATS[k].e + ' ' + CATS[k].n]; }));
+    return '<div class="vq-toolbar">' +
+        '<input class="vq-search" id="srch" type="search" placeholder="Пошук за назвою чи районом" value="' + esc(S.q) + '" aria-label="Пошук завдань">' +
+      '</div>' +
+      '<div class="vq-filters" role="group" aria-label="Категорії" style="margin-bottom:18px">' +
+        f.map(function (x) { return '<button type="button" class="vq-fb" data-a="filter" data-f="' + x[0] + '" aria-pressed="' + (S.filter === x[0]) + '">' + x[1] + '</button>'; }).join('') +
+      '</div>' +
+      '<div id="list">' + listHtml() + '</div>';
+  }
+
+  function mineView() {
+    var act = S.taken.map(byId).filter(Boolean);
+    var h = '<h3 class="vq-h" style="margin-top:0">Активні завдання</h3>';
+    if (!act.length) {
+      h += '<div class="vq-empty"><b>Активних завдань немає</b>Оберіть ініціативу у розділі «Завдання» й візьміть її в роботу.<br><br>' +
+           '<button type="button" class="submit-btn" style="padding:10px 18px;cursor:pointer" data-a="tab" data-t="tasks">До завдань</button></div>';
+    } else {
+      h += '<div class="activities-grid">' + act.map(function (q) { return card(q, 'active'); }).join('') + '</div>';
+    }
+    h += '<h3 class="vq-h">Виконано (' + S.done.length + ')</h3>';
+    var done = S.done.slice().reverse().map(function (d) { var q = byId(d.id); return q ? { q: q, d: d } : null; }).filter(Boolean);
+    if (!done.length) h += '<div class="vq-empty">Тут з’являтимуться виконані завдання.</div>';
+    else h += '<div class="activities-grid">' + done.map(function (x) {
+      return card(x.q, 'done').replace('<div class="vq-meta">', '<div class="vq-meta"><span>📅 ' + esc(x.d.date) + '</span>');
+    }).join('') + '</div>';
+    return h;
+  }
+
+  function profileView() {
+    var l = lvl(S.xp), inl = S.xp % 100, un = unlocked();
+    var board = BOARD.concat([{ n: S.name + ' (ви)', xp: S.xp, you: true }]).sort(function (a, b) { return b.xp - a.xp; });
+    return '<div class="vq-card"><div class="vq-prof">' +
+        '<div class="vq-ava" aria-hidden="true">' + esc(S.name.charAt(0).toUpperCase()) + '</div>' +
+        '<div class="vq-prof-main">' +
+          '<div class="vq-name">' + esc(S.name) + '<button type="button" class="vq-edit" data-a="rename">змінити ім’я</button></div>' +
+          '<div class="vq-sub">Рівень ' + l + ' · ' + lvName(l) + '</div>' +
+          '<div class="vq-bar" role="progressbar" aria-valuenow="' + inl + '" aria-valuemin="0" aria-valuemax="100"><i style="width:' + inl + '%"></i></div>' +
+          '<div class="vq-sub">' + inl + ' / 100 XP · до рівня ' + (l + 1) + ': ' + (100 - inl) + ' XP</div>' +
+        '</div></div>' +
+        '<div class="vq-stats">' +
+          '<div class="vq-stat"><b>' + S.done.length + '</b><span>завдань</span></div>' +
+          '<div class="vq-stat"><b>' + hours() + '</b><span>годин допомоги</span></div>' +
+          '<div class="vq-stat"><b>' + S.xp + '</b><span>XP усього</span></div>' +
+          '<div class="vq-stat"><b>' + S.points + '</b><span>балів</span></div>' +
+        '</div></div>' +
+      '<h3 class="vq-h">Досягнення <span style="color:#65617c;font-weight:500;font-size:.9rem">' + un.length + ' з ' + ACH.length + '</span></h3>' +
+      '<div class="vq-grid2">' + ACH.map(function (a) {
+        var u = un.indexOf(a.id) >= 0;
+        return '<div class="vq-card vq-ach' + (u ? '' : ' lock') + '"><div class="vq-ai" aria-hidden="true">' + a.e + '</div><div><b>' + a.n + '</b><small>' + a.d + '</small></div></div>';
+      }).join('') + '</div>' +
+      '<h3 class="vq-h">Рейтинг волонтерів</h3><div class="vq-card">' +
+        board.map(function (b, i) { return '<div class="vq-lb' + (b.you ? ' you' : '') + '"><span class="n">' + (i + 1) + '</span><span class="nm">' + esc(b.n) + '</span><span>' + b.xp + ' XP</span></div>'; }).join('') +
+      '</div>' +
+      '<div class="vq-reset"><button type="button" data-a="reset">Скинути прогрес</button></div>';
+  }
+
+  function modalHtml() {
+    if (!modal) return '';
+    if (modal.t === 'quest') {
+      var q = byId(modal.id); if (!q) return '';
+      var c = CATS[q.cat];
+      var btn = isDone(q.id) ? '<button type="button" class="submit-btn" disabled style="width:100%;padding:12px">Завдання виконано</button>'
+              : isTaken(q.id) ? '<button type="button" class="submit-btn" data-a="complete" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer;background:#05eb40;color:#120924">Завершити завдання</button>'
+              : '<button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer">Взяти в роботу</button>';
+      return '<div class="vq-ov" data-a="closeBg"><div class="vq-sheet" role="dialog" aria-modal="true" aria-label="' + esc(q.title) + '">' +
+        '<button type="button" class="vq-x" data-a="close" aria-label="Закрити">✕</button>' +
+        '<span class="district-tag"><i class="fa-solid fa-location-dot"></i> ' + esc(q.district) + '</span>' +
+        '<h2>' + esc(q.title) + '</h2>' +
+        '<div class="vq-meta"><span>' + c.e + ' ' + c.n + '</span><span>⚡ ' + q.lvl + '</span><span>⏱ ' + q.hours + ' год</span><span>👥 ' + (q.joined + (isTaken(q.id) || isDone(q.id) ? 1 : 0)) + ' / ' + q.slots + '</span></div>' +
+        '<p style="margin:14px 0">' + esc(q.desc) + '</p>' +
+        '<b>Що робити</b><ol>' + q.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
+        '<div class="vq-meta" style="margin:12px 0 18px"><span class="vq-rw">+' + q.xp + ' XP</span><span class="vq-rw">+' + q.pts + ' балів</span></div>' +
+        btn + '</div></div>';
+    }
+    if (modal.t === 'result') {
+      var r = byId(modal.id);
+      return '<div class="vq-ov" data-a="closeBg"><div class="vq-sheet vq-res" role="dialog" aria-modal="true" aria-label="Завдання виконано">' +
+        '<div style="font-size:3rem" aria-hidden="true">🎉</div><h2>Завдання виконано!</h2>' +
+        '<p style="color:#65617c">Дякуємо за допомогу: «' + esc(r.title) + '»</p>' +
+        '<div class="vq-big">+' + r.xp + ' XP</div><p><b>+' + r.pts + ' балів</b> на рахунку</p>' +
+        (modal.up ? '<div class="vq-note">Новий рівень: ' + lvl(S.xp) + ' · ' + lvName(lvl(S.xp)) + '</div>'
+                  : '<div class="vq-bar"><i style="width:' + (S.xp % 100) + '%"></i></div><div class="vq-sub">До наступного рівня: ' + (100 - S.xp % 100) + ' XP</div>') +
+        (modal.ach.length ? '<div style="margin-top:16px"><b>Нові досягнення</b>' + modal.ach.map(function (id) {
+          var a = ACH.filter(function (x) { return x.id === id; })[0];
+          return '<div class="vq-ach" style="margin-top:8px;justify-content:center"><div class="vq-ai">' + a.e + '</div><span>' + a.n + '</span></div>';
+        }).join('') + '</div>' : '') +
+        '<div style="display:grid;gap:10px;margin-top:20px">' +
+          '<button type="button" class="submit-btn" data-a="toProfile" style="padding:12px;cursor:pointer">Переглянути профіль</button>' +
+          '<button type="button" class="submit-btn vq-ghost" data-a="close" style="padding:12px;cursor:pointer;background:#fff;color:#8144fa;border:1.5px solid #8144fa">До завдань</button>' +
+        '</div></div></div>';
+    }
+    return '';
+  }
+
+  function render() {
+    tabs();
+    greet();
+    var body = S.tab === 'mine' ? mineView() : S.tab === 'profile' ? profileView() : tasksView();
+    $('view').innerHTML = body;
+    $('modal-root').innerHTML = modalHtml();
+  }
+
+  /* ---------- дії ---------- */
+  var A = {
+    tab: function (d) { S.tab = d.t; save(); render(); window.scrollTo(0, 0); },
+    filter: function (d) { S.filter = d.f; save(); render(); },
+    open: function (d) { modal = { t: 'quest', id: d.id }; render(); },
+    close: function () { modal = null; render(); },
+    closeBg: function (d, ev) { if (ev.target.classList.contains('vq-ov')) { modal = null; render(); } },
+    take: function (d) {
+      var q = byId(d.id); if (!q || isTaken(q.id) || isDone(q.id)) return;
+      S.taken.push(q.id); save(); modal = null; render();
+      toast('Завдання додано до «Мої завдання». Приємної допомоги!');
+    },
+    drop: function (d) {
+      S.taken = S.taken.filter(function (x) { return String(x) !== String(d.id); });
+      save(); render(); toast('Завдання скасовано');
+    },
+    complete: function (d) {
+      var q = byId(d.id); if (!q || isDone(q.id)) return;
+      var before = lvl(S.xp), had = unlocked();
+      S.xp += q.xp; S.points += q.pts;
+      S.taken = S.taken.filter(function (x) { return String(x) !== String(q.id); });
+      S.done.push({ id: q.id, date: new Date().toLocaleDateString('uk-UA') });
+      var fresh = unlocked().filter(function (x) { return had.indexOf(x) < 0; });
+      save();
+      modal = { t: 'result', id: q.id, up: lvl(S.xp) > before, ach: fresh };
+      render(); burst();
+    },
+    toProfile: function () { modal = null; S.tab = 'profile'; save(); render(); window.scrollTo(0, 0); },
+    rename: function () {
+      var n = prompt('Ваше ім’я:', S.name);
+      if (n && n.trim()) { S.name = n.trim().slice(0, 40); save(); render(); }
+    },
+    reset: function () {
+      if (confirm('Скинути весь прогрес (XP, бали, виконані завдання)?')) { S = fresh(); modal = null; save(); render(); window.scrollTo(0, 0); }
+    }
+  };
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-a]'); if (!t) return;
+    var f = A[t.dataset.a]; if (!f) return;
+    if (t.dataset.a === 'closeBg' && e.target !== t) return;
+    f(t.dataset, e);
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal) { modal = null; render(); } });
+  document.addEventListener('input', function (e) {
+    if (e.target.id === 'srch') { S.q = e.target.value; var l = $('list'); if (l) l.innerHTML = listHtml(); }
+  });
+
+  render();
+})();
+</script>
 </body>
 </html>

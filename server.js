@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 mongoose
   .connect(process.env.MONGODB_URI, { dbName: process.env.MONGODB_DB || 'volunteerquest' })
   .then(() => console.log('MongoDB підключена'))
-  .catch((err) => console.error('Помилка підключення до MongoDB:', err.message));
+  .catch((err) => console.error('Помилка підключення к MongoDB:', err.message));
  
 const page = (file) => (req, res) => res.sendFile(path.join(__dirname, file));
  
@@ -27,9 +27,11 @@ app.get('/volunteer-dashboard', page('volunteer-dashboard.html'));
   app.get(`/${name}.html`, page(`${name}.html`));
 });
  
-['style.css', 'login.css', 'login.js'].forEach((file) => {
+['style.css', 'login.css', 'login.js', 'volun1.jpg'].forEach((file) => {
   app.get(`/${file}`, page(file));
 });
+ 
+app.use('/images', express.static(path.join(__dirname, 'images')));
  
 app.get('/api/health', (req, res) => {
   const states = ['отключена', 'подключена', 'подключается', 'отключается'];
@@ -41,5 +43,5 @@ app.use((req, res) => {
 });
  
 app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен: http://localhost:${PORT}`);
+  console.log(`Сервер запущен: http://localhost:${PORT}`);
 });
