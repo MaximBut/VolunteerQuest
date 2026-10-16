@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кабінет Організатора — ДоброРазом</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+</head>
+<body class="dashboard-body">
+
+  <header class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>ДоброРазом | Організатор</span>
+    </div>
+    <div class="nav-auth">
+      <span class="user-greeting">Кабінет створення завдань</span>
+      <a href="index.html" class="auth-btn" style="background: #ff5c5c;">Вийти</a>
+    </div>
+  </header>
+
+  <main class="dashboard-container" style="max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+    <h2 style="color: #120924; margin-bottom: 10px;">Створити нове волонтерське завдання</h2>
+    <p style="color: #666; margin-bottom: 20px;">Опишіть потребу, щоб залучити волонтерів у Дніпрі.</p>
+
+    <form id="createTaskForm" onsubmit="event.preventDefault(); alert('Завдання успішно створено та опубліковано!');">
+      <div style="margin-bottom: 15px;">
+        <label style="display:block; margin-bottom:5px; font-weight:600;">Назва завдання:</label>
+        <input type="text" class="input-field" placeholder="Наприклад: Роздача гарячих обідів" required style="border-bottom: 1px solid #ccc; width:100%;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="display:block; margin-bottom:5px; font-weight:600;">Район Дніпра:</label>
+        <select class="input-field select-field" required style="border-bottom: 1px solid #ccc; width:100%; background:white; color:#333;">
+          <option value="" disabled selected>Оберіть район...</option>
+          <option value="sobornyi">Соборний район</option>
+          <option value="shevchenkivskyi">Шевченківський район</option>
+          <option value="samarskyi">Самарський район</option>
+          <option value="tsentralnyi">Центральний район</option>
+          <option value="chechelivskyi">Чечелівський район</option>
+          <option value="novokodatskyi">Новокодацький район</option>
+          <option value="amur-niżynśkyi">Амур-Нижньодніпровський район</option>
+          <option value="samarskyi">Самарський район</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 15px;">
+        <label style="display:block; margin-bottom:5px; font-weight:600;">Детальний опис та адреса:</label>
+        <textarea class="input-field" rows="4" placeholder="Розкажіть, що потрібно робити і де..." required style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; width:100%; outline:none;"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" style="width: 100%;">Опублікувати завдання</button>
+    </form>
+  </main>
+
+</body>
+</html>

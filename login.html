@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="images/icon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Увійти або зареєструватися</title>
+    <link rel="stylesheet" href="login.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+    <script src="login.js" defer></script>
+  </head>
+  <body>
+    <div class="bg"></div>
+    <div class="page-header">
+      <p class="page-subtitle">
+        Увійдіть або створіть новий акаунт для доступу до сайту
+      </p>
+    </div>
+    <div class="container">  
+      <div class="form-box">
+        <div class="button-box">
+          <div id="btn"></div>
+          <button type="button" id="log" class="toggle-btn" onclick="showLogin()">Вхід</button>
+          <button type="button" id="reg" class="toggle-btn-reg" onclick="showRegister()">Реєстрація</button>
+        </div>
+
+        <!-- Форма реєстрації -->
+        <form id="register" class="input-group" action="/register" method="POST" autocomplete="off">
+          <input type="text"
+                name="username"
+                class="input-field"
+                placeholder="Користувач"
+                required>
+
+          <input type="email"
+                name="email"
+                class="input-field"
+                placeholder="Email"
+                required>
+
+          <div class="password-wrapper">
+            <input type="password"
+                  name="password"
+                  id="regPassword"
+                  class="input-field"
+                  placeholder="Пароль"
+                  required>
+
+            <button type="button"
+                    class="show-pass"
+                    onclick="togglePassword('regPassword', this)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+
+          <!-- Вибір ролі -->
+          <select name="role" class="input-field select-field" required>
+            <option value="" disabled selected hidden>Оберіть роль...</option>
+            <option value="volunteer">Я Волонтер</option>
+            <option value="organizer">Я Даю завдання</option>
+          </select>
+
+          <button type="submit" class="submit-btn">
+            Зареєструватись
+          </button>
+        </form>
+
+        <!-- Форма входу -->
+        <form id="login" class="input-group" action="/login" method="POST" autocomplete="off">
+          <input type="text"
+                name="username"
+                class="input-field"
+                placeholder="Користувач"
+                required>
+
+          <div class="password-wrapper">
+            <input type="password"
+                  name="password"
+                  id="loginPassword"
+                  class="input-field"
+                  placeholder="Пароль"
+                  required>
+
+            <button type="button"
+                    class="show-pass"
+                    onclick="togglePassword('loginPassword', this)">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            Увійти
+          </button>
+
+          <a class="reset-btn" href="requestreset.html">
+            Забули пароль?
+          </a>
+        </form>
+
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>ДоброКвест · волонтерство у Дніпрі</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#05eb40; --gd:#03a52d; --gsoft:#e8fff0;
+  --p:#8144fa; --pd:#6a2fe0; --psoft:#f4efff;
+  --ink:#17142b; --mut:#65617c; --line:#e9e5f5; --bg:#ffffff;
+  --r:18px;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 70px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Onest',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#fff;z-index:30}
+h1,h2,h3{font-family:'Unbounded','Onest',system-ui,sans-serif;line-height:1.2;margin:0;letter-spacing:-.01em}
+h3{font-family:'Onest',system-ui,sans-serif;font-weight:700;font-size:1.05rem}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--p);outline-offset:2px;border-radius:8px}
+.mut{color:var(--mut)}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px}
+
+/* header */
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);background:#fff;z-index:20;border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:12px;height:62px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Unbounded',sans-serif;font-weight:700;font-size:1.05rem}
+.logo{width:34px;height:34px;border-radius:11px;background:var(--p);position:relative;flex:none}
+.logo::after{content:"";position:absolute;right:-3px;bottom:-3px;width:14px;height:14px;border-radius:50%;background:var(--g);border:3px solid #fff}
+.sp{flex:1}
+.chip-btn{padding:8px 12px;border-radius:999px;border:1.5px solid var(--line);font-size:.85rem;font-weight:600;background:#fff}
+.chip-btn:hover{border-color:var(--p);color:var(--p)}
+.me{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.9rem}
+.me .lv{background:var(--g);color:var(--ink);border-radius:999px;padding:3px 10px;font-weight:700;font-size:.8rem}
+
+/* nav: bottom on mobile, inline on desktop */
+.nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:25}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:12px;font-size:.74rem;font-weight:600;color:var(--mut)}
+.nav button span{font-size:1.25rem;line-height:1}
+.nav button[aria-current="page"]{color:var(--p);background:var(--psoft)}
+main{padding:20px 0 120px}
+@media(min-width:860px){
+  .nav{position:static;border:0;padding:0;background:none;justify-content:flex-start;gap:4px}
+  .nav button{flex:none;flex-direction:row;gap:8px;padding:9px 14px;font-size:.92rem}
+  .nav button span{font-size:1.05rem}
+  .hdr .hrow{height:66px}
+  main{padding-bottom:60px}
+}
+
+/* generic */
+.card{background:#fff;border:1.5px solid var(--line);border-radius:var(--r);padding:16px}
+.grid{display:grid;gap:14px}
+@media(min-width:700px){.grid.c2{grid-template-columns:1fr 1fr}.grid.c3{grid-template-columns:repeat(3,1fr)}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 20px;border-radius:14px;background:var(--p);color:#fff;font-weight:700;transition:background .15s,transform .1s}
+.btn:hover{background:var(--pd)}
+.btn:active{transform:scale(.98)}
+.btn.g{background:var(--g);color:var(--ink)}
+.btn.g:hover{background:#00d438}
+.btn.o{background:#fff;color:var(--p);border:1.5px solid var(--p)}
+.btn.o:hover{background:var(--psoft)}
+.btn.w{width:100%}
+.btn[disabled]{background:#eeebf6;color:#9893ad;cursor:not-allowed}
+.bar{height:12px;border-radius:999px;background:var(--psoft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--g);border-radius:999px;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.tag{display:inline-block;font-size:.78rem;font-weight:600;padding:3px 10px;border-radius:999px;background:var(--psoft);color:var(--pd)}
+.tag.t2{background:#f3f2f7;color:var(--mut)}
+.tag.ok{background:var(--g);color:var(--ink)}
+.tag.go{background:#fff3c9;color:#7a5600}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:26px 0 12px}
+.sec-h h2{font-size:1.15rem}
+.empty{text-align:center;padding:36px 18px;border:1.5px dashed var(--line);border-radius:var(--r);color:var(--mut)}
+.empty b{display:block;color:var(--ink);margin-bottom:4px}
+
+/* hero */
+.hero{border-radius:24px;padding:24px 20px;background:var(--psoft);position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;background:var(--g);opacity:.9}
+.hero>*{position:relative;z-index:1}
+.hero h1{font-size:clamp(1.45rem,5vw,2.2rem);max-width:15em}
+.hero p{margin-top:10px;max-width:34em;color:var(--mut)}
+.hero .lvbox{margin-top:18px;background:#fff;border-radius:16px;padding:14px;max-width:420px}
+.lvrow{display:flex;justify-content:space-between;font-weight:600;font-size:.9rem;margin-bottom:8px}
+
+/* quests */
+.filters{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.fb{flex:none;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);font-weight:600;font-size:.88rem;background:#fff}
+.fb[aria-pressed="true"]{background:var(--p);border-color:var(--p);color:#fff}
+.search{width:100%;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);font:inherit;margin-bottom:10px}
+.search:focus{border-color:var(--p);outline:none}
+.q{display:flex;gap:14px;cursor:pointer;transition:border-color .15s,transform .15s}
+.q:hover{border-color:var(--p)}
+.qi{width:52px;height:52px;border-radius:16px;background:var(--psoft);display:grid;place-items:center;font-size:1.6rem;flex:none}
+.qb{min-width:0;flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.q h3{margin-bottom:2px}
+.meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:.88rem;color:var(--mut);font-weight:500}
+.rw{background:var(--gsoft);color:#056a1f;padding:1px 9px;border-radius:999px;font-weight:700}
+
+/* rewards */
+.bal{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--p);color:#fff;border-radius:22px;padding:20px}
+.bal b{font-family:'Unbounded',sans-serif;font-size:2rem;color:var(--g)}
+.rcard{display:flex;flex-direction:column;gap:10px}
+.rtop{display:flex;gap:12px;align-items:center}
+.ri{width:48px;height:48px;border-radius:14px;background:var(--gsoft);display:grid;place-items:center;font-size:1.5rem}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;letter-spacing:.06em;background:var(--psoft);color:var(--pd);padding:6px 12px;border-radius:10px;display:inline-block}
+
+/* profile */
+.prof{display:flex;gap:16px;align-items:center}
+.ava{width:68px;height:68px;border-radius:22px;background:var(--p);color:#fff;display:grid;place-items:center;font-family:'Unbounded',sans-serif;font-size:1.7rem;flex:none;box-shadow:6px 6px 0 var(--g)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stat{background:var(--psoft);border-radius:14px;padding:12px;text-align:center}
+.stat b{display:block;font-family:'Unbounded',sans-serif;font-size:1.3rem}
+.stat span{font-size:.8rem;color:var(--mut)}
+.ach{display:flex;gap:12px;align-items:center}
+.ach .ai{width:44px;height:44px;border-radius:50%;background:var(--g);display:grid;place-items:center;font-size:1.3rem;flex:none}
+.ach.lock{opacity:.45}
+.ach.lock .ai{background:#eceaf3;filter:grayscale(1)}
+.lb{display:flex;align-items:center;gap:12px;padding:10px 4px;border-bottom:1px solid var(--line)}
+.lb:last-child{border:0}
+.lb .n{width:26px;font-weight:700;color:var(--mut)}
+.lb.you{background:var(--gsoft);border-radius:12px;padding:10px 10px;border:0}
+.lb .sp{font-weight:600}
+
+/* forms */
+label{display:block;font-weight:600;font-size:.9rem;margin:14px 0 6px}
+input.f,select.f,textarea.f{width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);font:inherit;background:#fff}
+input.f:focus,select.f:focus,textarea.f:focus{border-color:var(--p);outline:none}
+textarea.f{min-height:96px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* login */
+.login{min-height:calc(100vh - 40px);display:flex;flex-direction:column;justify-content:center;max-width:520px;margin:0 auto;padding:30px 18px 50px}
+.login h1{font-size:clamp(1.7rem,6vw,2.4rem);margin:18px 0 10px}
+.roles{display:grid;gap:12px;margin-top:20px}
+.role{display:flex;gap:14px;align-items:center;text-align:left;padding:16px;border:1.5px solid var(--line);border-radius:18px;background:#fff;width:100%;transition:border-color .15s,background .15s}
+.role:hover{border-color:var(--p);background:var(--psoft)}
+.role .ri{background:var(--psoft)}
+.role b{display:block}
+.principle{margin-top:22px;padding:14px 16px;border-radius:16px;background:var(--gsoft);color:#055a1b;font-weight:500;font-size:.95rem}
+
+/* modal */
+.ov{position:fixed;inset:0;background:rgba(23,20,43,.5);z-index:50;display:flex;align-items:flex-end;justify-content:center;animation:fade .2s}
+.sheet{background:#fff;width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:26px 26px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));animation:up .28s cubic-bezier(.2,.8,.2,1)}
+@media(min-width:700px){.ov{align-items:center}.sheet{border-radius:26px}}
+.sheet h2{font-size:1.25rem;margin:8px 0}
+.xbtn{float:right;width:36px;height:36px;border-radius:50%;background:#f3f2f7;font-size:1.1rem}
+ol.steps{padding-left:20px;margin:8px 0}
+ol.steps li{margin:4px 0}
+.res{text-align:center}
+.res .big{font-family:'Unbounded',sans-serif;font-size:2.4rem;color:var(--p)}
+.res .big span{background:var(--g);color:var(--ink);padding:0 10px;border-radius:12px}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;z-index:60;max-width:90vw;animation:fade .2s}
+.conf{position:fixed;top:-20px;width:10px;height:14px;border-radius:3px;z-index:70;pointer-events:none;animation:fall 1.8s ease-in forwards}
+.foot{margin-top:34px;font-size:.82rem;color:var(--mut);text-align:center}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fall{to{transform:translateY(105vh) rotate(540deg);opacity:.9}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function(){
+'use strict';
+var KEY='dobrokvest.v1';
+var LV=['Новачок','Помічник','Активіст','Герой міста','Легенда Дніпра'];
+var CATS={
+  animals:{n:'Тварини',e:'🐾'},
+  eco:{n:'Екологія',e:'🌳'},
+  aid:{n:'Гумдопомога',e:'📦'},
+  city:{n:'Місто',e:'🗺️'}
+};
+var QUESTS=[
+ {id:1,title:'Вигуляти собаку з притулку',cat:'animals',org:'Притулок «Лапа допомоги»',district:'Самарський район',hours:2,xp:40,pts:30,slots:6,joined:3,lvl:'Легко',
+  desc:'Притулку бракує рук, щоб кожен собака щодня виходив на прогулянку. Ви берете одного пса на повідку й гуляєте з ним близько двох годин.',
+  steps:['Прийдіть до притулку й отримайте собаку та повідок','Вигуляйте його у вказаній зоні','Поверніть собаку й повідомте волонтерам, як усе минуло']},
+ {id:2,title:'Прибрати парк',cat:'eco',org:'Ініціативна група «Чисте Придніпров’я»',district:'Центр',hours:3,xp:60,pts:50,slots:20,joined:11,lvl:'Середньо',
+  desc:'Спільне прибирання алей і газонів. Рукавички та мішки на місці, потрібен лише зручний одяг.',
+  steps:['Зустріч на вході в парк','Отримайте рукавички та мішки','Прибирайте свою ділянку','Здайте повні мішки координатору']},
+ {id:3,title:'Розвантажити фуру з гумдопомогою',cat:'aid',org:'Благодійний фонд «Спільна справа»',district:'Індустріальний район',hours:2,xp:80,pts:70,slots:10,joined:7,lvl:'Складно',
+  desc:'Прийшла фура з допомогою: треба швидко розвантажити коробки й розкласти їх на складі. Потрібна фізична витривалість.',
+  steps:['Прийдіть на склад фонду','Розвантажте фуру в команді','Розкладіть коробки за списком','Підпишіть акт приймання з координатором']},
+ {id:4,title:'Дослідити місцевість Дніпра',cat:'city',org:'Краєзнавчий клуб «Дніпрова хвиля»',district:'Соборний район',hours:2,xp:50,pts:40,slots:15,joined:4,lvl:'Легко',
+  desc:'Пройдіть маршрутом по місту, сфотографуйте цікаві місця й додайте короткі описи. Матеріали підуть у відкриту мапу міської історії.',
+  steps:['Отримайте маршрут і список точок','Зробіть фото кожної точки','Напишіть коротку примітку до кожного фото','Надішліть добірку координатору']},
+ {id:5,title:'Пакування продуктових наборів',cat:'aid',org:'Благодійний фонд «Спільна справа»',district:'Шевченківський район',hours:3,xp:55,pts:45,slots:12,joined:5,lvl:'Легко',
+  desc:'Збираємо набори для літніх людей: крупи, консерви, олія. Працюємо за конвеєром, вистачить будь-якого темпу.',
+  steps:['Прийдіть на пункт пакування','Станьте до свого етапу конвеєра','Перевірте комплектність наборів']},
+ {id:6,title:'Висадити дерева на набережній',cat:'eco',org:'Ініціативна група «Чисте Придніпров’я»',district:'Амур-Нижньодніпровський район',hours:4,xp:75,pts:65,slots:25,joined:9,lvl:'Середньо',
+  desc:'Висаджуємо саджанці вздовж набережної. Лопати видаємо на місці, інструктор покаже, як правильно садити.',
+  steps:['Інструктаж на місці','Посадіть своє дерево','Полийте й підпишіть табличку']},
+ {id:7,title:'Нагодувати безпритульних котів',cat:'animals',org:'Притулок «Лапа допомоги»',district:'Новокодацький район',hours:1,xp:25,pts:20,slots:8,joined:2,lvl:'Легко',
+  desc:'Короткий обхід з кормом за списком точок у дворах. Для тих, хто має лише годину.',
+  steps:['Заберіть корм і маршрут','Обійдіть точки зі списку','Позначте, де кіт не прийшов']},
+ {id:8,title:'Читання дітям у бібліотеці',cat:'city',org:'Краєзнавчий клуб «Дніпрова хвиля»',district:'Чечелівський район',hours:2,xp:45,pts:35,slots:6,joined:1,lvl:'Середньо',
+  desc:'Читаємо вголос казки для дітей з прифронтових родин, які переїхали до міста. Книжки підготовлені.',
+  steps:['Оберіть книжку з добірки','Прочитайте її групі дітей','Проведіть коротке обговорення']}
+];
+var REWARDS=[
+ {id:'r1',e:'☕',name:'Кава в подарунок',partner:'Кав’ярня «Зерно»',cost:40},
+ {id:'r2',e:'🛍️',name:'Знижка 10% на покупку',partner:'Магазин «Крамничка»',cost:60},
+ {id:'r3',e:'🎬',name:'Знижка 30% на квиток',partner:'Кінотеатр «Екран»',cost:90},
+ {id:'r4',e:'🏋️',name:'Разове відвідування',partner:'Спортзал «Пульс»',cost:120}
+];
+var ACH=[
+ {id:'a1',e:'🌱',n:'Перший крок',d:'Виконайте перший квест',t:function(){return S.done.length>=1}},
+ {id:'a2',e:'🔥',n:'Тріо добрих справ',d:'Виконайте 3 квести',t:function(){return S.done.length>=3}},
+ {id:'a3',e:'🐕',n:'Друг тварин',d:'Квест у категорії «Тварини»',t:function(){return hasCat('animals')}},
+ {id:'a4',e:'🌍',n:'Чисте місто',d:'Квест у категорії «Екологія»',t:function(){return hasCat('eco')}},
+ {id:'a5',e:'🤝',n:'Рука допомоги',d:'Квест у категорії «Гумдопомога»',t:function(){return hasCat('aid')}},
+ {id:'a6',e:'⭐',n:'Активіст',d:'Досягніть 3 рівня',t:function(){return lvl(S.xp)>=3}},
+ {id:'a7',e:'🎁',n:'Нагорода отримана',d:'Обміняйте бали на бонус',t:function(){return S.redeemed.length>=1}}
+];
+var BOARD=[{n:'Олена К.',xp:420},{n:'Максим Р.',xp:310},{n:'Дарина П.',xp:255},{n:'Артем Л.',xp:190}];
+
+function fresh(){return{user:null,xp:0,points:0,taken:[],done:[],redeemed:[],custom:[],
+  pending:[{id:2,who:'Олена К.',ok:false},{id:1,who:'Максим Р.',ok:false}],view:'quests',filter:'all',q:''}}
+function load(){try{var s=localStorage.getItem(KEY);if(s){return Object.assign(fresh(),JSON.parse(s))}}catch(e){}return fresh()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var S=load();
+var modal=null;
+
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function lvl(xp){return Math.floor(xp/100)+1}
+function lvName(l){return LV[Math.min(l-1,LV.length-1)]}
+function all(){return QUESTS.concat(S.custom)}
+function byId(id){return all().filter(function(q){return String(q.id)===String(id)})[0]}
+function isDone(id){return S.done.some(function(d){return String(d.id)===String(id)})}
+function isTaken(id){return S.taken.some(function(t){return String(t)===String(id)})}
+function hasCat(c){return S.done.some(function(d){var q=byId(d.id);return q&&q.cat===c})}
+function unlocked(){return ACH.filter(function(a){return a.t()}).map(function(a){return a.id})}
+function toast(m){var t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=m;document.body.appendChild(t);setTimeout(function(){t.remove()},2200)}
+function burst(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var cols=['#05eb40','#8144fa','#05eb40','#b99aff'];
+  for(var i=0;i<42;i++){var c=document.createElement('i');c.className='conf';
+    c.style.left=Math.random()*100+'vw';c.style.background=cols[i%cols.length];
+    c.style.animationDelay=Math.random()*.5+'s';c.style.animationDuration=(1.4+Math.random()*1.2)+'s';
+    document.body.appendChild(c);setTimeout(function(el){return function(){el.remove()}}(c),3200)}
+}
+
+/* ---------- views ---------- */
+function loginView(){
+  return '<div class="login">'+
+   '<div class="brand"><span class="logo"></span>ДоброКвест</div>'+
+   '<h1>Добрі справи Дніпра стають квестами</h1>'+
+   '<p class="mut">Обирай завдання поруч, роби реальну допомогу, отримуй бали, рівні та бонуси від партнерів міста.</p>'+
+   '<label for="nm">Як тебе звати?</label>'+
+   '<input class="f" id="nm" maxlength="40" placeholder="Ім’я або назва організації" autocomplete="off">'+
+   '<div class="roles">'+
+    '<button class="role" data-a="login" data-role="vol"><span class="ri">🙋</span><span><b>Я волонтер</b><span class="mut">Беру квести та виконую їх</span></span></button>'+
+    '<button class="role" data-a="login" data-role="org"><span class="ri">🏠</span><span><b>Я організація або ініціатива</b><span class="mut">Створюю квести для молоді міста</span></span></button>'+
+   '</div>'+
+   '<div class="principle">Волонтерство — на першому місці. Гра — лише інструмент, мета — реальна допомога людям, тваринам і місту.</div>'+
+  '</div>';
+}
+
+function header(){
+  var vol=S.user.role==='vol';var l=lvl(S.xp);
+  var items=vol?[['quests','🧭','Квести'],['mine','✅','Мої квести'],['rewards','🎁','Нагороди'],['profile','👤','Профіль']]
+               :[['oquests','📋','Квести'],['ocreate','➕','Створити'],['oconfirm','✔️','Заявки']];
+  var nav=items.map(function(i){return '<button data-a="nav" data-v="'+i[0]+'"'+(S.view===i[0]?' aria-current="page"':'')+'><span aria-hidden="true">'+i[1]+'</span>'+i[2]+'</button>'}).join('');
+  return '<header class="hdr"><div class="wrap"><div class="hrow">'+
+    '<div class="brand"><span class="logo"></span>ДоброКвест</div>'+
+    '<div class="sp"></div>'+
+    (vol?'<div class="me"><span>'+esc(S.user.name)+'</span><span class="lv">Рівень '+l+'</span></div>':'<div class="me">'+esc(S.user.name)+'</div>')+
+    '<button class="chip-btn" data-a="switch">'+(vol?'Режим організації':'Режим волонтера')+'</button>'+
+    '<nav class="nav" aria-label="Розділи">'+nav+'</nav>'+
+  '</div></div></header>';
+}
+
+function qCard(q){
+  var c=CATS[q.cat],d=isDone(q.id),t=isTaken(q.id);
+  return '<article class="card q" data-a="open" data-id="'+q.id+'" tabindex="0" role="button" aria-label="Відкрити квест: '+esc(q.title)+'">'+
+   '<div class="qi" aria-hidden="true">'+c.e+'</div><div class="qb">'+
+   '<div class="tags"><span class="tag">'+c.n+'</span><span class="tag t2">'+q.lvl+'</span>'+(d?'<span class="tag ok">Виконано</span>':t?'<span class="tag go">У процесі</span>':'')+'</div>'+
+   '<h3>'+esc(q.title)+'</h3><div class="mut">'+esc(q.org)+', '+esc(q.district)+'</div>'+
+   '<div class="meta"><span>⏱ '+q.hours+' год</span><span class="rw">+'+q.xp+' XP</span><span class="rw">+'+q.pts+' балів</span></div>'+
+   '</div></article>';
+}
+function listHtml(){
+  var q=S.q.trim().toLowerCase();
+  var list=all().filter(function(x){
+    if(S.filter!=='all'&&x.cat!==S.filter)return false;
+    if(q&&(x.title+' '+x.org+' '+x.district).toLowerCase().indexOf(q)<0)return false;
+    return true});
+  if(!list.length)return '<div class="empty"><b>Нічого не знайдено</b>Спробуйте іншу категорію або очистіть пошук.</div>';
+  return '<div class="grid c2">'+list.map(qCard).join('')+'</div>';
+}
+function questsView(){
+  var l=lvl(S.xp),inl=S.xp%100;
+  var f=[['all','Усі']].concat(Object.keys(CATS).map(function(k){return[k,CATS[k].e+' '+CATS[k].n]}));
+  return '<section class="hero"><h1>Зроби добру справу у Дніпрі сьогодні</h1>'+
+   '<p>Обери квест на кілька годин, допоможи реальним людям і отримай бали, рівні та бонуси від партнерів.</p>'+
+   '<div class="lvbox"><div class="lvrow"><span>Рівень '+l+' · '+lvName(l)+'</span><span>'+inl+' / 100 XP</span></div><div class="bar" role="progressbar" aria-valuenow="'+inl+'" aria-valuemin="0" aria-valuemax="100"><i style="width:'+inl+'%"></i></div></div></section>'+
+   '<div class="sec-h"><h2>Квести поруч</h2><span class="mut">'+all().length+' доступно</span></div>'+
+   '<input class="search" id="srch" type="search" placeholder="Пошук за назвою, організацією чи районом" value="'+esc(S.q)+'" aria-label="Пошук квестів">'+
+   '<div class="filters" role="group" aria-label="Категорії">'+f.map(function(x){return '<button class="fb" data-a="filter" data-f="'+x[0]+'" aria-pressed="'+(S.filter===x[0])+'">'+x[1]+'</button>'}).join('')+'</div>'+
+   '<div id="list">'+listHtml()+'</div>';
+}
+function mineView(){
+  var act=S.taken.map(byId).filter(Boolean);
+  var h='<div class="sec-h"><h2>Мої активні квести</h2></div>';
+  if(!act.length)h+='<div class="empty"><b>Активних квестів немає</b>Оберіть завдання у стрічці й візьміть його.<br><br><button class="btn" data-a="nav" data-v="quests">До стрічки квестів</button></div>';
+  else h+='<div class="grid c2">'+act.map(function(q){return '<div class="card"><div class="tags"><span class="tag">'+CATS[q.cat].n+'</span><span class="tag go">У процесі</span></div><h3>'+esc(q.title)+'</h3><div class="mut">'+esc(q.org)+'</div><ol class="steps">'+q.steps.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol><div style="display:flex;gap:8px;margin-top:10px"><button class="btn g" style="flex:1" data-a="complete" data-id="'+q.id+'">Завершити квест</button><button class="btn o" data-a="drop" data-id="'+q.id+'">Відмовитись</button></div></div>'}).join('')+'</div>';
+  h+='<div class="sec-h"><h2>Виконано</h2><span class="mut">'+S.done.length+'</span></div>';
+  if(!S.done.length)h+='<div class="empty">Тут з’являтимуться виконані квести.</div>';
+  else h+='<div class="grid c2">'+S.done.slice().reverse().map(function(d){var q=byId(d.id);if(!q)return '';return '<div class="card"><div class="tags"><span class="tag ok">Виконано</span>'+(d.ok?'<span class="tag">Підтверджено організацією</span>':'<span class="tag t2">Чекає підтвердження</span>')+'</div><h3>'+esc(q.title)+'</h3><div class="meta"><span class="rw">+'+q.xp+' XP</span><span class="rw">+'+q.pts+' балів</span><span>'+esc(d.date)+'</span></div></div>'}).join('')+'</div>';
+  return h;
+}
+function rewardsView(){
+  var h='<div class="bal"><div><div>Ваш баланс</div><b>'+S.points+'</b> <span>балів</span></div><div style="font-size:2.4rem" aria-hidden="true">🎁</div></div>';
+  h+='<div class="sec-h"><h2>Бонуси від партнерів</h2></div><div class="grid c2">'+REWARDS.map(function(r){
+    var ok=S.points>=r.cost;
+    return '<div class="card rcard"><div class="rtop"><div class="ri" aria-hidden="true">'+r.e+'</div><div><h3>'+r.name+'</h3><div class="mut">'+r.partner+'</div></div></div>'+
+     '<button class="btn '+(ok?'g':'')+' w" data-a="redeem" data-id="'+r.id+'"'+(ok?'':' disabled')+'>'+(ok?'Обміняти за '+r.cost+' балів':'Не вистачає '+(r.cost-S.points)+' балів')+'</button></div>'}).join('')+'</div>';
+  if(S.redeemed.length){h+='<div class="sec-h"><h2>Мої промокоди</h2></div><div class="grid c2">'+S.redeemed.slice().reverse().map(function(x){var r=REWARDS.filter(function(r){return r.id===x.rid})[0];return '<div class="card"><h3>'+r.e+' '+r.name+'</h3><div class="mut" style="margin-bottom:8px">'+r.partner+'</div><span class="code">'+x.code+'</span></div>'}).join('')+'</div>'}
+  h+='<p class="foot">Партнери та бонуси показані як демонстраційні дані.</p>';
+  return h;
+}
+function profileView(){
+  var l=lvl(S.xp),inl=S.xp%100,un=unlocked();
+  var hrs=S.done.reduce(function(a,d){var q=byId(d.id);return a+(q?q.hours:0)},0);
+  var board=BOARD.concat([{n:S.user.name+' (ви)',xp:S.xp,you:true}]).sort(function(a,b){return b.xp-a.xp});
+  return '<div class="card"><div class="prof"><div class="ava" aria-hidden="true">'+esc(S.user.name.charAt(0).toUpperCase())+'</div><div style="flex:1"><h2 style="font-size:1.2rem">'+esc(S.user.name)+'</h2><div class="mut">Рівень '+l+' · '+lvName(l)+'</div><div class="bar" style="margin-top:10px"><i style="width:'+inl+'%"></i></div><div class="mut" style="font-size:.82rem;margin-top:4px">До рівня '+(l+1)+': '+(100-inl)+' XP</div></div></div>'+
+   '<div class="stats"><div class="stat"><b>'+S.done.length+'</b><span>квестів</span></div><div class="stat"><b>'+hrs+'</b><span>годин допомоги</span></div><div class="stat"><b>'+S.xp+'</b><span>XP усього</span></div></div></div>'+
+   '<div class="sec-h"><h2>Досягнення</h2><span class="mut">'+un.length+' з '+ACH.length+'</span></div><div class="grid c2">'+ACH.map(function(a){var u=un.indexOf(a.id)>=0;return '<div class="card ach'+(u?'':' lock')+'"><div class="ai" aria-hidden="true">'+a.e+'</div><div><b>'+a.n+'</b><div class="mut" style="font-size:.88rem">'+a.d+'</div></div></div>'}).join('')+'</div>'+
+   '<div class="sec-h"><h2>Рейтинг волонтерів</h2></div><div class="card">'+board.map(function(b,i){return '<div class="lb'+(b.you?' you':'')+'"><span class="n">'+(i+1)+'</span><span class="sp">'+esc(b.n)+'</span><span>'+b.xp+' XP</span></div>'}).join('')+'</div>'+
+   '<p class="foot"><button class="chip-btn" data-a="reset">Скинути демо-дані</button></p>';
+}
+/* organization */
+function oquestsView(){
+  var h='<div class="sec-h"><h2>Квести вашої організації</h2></div>';
+  if(!S.custom.length)return h+'<div class="empty"><b>Ви ще не створили жодного квесту</b>Опишіть завдання на кілька годин, і волонтери його побачать.<br><br><button class="btn" data-a="nav" data-v="ocreate">Створити перший квест</button></div>';
+  return h+'<div class="grid c2">'+S.custom.map(function(q){
+    var n=q.joined+(isTaken(q.id)||isDone(q.id)?1:0);
+    return '<div class="card"><div class="tags"><span class="tag">'+CATS[q.cat].n+'</span><span class="tag t2">'+q.lvl+'</span></div><h3>'+esc(q.title)+'</h3><div class="mut">'+esc(q.district)+', '+q.hours+' год</div><div class="meta"><span class="rw">+'+q.xp+' XP</span><span class="rw">+'+q.pts+' балів</span></div><div style="margin-top:12px"><div class="lvrow"><span>Волонтерів</span><span>'+n+' / '+q.slots+'</span></div><div class="bar"><i style="width:'+Math.min(100,n/q.slots*100)+'%"></i></div></div></div>'}).join('')+'</div>';
+}
+function ocreateView(){
+  return '<div class="sec-h"><h2>Новий квест</h2></div><div class="card">'+
+   '<label for="c-title" style="margin-top:0">Назва квесту</label><input class="f" id="c-title" maxlength="80" placeholder="Наприклад: Прибрати двір біля школи">'+
+   '<div class="two"><div><label for="c-cat">Категорія</label><select class="f" id="c-cat">'+Object.keys(CATS).map(function(k){return '<option value="'+k+'">'+CATS[k].n+'</option>'}).join('')+'</select></div>'+
+   '<div><label for="c-lvl">Складність</label><select class="f" id="c-lvl"><option>Легко</option><option selected>Середньо</option><option>Складно</option></select></div></div>'+
+   '<label for="c-dist">Район</label><select class="f" id="c-dist">'+['Центр','Соборний район','Шевченківський район','Амур-Нижньодніпровський район','Індустріальний район','Новокодацький район','Самарський район','Чечелівський район'].map(function(d){return '<option>'+d+'</option>'}).join('')+'</select>'+
+   '<div class="two"><div><label for="c-h">Тривалість, год</label><input class="f" id="c-h" type="number" min="1" max="8" value="2"></div><div><label for="c-s">Кількість місць</label><input class="f" id="c-s" type="number" min="1" max="100" value="10"></div></div>'+
+   '<label for="c-xp">Нагорода за квест, XP (бали нараховуються так само)</label><input class="f" id="c-xp" type="number" min="10" max="200" value="50">'+
+   '<label for="c-d">Що потрібно зробити</label><textarea class="f" id="c-d" placeholder="Опишіть завдання, місце зустрічі й що взяти з собою"></textarea>'+
+   '<button class="btn w" style="margin-top:18px" data-a="create">Опублікувати квест</button></div>';
+}
+function oconfirmView(){
+  var items=S.pending.map(function(p,i){return{p:p,i:i}});
+  var mine=S.done.map(function(d,i){return{p:{id:d.id,who:S.user.name+' (ви як волонтер)',ok:d.ok,mine:true,di:i},i:-1}});
+  var rows=items.concat(mine);
+  var h='<div class="sec-h"><h2>Заявки на підтвердження</h2></div>';
+  if(!rows.length)return h+'<div class="empty">Нових заявок немає.</div>';
+  return h+'<div class="grid c2">'+rows.map(function(r){var q=byId(r.p.id);if(!q)return '';
+    return '<div class="card"><div class="tags"><span class="tag">'+CATS[q.cat].n+'</span>'+(r.p.ok?'<span class="tag ok">Підтверджено</span>':'<span class="tag go">Чекає</span>')+'</div><h3>'+esc(q.title)+'</h3><div class="mut" style="margin-bottom:10px">Виконав: '+esc(r.p.who)+'</div>'+(r.p.ok?'':'<button class="btn g w" data-a="confirm" data-i="'+r.i+'" data-di="'+(r.p.di===undefined?'':r.p.di)+'">Підтвердити виконання</button>')+'</div>'}).join('')+'</div>';
+}
+
+/* modals */
+function modalHtml(){
+  if(!modal)return '';
+  if(modal.t==='quest'){
+    var q=byId(modal.id);if(!q)return '';var c=CATS[q.cat],d=isDone(q.id),t=isTaken(q.id);
+    var vol=S.user.role==='vol';
+    var btn=!vol?'':d?'<button class="btn w" disabled>Квест виконано</button>':t?'<button class="btn g w" data-a="complete" data-id="'+q.id+'">Завершити квест</button>':'<button class="btn w" data-a="take" data-id="'+q.id+'">Взяти квест</button>';
+    return '<div class="ov" data-a="closeBg"><div class="sheet" role="dialog" aria-modal="true" aria-label="'+esc(q.title)+'"><button class="xbtn" data-a="close" aria-label="Закрити">✕</button>'+
+     '<div class="tags"><span class="tag">'+c.e+' '+c.n+'</span><span class="tag t2">'+q.lvl+'</span></div><h2>'+esc(q.title)+'</h2><div class="mut">'+esc(q.org)+'</div>'+
+     '<div class="meta"><span>📍 '+esc(q.district)+'</span><span>⏱ '+q.hours+' год</span><span>👥 '+(q.joined)+' / '+q.slots+'</span></div>'+
+     '<p style="margin:14px 0">'+esc(q.desc)+'</p><b>Що робити</b><ol class="steps">'+q.steps.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol>'+
+     '<div class="meta" style="margin:14px 0 18px"><span class="rw">+'+q.xp+' XP</span><span class="rw">+'+q.pts+' балів</span></div>'+btn+'</div></div>';
+  }
+  if(modal.t==='result'){
+    var q2=byId(modal.id);
+    return '<div class="ov" data-a="closeBg"><div class="sheet res" role="dialog" aria-modal="true" aria-label="Квест виконано"><div style="font-size:3rem" aria-hidden="true">🎉</div><h2>Квест виконано!</h2><p class="mut">Дякуємо за допомогу: «'+esc(q2.title)+'»</p>'+
+     '<div class="big" style="margin:18px 0 6px"><span>+'+q2.xp+' XP</span></div><p><b>+'+q2.pts+' балів</b> на рахунку</p>'+
+     (modal.up?'<div class="principle" style="margin-top:16px">Новий рівень: '+lvl(S.xp)+' · '+lvName(lvl(S.xp))+'</div>':'<div class="bar" style="margin:16px 0 4px"><i style="width:'+(S.xp%100)+'%"></i></div><div class="mut" style="font-size:.85rem">До наступного рівня: '+(100-S.xp%100)+' XP</div>')+
+     (modal.ach.length?'<div style="margin-top:16px"><b>Нові досягнення</b>'+modal.ach.map(function(id){var a=ACH.filter(function(x){return x.id===id})[0];return '<div class="ach" style="margin-top:8px;justify-content:center"><div class="ai">'+a.e+'</div><span>'+a.n+'</span></div>'}).join('')+'</div>':'')+
+     '<div style="display:grid;gap:10px;margin-top:20px"><button class="btn g" data-a="toRewards">Обрати нагороду</button><button class="btn o" data-a="close">До стрічки квестів</button></div></div></div>';
+  }
+  if(modal.t==='code'){
+    var r=REWARDS.filter(function(x){return x.id===modal.rid})[0];
+    return '<div class="ov" data-a="closeBg"><div class="sheet res" role="dialog" aria-modal="true" aria-label="Промокод"><div style="font-size:3rem" aria-hidden="true">'+r.e+'</div><h2>'+r.name+'</h2><p class="mut">'+r.partner+'</p><p style="margin:16px 0"><span class="code" style="font-size:1.3rem">'+modal.code+'</span></p><p class="mut">Покажіть цей код партнеру. Також його можна знайти в розділі «Мої промокоди».</p><button class="btn w" style="margin-top:18px" data-a="close">Готово</button></div></div>';
+  }
+  return '';
+}
+
+/* ---------- render ---------- */
+function render(){
+  var y=window.scrollY;var app=document.getElementById('app');
+  if(!S.user){app.innerHTML=loginView();return}
+  var v=S.view,body='';
+  if(S.user.role==='vol'){body=v==='mine'?mineView():v==='rewards'?rewardsView():v==='profile'?profileView():questsView()}
+  else{body=v==='ocreate'?ocreateView():v==='oconfirm'?oconfirmView():oquestsView()}
+  app.innerHTML=header()+'<main><div class="wrap">'+body+(S.user.role==='vol'&&v==='quests'?'<p class="foot">Організації, квести та партнери в цій версії — демонстраційні дані.</p>':'')+'</div></main>'+modalHtml();
+  window.scrollTo(0,y);
+}
+function go(v){S.view=v;save();render();window.scrollTo(0,0)}
+
+/* ---------- actions ---------- */
+var A={
+ login:function(d){var nm=(document.getElementById('nm').value||'').trim();
+   S.user={name:nm||(d.role==='vol'?'Волонтер':'Організація'),role:d.role};S.view=d.role==='vol'?'quests':'oquests';save();render();window.scrollTo(0,0)},
+ nav:function(d){go(d.v)},
+ switch:function(){S.user.role=S.user.role==='vol'?'org':'vol';S.view=S.user.role==='vol'?'quests':'oquests';save();render();window.scrollTo(0,0)},
+ filter:function(d){S.filter=d.f;save();render()},
+ open:function(d){modal={t:'quest',id:d.id};render()},
+ close:function(){modal=null;render()},
+ closeBg:function(d,ev){if(ev.target.classList.contains('ov')){modal=null;render()}},
+ take:function(d){var q=byId(d.id);if(!q||isTaken(q.id)||isDone(q.id))return;S.taken.push(q.id);save();modal=null;render();toast('Квест у ваших активних. Приємної допомоги!');},
+ drop:function(d){S.taken=S.taken.filter(function(x){return String(x)!==String(d.id)});save();render();toast('Квест скасовано')},
+ complete:function(d){var q=byId(d.id);if(!q||isDone(q.id))return;
+   var before=lvl(S.xp),ba=unlocked();
+   S.xp+=q.xp;S.points+=q.pts;
+   S.taken=S.taken.filter(function(x){return String(x)!==String(q.id)});
+   S.done.push({id:q.id,date:new Date().toLocaleDateString('uk-UA'),ok:false});
+   var na=unlocked().filter(function(x){return ba.indexOf(x)<0});
+   save();modal={t:'result',id:q.id,up:lvl(S.xp)>before,ach:na};render();burst()},
+ toRewards:function(){modal=null;go('rewards')},
+ redeem:function(d){var r=REWARDS.filter(function(x){return x.id===d.id})[0];if(!r||S.points<r.cost)return;
+   S.points-=r.cost;var ch='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',c='';
+   for(var i=0;i<8;i++){c+=ch.charAt(Math.floor(Math.random()*ch.length));if(i===3)c+='-'}
+   c='DK-'+c;S.redeemed.push({rid:r.id,code:c});save();modal={t:'code',rid:r.id,code:c};render()},
+ create:function(){
+   var g=function(i){return document.getElementById(i).value};
+   var title=g('c-title').trim();
+   if(title.length<4){toast('Додайте назву квесту (мінімум 4 символи)');document.getElementById('c-title').focus();return}
+   var cat=g('c-cat'),xp=Math.max(10,Math.min(200,parseInt(g('c-xp'),10)||50));
+   var desc=g('c-d').trim()||'Деталі уточнюйте в організатора.';
+   S.custom.push({id:'c'+Date.now(),title:title,cat:cat,org:S.user.name,district:g('c-dist'),hours:Math.max(1,Math.min(8,parseInt(g('c-h'),10)||2)),
+     xp:xp,pts:Math.round(xp*.8),slots:Math.max(1,Math.min(100,parseInt(g('c-s'),10)||10)),joined:0,lvl:g('c-lvl'),desc:desc,
+     steps:['Прийдіть у вказане місце','Виконайте завдання разом із координатором','Отримайте підтвердження від організатора']});
+   save();S.view='oquests';render();window.scrollTo(0,0);toast('Квест опубліковано. Волонтери його вже бачать');},
+ confirm:function(d){
+   if(d.di!==''&&d.di!==undefined){var x=S.done[parseInt(d.di,10)];if(x)x.ok=true}
+   else{var p=S.pending[parseInt(d.i,10)];if(p)p.ok=true}
+   save();render();toast('Виконання підтверджено')},
+ reset:function(){if(confirm('Скинути прогрес і повернутися на екран входу?')){S=fresh();modal=null;save();render();window.scrollTo(0,0)}}
+};
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-a]');if(!t)return;
+  var f=A[t.dataset.a];if(f){if(t.dataset.a==='closeBg'&&e.target!==t)return;f(t.dataset,e)}
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&modal){modal=null;render();return}
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('article[data-a="open"]')){e.preventDefault();A.open(e.target.dataset)}
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='srch'){S.q=e.target.value;var l=document.getElementById('list');if(l)l.innerHTML=listHtml()}
+});
+render();
+})();
+</script>
+</body>
+</html>

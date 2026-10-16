@@ -1,0 +1,221 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #f4f5f8; /* Світлий фон сторінки */
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  color: #333333;
+}
+
+.bg {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: transparent url('./images/profilebgpic.png') repeat 0 0;
+  animation: bg-animation .2s infinite;
+  opacity: 0.05;
+  z-index: -1;
+}
+
+@keyframes bg-animation {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 10%); }
+  80% { transform: translate(-15%, 0); }
+  90% { transform: translate(10%, 5%); }
+  100% { transform: translate(5%, 0); }
+}
+
+.container {
+  width: 380px;
+  height: 480px; /* Збільшено висоту під випадаючий список */
+  background: #ffffff; /* Білий фон картки */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.form-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.button-box {
+  width: 230px;
+  margin: 30px auto;
+  position: relative;
+  background: #eaeaea;
+  border-radius: 30px;
+}
+
+.toggle-btn, .toggle-btn-reg {
+  padding: 10px 0;
+  width: 110px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  outline: none;
+  position: relative;
+  font-weight: bold;
+  color: #555555;
+  transition: color 0.3s ease;
+}
+
+#btn {
+  position: absolute;
+  width: 115px;
+  height: 100%;
+  background: linear-gradient(135deg, #8144fa, #05eb40);
+  border-radius: 30px;
+  transition: 0.5s;
+  left: 0;
+}
+
+.input-group {
+  position: absolute;
+  top: 110px;
+  width: 280px;
+  transition: 0.5s;
+  left: 50px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px 0;
+  margin: 8px 0;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  background: transparent;
+  color: #333333;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.input-field::placeholder {
+  color: #999;
+}
+
+.input-field:focus {
+  border-bottom: 1px solid #8144fa;
+}
+
+/* Стилізація випадаючого списку */
+.select-field {
+  cursor: pointer;
+  color: #333333;
+}
+
+.select-field option {
+  background: #ffffff;
+  color: #333333;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px 30px;
+  cursor: pointer;
+  display: block;
+  margin-top: 20px;
+  background: linear-gradient(135deg, #8144fa, #05eb40);
+  border: 0;
+  border-radius: 30px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 15px;
+  box-shadow: 0 4px 15px rgba(129, 68, 250, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(5, 235, 64, 0.4);
+}
+
+#login {
+  left: 50px;
+}
+
+#register {
+  left: 450px;
+}
+
+.reset-btn {
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 15px;
+  display: block;
+  width: 100%;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.reset-btn:hover {
+  color: #8144fa;
+  text-decoration: none;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.show-pass {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.3s ease;
+}
+
+.show-pass:hover {
+  color: #8144fa;
+}
+
+.page-header {
+  text-align: center;
+  margin: 0 0 18px 0;
+  animation: headerIn 700ms ease both;
+  z-index: 2;
+}
+
+.page-subtitle {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #555555;
+}
+
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}

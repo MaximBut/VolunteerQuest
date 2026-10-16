@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кабінет Волонтера — ДоброРазом</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+</head>
+<body class="dashboard-body">
+
+  <header class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>ДоброРазом | Волонтер</span>
+    </div>
+    <div class="nav-auth">
+      <span class="user-greeting">Привіт, Волонтере!</span>
+      <a href="index.html" class="auth-btn" style="background: #ff5c5c;">Вийти</a>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <section class="dashboard-intro">
+      <h2>Доступні завдання у Дніпрі</h2>
+      <p>Обирайте ініціативу, допомагайте місту та заробляйте бали активності.</p>
+    </section>
+
+    <div class="activities-grid">
+      <div class="activity-card">
+        <div class="card-img" style="background-image: url('images/activity1.jpg');"></div>
+        <div class="card-content">
+          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Соборний район</span>
+          <h3>Фасування продуктових наборів</h3>
+          <p>Необхідно допомогти з фасуванням їжі для внутрішньо переміщених осіб.</p>
+          <button class="submit-btn" onclick="alert('Ви успішно взяли завдання в роботу!')" style="margin-top:10px; padding:8px;">Взяти в роботу</button>
+        </div>
+      </div>
+
+      <div class="activity-card">
+        <div class="card-img" style="background-image: url('images/activity2.jpg');"></div>
+        <div class="card-content">
+          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Шевченківський район</span>
+          <h3>Плетіння маскувальних сіток</h3>
+          <p>Плетіння захисних сіток для підрозділів ТрО.</p>
+          <button class="submit-btn" onclick="alert('Ви успішно взяли завдання в роботу!')" style="margin-top:10px; padding:8px;">Взяти в роботу</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
