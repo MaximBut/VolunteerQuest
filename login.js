@@ -2,95 +2,84 @@ const loginForm = document.getElementById("login");
 const registerForm = document.getElementById("register");
 const btn = document.getElementById("btn");
 
-const logbtn = document.getElementById("log");
-const regbtn = document.getElementById("reg");
-
-loginForm.addEventListener('submit', async (e) => {
+// Обробка ВХОДУ
+loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const formData = new FormData(loginForm);
-  const data = Object.fromEntries(formData);
+  const usernameInput = loginForm.querySelector('input[name="username"]')?.value || loginForm.querySelector('input:nth-of-type(1)').value;
+  const passwordInput = loginForm.querySelector('input[name="password"]')?.value || loginForm.querySelector('input:nth-of-type(2)').value;
 
-  const response = await fetch('/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
+  // Шукаємо збереженого користувача
+  const savedUser = JSON.parse(localStorage.getItem('currentUser'));
 
-  const text = await response.text();
-
-  if (response.redirected) {
-    window.location.href = response.url;
-  } else if (text.includes('Успішний вхід')) {
+  if (savedUser && savedUser.username === usernameInput && savedUser.password === passwordInput) {
     Swal.fire({
       icon: 'success',
       title: 'Вхід успішний!',
       confirmButtonText: 'Гаразд',
       confirmButtonColor: '#8144fa'
     }).then(() => {
-      window.location.href = '/home';
+      // Перенаправлення залежно від ролі або на головну
+      if (savedUser.role === 'organizer') {
+        window.location.href = 'organizer-dashboard.html';
+      } else {
+        window.location.href = 'volunteer-dashboard.html';
+      }
     });
   } else {
     Swal.fire({
       icon: 'error',
       title: 'Помилка!',
-      text: text,
+      text: 'Невірний логін або пароль, або акаунт не створено.',
       confirmButtonText: 'Спробувати знову',
       confirmButtonColor: '#8144fa'
     });
   }
 });
 
-registerForm.addEventListener('submit', async (e) => {
+// Обробка РЕЄСТРАЦІЇ
+registerForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  const formData = new FormData(registerForm);
-  const data = Object.fromEntries(formData);
+  const inputs = registerForm.querySelectorAll('input');
+  const roleSelect = registerForm.querySelector('select');
 
-  const response = await fetch('/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+  const userData = {
+    username: inputs[0].value,
+    email: inputs[1].value,
+    password: inputs[2].value,
+    role: roleSelect ? roleSelect.value : 'volunteer'
+  };
+
+  // Зберігаємо користувача в localStorage
+  localStorage.setItem('currentUser', JSON.stringify(userData));
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Успішно!',
+    text: 'Реєстрація пройшла успішно! Тепер увійдіть у систему.',
+    confirmButtonText: 'ОК',
+    confirmButtonColor: '#05eb40'
+  }).then(() => {
+    showLogin();
   });
-
-  const text = await response.text();
-
-  if (text.includes('успішна')) {
-    Swal.fire({
-      icon: 'success',
-      title: 'Успішно!',
-      text: text,
-      confirmButtonText: 'ОК',
-      confirmButtonColor: '#05eb40'
-    }).then(() => {
-      setTimeout(showLogin, 100);
-    });
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: 'Помилка!',
-      text: text,
-      confirmButtonText: 'Спробувати знову',
-      confirmButtonColor: '#8144fa'
-    });
-  }
 });
 
 function showLogin() {
   loginForm.style.left = '50px';
   registerForm.style.left = '450px';
-  btn.style.left = "0px";
+  if (btn) btn.style.left = "0px";
 }
 
 function showRegister() {
   loginForm.style.left = '-400px';
   registerForm.style.left = '50px';
-  btn.style.left = "115px";
+  if (btn) btn.style.left = "115px";
 }
 
-function togglePassword(inputId, btn) {
+function togglePassword(inputId, btnEl) {
   const input = document.getElementById(inputId);
-  const icon = btn.querySelector('i');
+  const icon = btnEl.querySelector('i');
 
   if (input.type === "password") {
     input.type = "text";

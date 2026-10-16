@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="images/icon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ДоброРазом — Волонтерська організація Дніпра</title>
+  <link rel="stylesheet" href="style1.css">
+  <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <!-- Навігаційне меню -->
+  <header class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-heart"></i> <span>ДоброРазом</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#mission">Наша місія</a>
+      <a href="#projects">Проєкти</a>
+      <a href="#volunteering">Волонтерство</a>
+      <a href="#reports">Звітність</a>
+      <a href="#partners">Партнерство</a>
+    </nav>
+    <div class="nav-auth">
+      <a href="login.html" class="auth-btn">Увійти / Реєстрація</a>
+    </div>
+  </header>
+
+  <!-- Перший екран: Інтерактивна картинка з фразами та центральним квадратом -->
+  <section class="hero-interactive">
+    <!-- Плаваючі фрази (інтерактивні елементи фону) -->
+    <div class="floating-phrase" style="top: 15%; left: 10%; animation-delay: 0s;">«Творимо добро разом»</div>
+    <div class="floating-phrase" style="top: 25%; right: 12%; animation-delay: 2s;">«Допомога біля дому»</div>
+    <div class="floating-phrase" style="bottom: 20%; left: 15%; animation-delay: 4s;">«Кожен внесок важливий»</div>
+    <div class="floating-phrase" style="bottom: 25%; right: 18%; animation-delay: 1s;">«Дніпро — місто єдності»</div>
+    <div class="floating-phrase" style="top: 50%; left: 5%; animation-delay: 3s;">«Стань волонтером сьогодні»</div>
+
+    <!-- Центральний квадрат-візитка -->
+    <div class="hero-card">
+      <span class="hero-badge"><i class="fa-solid fa-hands-holding-child"></i> Платформа змін</span>
+      <h1>ДоброРазом у Дніпрі</h1>
+      <p>Єдина платформа для тих, хто хоче допомагати місту, та тих, хто потребує підтримки чи дає завдання.</p>
+      <a href="#volunteering" class="btn-hero">Долучитися до ініціатив ↓</a>
+    </div>
+  </section>
+
+  <!-- Основний блок можливостей волонтерства із сортуванням -->
+  <section id="volunteering" class="opportunities-section">
+    <div class="section-header">
+      <h2>Можливості для волонтерів</h2>
+      <p>Обирайте те, що вам до душі, за категоріями або районами міста</p>
+    </div>
+
+    <!-- Панель сортування та фільтрації -->
+    <div class="filter-panel">
+      <div class="filter-group">
+        <label><i class="fa-solid fa-filter"></i> Категорія:</label>
+        <select id="categoryFilter" class="filter-select" onchange="filterActivities()">
+          <option value="all">Усі категорії</option>
+          <option value="pets">🐾 Пітомці / Тварини</option>
+          <option value="cleaning">🧹 Прибирання / Уборка</option>
+          <option value="humanitarian">📦 Гуманітарна допомога</option>
+          <option value="military">🛡️ Допомога армії</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label><i class="fa-solid fa-location-dot"></i> Район Дніпра:</label>
+        <select id="districtFilter" class="filter-select" onchange="filterActivities()">
+          <option value="all">Усі райони</option>
+          <option value="sobornyi">Соборний район</option>
+          <option value="shevchenkivskyi">Шевченківський район</option>
+          <option value="tsentralnyi">Центральний район</option>
+          <option value="samarskyi">Самарський район</option>
+          <option value="novokodatskyi">Новокодацький район</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Сітка карток активностей -->
+    <div class="activities-grid" id="activitiesGrid">
+      
+      <!-- Картка 1 -->
+      <div class="activity-card" data-category="pets" data-district="sobornyi">
+        <div class="card-img" style="background-image: url('images/activity1.jpg');">
+          <span class="category-tag">Пітомці</span>
+        </div>
+        <div class="card-content">
+          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Соборний район</span>
+          <h3>Допомога притулку для тварин</h3>
+          <p>Потрібні волонтери для вигулу собак, прибирання вольєрів та роздачі корму.</p>
+          <a href="login.html" class="card-link">Взяти участь →</a>
+        </div>
+      </div>
+
+      <!-- Картка 2 -->
+      <div class="activity-card" data-category="cleaning" data-district="shevchenkivskyi">
+        <div class="card-img" style="background-image: url('images/activity2.jpg');">
+          <span class="category-tag">Прибирання</span>
+        </div>
+        <div class="card-content">
+          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Шевченківський район</span>
+          <h3>Тойло-уборка паркової зони</h3>
+          <p>Екологічний суботник: прибирання сміття у парку ім. Шевченка разом з командою.</p>
+          <a href="login.html" class="card-link">Взяти участь →</a>
+        </div>
+      </div>
+
+      <!-- Картка 3 -->
+      <div class="activity-card" data-category="humanitarian" data-district="tsentralnyi">
+        <div class="card-img" style="background-image: url('images/activity3.jpg');">
+          <span class="category-tag">Гуманітарка</span>
+        </div>
+        <div class="card-content">
+          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Центральний район</span>
+          <h3>Фасування продуктових наборів</h3>
+          <p>Збір та пакування гуманітарних наборів для внутрішньо переміщених осіб.</p>
+          <a href="login.html" class="card-link">Взяти участь →</a>
+        </div>
+      </div>
+
+      <!-- Картка 4 -->
+      <div class="activity-card" data-category="military" data-district="samarskyi">
+        <div class="card-img" style="background-image: url('images/activity1.jpg');">
+          <span class="category-tag">Допомога армії</span>
+        </div>
+        <div class="card-content">
+          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Самарський район</span>
+          <h3>Плетіння маскувальних сіток</h3>
+          <p>Виготовлення захисних сіток для військових підрозділів на передовій.</p>
+          <a href="login.html" class="card-link">Взяти участь →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Футер -->
+  <footer>
+    <p>&copy; 2026 ДоброРазом. Усі права захищені.</p>
+  </footer>
+
+  <!-- Скрипт для фільтрації -->
+  <script>
+    function filterActivities() {
+      const selectedCategory = document.getElementById('categoryFilter').value;
+      const selectedDistrict = document.getElementById('districtFilter').value;
+      const cards = document.querySelectorAll('.activity-card');
+
+      cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const district = card.getAttribute('data-district');
+
+        const matchesCategory = (selectedCategory === 'all' || category === selectedCategory);
+        const matchesDistrict = (selectedDistrict === 'all' || district === selectedDistrict);
+
+        if (matchesCategory && matchesDistrict) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
