@@ -1,0 +1,266 @@
+/* Додаткові стилі для внутрішніх сторінок (підключати після style.css) */
+
+/* Плавні переходи між сторінками */
+@view-transition {
+  navigation: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Запасний варіант для браузерів без View Transitions: плавна поява сторінки */
+@keyframes page-fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+body {
+  animation: page-fade-in 0.45s ease-out;
+}
+
+::view-transition-old(root) {
+  animation: 0.25s ease-in both vt-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 0.35s ease-out both vt-fade-in;
+}
+
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+
+/* Шапка залишається на місці під час переходу */
+.navbar {
+  view-transition-name: navbar;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  body { animation: none; }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) { animation: none; }
+}
+
+.logo a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-links a.active {
+  color: #8144fa;
+  border-bottom: 2px solid #05eb40;
+  padding-bottom: 4px;
+}
+
+.page-header {
+  text-align: center;
+  padding: 50px 80px 10px 80px;
+}
+
+.page-header h1 {
+  font-size: 2.3rem;
+  color: #120924;
+  margin: 0 0 10px 0;
+}
+
+.page-header p {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Місія */
+.mission-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  padding: 50px 80px;
+  background: #ffffff;
+  margin: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+}
+
+.mission-text {
+  max-width: 560px;
+}
+
+.mission-text h2 {
+  font-size: 1.8rem;
+  color: #120924;
+  margin-top: 0;
+}
+
+.mission-text p {
+  color: #666;
+  line-height: 1.7;
+  font-size: 1.05rem;
+}
+
+.mission-image img {
+  width: 450px;
+  max-width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+  padding: 0 80px 60px 80px;
+}
+
+.value-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(129, 68, 250, 0.15);
+}
+
+.value-card i {
+  font-size: 2rem;
+  color: #8144fa;
+  margin-bottom: 12px;
+}
+
+.value-card h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.value-card p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+/* Звітність */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 30px;
+  padding: 30px 80px 60px 80px;
+}
+
+.chart-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.chart-card h3 {
+  margin: 0 0 5px 0;
+  color: #120924;
+}
+
+.chart-card .chart-note {
+  margin: 0 0 15px 0;
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.chart-box {
+  position: relative;
+  height: 300px;
+}
+
+/* Партнери */
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 30px 80px 60px 80px;
+}
+
+.partner-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.partner-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(129, 68, 250, 0.15);
+}
+
+.partner-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #8144fa, #05eb40);
+  color: #fff;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.partner-card h3 {
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.partner-card p {
+  margin: 0 0 12px 0;
+  color: #666;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.partner-tag {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: #8144fa;
+  background: rgba(129, 68, 250, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.partner-cta {
+  text-align: center;
+  background: #120924;
+  color: #fff;
+  margin: 0 40px 40px 40px;
+  padding: 40px;
+  border-radius: 16px;
+}
+
+.partner-cta h2 {
+  margin-top: 0;
+  color: #05eb40;
+}
+
+.partner-cta p {
+  color: rgba(255,255,255,0.8);
+}
+
+@media (max-width: 800px) {
+  .navbar, .hero, .mission-block { padding-left: 20px; padding-right: 20px; }
+  .mission-block { flex-direction: column; margin: 20px; }
+  .page-header, .values, .charts-grid, .partners-grid { padding-left: 20px; padding-right: 20px; }
+  .charts-grid { grid-template-columns: 1fr; }
+} 
