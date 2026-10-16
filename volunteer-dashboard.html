@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
   <style>
-    /* Додаткові стилі кабінету (префікс vq-), щоб не чіпати style.css */
+    
     .vq-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
     .vq-tab{padding:10px 20px;border-radius:20px;border:2px solid transparent;background:#fff;font:inherit;font-weight:bold;color:#555;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:color .2s,transform .2s}
     .vq-tab:hover{color:#8144fa;transform:translateY(-2px)}
@@ -35,7 +35,7 @@
     .vq-empty b{display:block;color:#120924;margin-bottom:6px}
     .vq-h{margin:30px 0 14px;font-size:1.2rem}
 
-    /* профіль */
+    
     .vq-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,.05)}
     .vq-prof{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
     .vq-ava{width:72px;height:72px;border-radius:22px;background:#8144fa;color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none;box-shadow:6px 6px 0 #05eb40}
@@ -63,7 +63,7 @@
     .vq-reset{margin-top:26px;text-align:center}
     .vq-reset button{border:1.5px solid #e4def5;background:#fff;border-radius:999px;padding:8px 16px;font:inherit;cursor:pointer;color:#65617c}
 
-    /* модальні вікна */
+    
     .vq-ov{position:fixed;inset:0;background:rgba(23,20,43,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
     .vq-sheet{background:#fff;width:100%;max-width:540px;max-height:90vh;overflow:auto;border-radius:24px;padding:24px}
     .vq-sheet h2{margin:8px 0}
@@ -165,7 +165,7 @@
     { n: 'Дарина П.', xp: 255 }, { n: 'Артем Л.', xp: 190 }
   ];
 
-  /* ---------- стан ---------- */
+  
   function fresh() { return { name: 'Волонтер', xp: 0, points: 0, taken: [], done: [], tab: 'tasks', filter: 'all', q: '' }; }
   function load() {
     try { var s = localStorage.getItem(KEY); if (s) return Object.assign(fresh(), JSON.parse(s)); } catch (e) {}
@@ -175,7 +175,7 @@
   var S = load();
   var modal = null;
 
-  /* ---------- допоміжні ---------- */
+  
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function lvl(xp) { return Math.floor(xp / 100) + 1; }
   function lvName(l) { return LEVELS[Math.min(l - 1, LEVELS.length - 1)]; }
@@ -208,7 +208,7 @@
     }
   }
 
-  /* ---------- відображення ---------- */
+  
   function greet() {
     var l = lvl(S.xp);
     $('greet').textContent = 'Привіт, ' + S.name + '! · Рівень ' + l + ' · ' + S.points + ' балів';
@@ -369,7 +369,7 @@
     $('modal-root').innerHTML = modalHtml();
   }
 
-  /* ---------- дії ---------- */
+  
   var A = {
     tab: function (d) { S.tab = d.t; save(); render(); window.scrollTo(0, 0); },
     filter: function (d) { S.filter = d.f; save(); render(); },

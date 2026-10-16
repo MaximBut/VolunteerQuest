@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: #f4f5f8; /* Світлий фон сторінки */
+  background: #f4f5f8; 
   font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
@@ -40,8 +40,8 @@ body {
 
 .container {
   width: 380px;
-  height: 480px; /* Збільшено висоту під випадаючий список */
-  background: #ffffff; /* Білий фон картки */
+  height: 480px; 
+  background: #ffffff; 
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   position: relative;
@@ -115,7 +115,7 @@ body {
   border-bottom: 1px solid #8144fa;
 }
 
-/* Стилізація випадаючого списку */
+
 .select-field {
   cursor: pointer;
   color: #333333;

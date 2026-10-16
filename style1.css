@@ -7,7 +7,7 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Навігація */
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -60,7 +60,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Перший екран: інтерактивний блок з плаваючими фразами */
+
 .hero-interactive {
   position: relative;
   height: 90vh;
@@ -72,7 +72,7 @@ body {
   padding: 0 20px;
 }
 
-/* Плаваючі фрази фон */
+
 .floating-phrase {
   position: absolute;
   background: rgba(255, 255, 255, 0.08);
@@ -92,7 +92,7 @@ body {
   100% { transform: translateY(15px) translateX(-15px); }
 }
 
-/* Центральна картка на першому екрані */
+
 .hero-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -150,7 +150,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Секція можливостей */
+
 .opportunities-section {
   padding: 60px 80px;
 }
@@ -170,7 +170,7 @@ body {
   color: #666;
 }
 
-/* Панель сортування та фільтрів */
+
 .filter-panel {
   display: flex;
   justify-content: center;
@@ -204,7 +204,7 @@ body {
   cursor: pointer;
 }
 
-/* Сітка карток */
+
 .activities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -281,7 +281,7 @@ body {
   color: #05eb40;
 }
 
-/* Футер */
+
 footer {
   text-align: center;
   padding: 20px;
