@@ -5,8 +5,8 @@ body {
   font-family: 'Segoe UI', sans-serif;
   color: #333333;
 }
- 
 
+/* Навигация */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -18,7 +18,7 @@ body {
   top: 0;
   z-index: 1000;
 }
- 
+
 .logo {
   font-size: 1.5rem;
   font-weight: bold;
@@ -27,23 +27,23 @@ body {
   align-items: center;
   gap: 10px;
 }
- 
+
 .nav-links {
   display: flex;
   gap: 30px;
 }
- 
+
 .nav-links a {
   text-decoration: none;
   color: #555555;
   font-weight: 500;
   transition: color 0.3s;
 }
- 
+
 .nav-links a:hover {
   color: #8144fa;
 }
- 
+
 .auth-btn {
   background: linear-gradient(135deg, #8144fa, #05eb40);
   color: #ffffff;
@@ -54,12 +54,12 @@ body {
   box-shadow: 0 4px 15px rgba(129, 68, 250, 0.3);
   transition: transform 0.2s;
 }
- 
+
 .auth-btn:hover {
   transform: translateY(-2px);
 }
- 
 
+/* Главный баннер */
 .hero {
   display: flex;
   align-items: center;
@@ -70,29 +70,29 @@ body {
   border-radius: 16px;
   box-shadow: 0 5px 20px rgba(0,0,0,0.03);
 }
- 
+
 .hero-content {
   max-width: 550px;
 }
- 
+
 .hero-content h1 {
   font-size: 2.5rem;
   color: #120924;
   margin-bottom: 20px;
 }
- 
+
 .hero-content p {
   font-size: 1.1rem;
   color: #666;
   margin-bottom: 30px;
   line-height: 1.6;
 }
- 
+
 .hero-buttons {
   display: flex;
   gap: 15px;
 }
- 
+
 .btn-primary {
   padding: 12px 25px;
   border-radius: 30px;
@@ -104,12 +104,12 @@ body {
   transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 4px 15px rgba(129, 68, 250, 0.3);
 }
- 
+
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(5, 235, 64, 0.4);
 }
- 
+
 .btn-secondary {
   border: 2px solid #8144fa;
   color: #8144fa;
@@ -119,19 +119,19 @@ body {
   font-weight: bold;
   transition: background 0.3s, color 0.3s;
 }
- 
+
 .btn-secondary:hover {
   background: #8144fa;
   color: #fff;
 }
- 
+
 .hero-image img {
   width: 450px;
   border-radius: 12px;
   object-fit: cover;
 }
- 
 
+/* Статистика */
 .stats {
   display: flex;
   justify-content: space-around;
@@ -141,42 +141,42 @@ body {
   margin: 0 40px 40px 40px;
   border-radius: 16px;
 }
- 
+
 .stat-item h2 {
   font-size: 2.5rem;
   color: #05eb40;
   margin: 0 0 5px 0;
 }
- 
+
 .stat-item p {
   margin: 0;
   color: rgba(255, 255, 255, 0.8);
 }
- 
 
+/* Секция с активностями (квадратиками) */
 .activities-section {
   padding: 20px 80px 60px 80px;
 }
- 
+
 .activities-section h2 {
   text-align: center;
   font-size: 2rem;
   color: #120924;
   margin-bottom: 10px;
 }
- 
+
 .section-subtitle {
   text-align: center;
   color: #666;
   margin-bottom: 40px;
 }
- 
+
 .activities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
 }
- 
+
 .activity-card {
   background: #ffffff;
   border-radius: 12px;
@@ -184,23 +184,23 @@ body {
   box-shadow: 0 5px 15px rgba(0,0,0,0.05);
   transition: transform 0.3s, box-shadow 0.3s;
 }
- 
+
 .activity-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 25px rgba(129, 68, 250, 0.15);
 }
- 
+
 .card-img {
   height: 180px;
   background-size: cover;
   background-position: center;
-  background-color: #ddd; 
+  background-color: #ddd; /* Заглушка, если картинка не загрузится */
 }
- 
+
 .card-content {
   padding: 20px;
 }
- 
+
 .district-tag {
   display: inline-block;
   font-size: 0.85rem;
@@ -210,119 +210,36 @@ body {
   border-radius: 20px;
   margin-bottom: 10px;
 }
- 
+
 .card-content h3 {
   font-size: 1.2rem;
   margin: 0 0 10px 0;
   color: #333;
 }
- 
+
 .card-content p {
   font-size: 0.95rem;
   color: #666;
   margin-bottom: 20px;
   line-height: 1.5;
 }
- 
+
 .card-link {
   color: #05eb40;
   font-weight: bold;
   text-decoration: none;
   transition: color 0.2s;
 }
- 
+
 .card-link:hover {
   color: #8144fa;
 }
- 
 
+/* Футер */
 footer {
   text-align: center;
   padding: 20px;
   background: #ffffff;
   color: #777;
   border-top: 1px solid #eaeaea;
-}
- 
-
-.nav-auth {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
- 
-.user-greeting {
-  color: #555555;
-  font-weight: 500;
-}
- 
-.dashboard-container {
-  padding: 30px 80px 60px 80px;
-}
- 
-.dashboard-intro {
-  margin-bottom: 25px;
-}
- 
-.dashboard-intro h2 {
-  font-size: 2rem;
-  color: #120924;
-  margin: 0 0 8px 0;
-}
- 
-.dashboard-intro p {
-  color: #666;
-  margin: 0;
-  line-height: 1.6;
-}
- 
-.submit-btn {
-  display: inline-block;
-  padding: 10px 20px;
-  border: 0;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #8144fa, #05eb40);
-  color: #ffffff;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(129, 68, 250, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
- 
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(5, 235, 64, 0.4);
-}
- 
-.submit-btn:disabled {
-  background: #eeebf6;
-  color: #9893ad;
-  box-shadow: none;
-  cursor: not-allowed;
-  transform: none;
-}
- 
-
-@media (max-width: 760px) {
-  .navbar {
-    padding: 14px 18px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .nav-auth {
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .dashboard-container {
-    padding: 20px 16px 50px 16px;
-  }
-  .dashboard-intro h2 {
-    font-size: 1.5rem;
-  }
-  .activities-grid {
-    grid-template-columns: 1fr;
-  }
 }

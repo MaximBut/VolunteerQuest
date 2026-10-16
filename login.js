@@ -2,67 +2,108 @@ const loginForm = document.getElementById("login");
 const registerForm = document.getElementById("register");
 const btn = document.getElementById("btn");
 
-// Обробка ВХОДУ
-loginForm.addEventListener('submit', (e) => {
+// Обробка ВХОДУ через сервер та базу даних MySQL
+loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const usernameInput = loginForm.querySelector('input[name="username"]')?.value || loginForm.querySelector('input:nth-of-type(1)').value;
-  const passwordInput = loginForm.querySelector('input[name="password"]')?.value || loginForm.querySelector('input:nth-of-type(2)').value;
+  const formData = new FormData(loginForm);
+  const data = Object.fromEntries(formData);
 
-  // Шукаємо збереженого користувача
-  const savedUser = JSON.parse(localStorage.getItem('currentUser'));
-
-  if (savedUser && savedUser.username === usernameInput && savedUser.password === passwordInput) {
-    Swal.fire({
-      icon: 'success',
-      title: 'Вхід успішний!',
-      confirmButtonText: 'Гаразд',
-      confirmButtonColor: '#8144fa'
-    }).then(() => {
-      // Перенаправлення залежно від ролі або на головну
-      if (savedUser.role === 'organizer') {
-        window.location.href = 'organizer-dashboard.html';
-      } else {
-        window.location.href = 'volunteer-dashboard.html';
-      }
+  try {
+    const response = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
-  } else {
+
+    const textResult = await response.text();
+    let result;
+    
+    try {
+      result = JSON.parse(textResult);
+    } catch {
+      result = { success: false, message: textResult };
+    }
+
+    if (response.ok && result.success) {
+      localStorage.setItem('userId', result.userId);
+      localStorage.setItem('username', result.username);
+      localStorage.setItem('userRole', result.role);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Вхід успішний!',
+        confirmButtonText: 'Гаразд',
+        confirmButtonColor: '#8144fa'
+      }).then(() => {
+        window.location.href = result.redirect;
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Помилка!',
+        text: result.message || 'Невірний логін або пароль.',
+        confirmButtonText: 'Спробувати знову',
+        confirmButtonColor: '#8144fa'
+      });
+    }
+  } catch (error) {
+    console.error("Помилка:", error);
     Swal.fire({
       icon: 'error',
-      title: 'Помилка!',
-      text: 'Невірний логін або пароль, або акаунт не створено.',
-      confirmButtonText: 'Спробувати знову',
+      title: 'Помилка мережі',
+      text: 'Не вдалося підключитися до сервера.',
+      confirmButtonText: 'ОК',
       confirmButtonColor: '#8144fa'
     });
   }
 });
 
-// Обробка РЕЄСТРАЦІЇ
-registerForm.addEventListener('submit', (e) => {
+// Обробка РЕЄСТРАЦІЇ через сервер та запис в MySQL
+registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const inputs = registerForm.querySelectorAll('input');
-  const roleSelect = registerForm.querySelector('select');
+  const formData = new FormData(registerForm);
+  const data = Object.fromEntries(formData);
 
-  const userData = {
-    username: inputs[0].value,
-    email: inputs[1].value,
-    password: inputs[2].value,
-    role: roleSelect ? roleSelect.value : 'volunteer'
-  };
+  try {
+    const response = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
 
-  // Зберігаємо користувача в localStorage
-  localStorage.setItem('currentUser', JSON.stringify(userData));
+    const textResult = await response.text();
 
-  Swal.fire({
-    icon: 'success',
-    title: 'Успішно!',
-    text: 'Реєстрація пройшла успішно! Тепер увійдіть у систему.',
-    confirmButtonText: 'ОК',
-    confirmButtonColor: '#05eb40'
-  }).then(() => {
-    showLogin();
-  });
+    if (response.ok) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Успішно!',
+        text: 'Реєстрація пройшла успішно! Тепер увійдіть у систему.',
+        confirmButtonText: 'ОК',
+        confirmButtonColor: '#05eb40'
+      }).then(() => {
+        showLogin();
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Помилка!',
+        text: textResult || 'Користувач з такими даними вже існує.',
+        confirmButtonText: 'Спробувати знову',
+        confirmButtonColor: '#8144fa'
+      });
+    }
+  } catch (error) {
+    console.error("Помилка:", error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Помилка мережі',
+      text: 'Не вдалося звʼязатися з сервером.',
+      confirmButtonText: 'ОК',
+      confirmButtonColor: '#8144fa'
+    });
+  }
 });
 
 function showLogin() {
