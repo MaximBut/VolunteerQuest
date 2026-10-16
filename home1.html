@@ -77,62 +77,39 @@
       </div>
     </div>
 
-    <!-- Сітка карток активностей -->
-    <div class="activities-grid" id="activitiesGrid">
-      
-      <!-- Картка 1 -->
-      <div class="activity-card" data-category="pets" data-district="sobornyi">
-        <div class="card-img" style="background-image: url('images/activity1.jpg');">
-          <span class="category-tag">Пітомці</span>
-        </div>
-        <div class="card-content">
-          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Соборний район</span>
-          <h3>Допомога притулку для тварин</h3>
-          <p>Потрібні волонтери для вигулу собак, прибирання вольєрів та роздачі корму.</p>
-          <a href="login.html" class="card-link">Взяти участь →</a>
-        </div>
-      </div>
+    <div class="activities-grid" id="activitiesGrid"></div>
 
-      <!-- Картка 2 -->
-      <div class="activity-card" data-category="cleaning" data-district="shevchenkivskyi">
-        <div class="card-img" style="background-image: url('images/activity2.jpg');">
-          <span class="category-tag">Прибирання</span>
-        </div>
-        <div class="card-content">
-          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Шевченківський район</span>
-          <h3>Тойло-уборка паркової зони</h3>
-          <p>Екологічний суботник: прибирання сміття у парку ім. Шевченка разом з командою.</p>
-          <a href="login.html" class="card-link">Взяти участь →</a>
-        </div>
-      </div>
+<script>
+  async function loadHomeTasks() {
+    try {
+      const res = await fetch('/api/tasks');
+      const tasks = await res.json();
+      const grid = document.getElementById('activitiesGrid');
 
-      <!-- Картка 3 -->
-      <div class="activity-card" data-category="humanitarian" data-district="tsentralnyi">
-        <div class="card-img" style="background-image: url('images/activity3.jpg');">
-          <span class="category-tag">Гуманітарка</span>
-        </div>
-        <div class="card-content">
-          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Центральний район</span>
-          <h3>Фасування продуктових наборів</h3>
-          <p>Збір та пакування гуманітарних наборів для внутрішньо переміщених осіб.</p>
-          <a href="login.html" class="card-link">Взяти участь →</a>
-        </div>
-      </div>
+      if (!tasks.length) {
+        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:#666;">Поки немає активних завдань.</p>';
+        return;
+      }
 
-      <!-- Картка 4 -->
-      <div class="activity-card" data-category="military" data-district="samarskyi">
-        <div class="card-img" style="background-image: url('images/activity1.jpg');">
-          <span class="category-tag">Допомога армії</span>
+      grid.innerHTML = tasks.map(task => `
+        <div class="activity-card" data-category="${task.category || 'all'}" data-district="${task.district}">
+          <div class="card-img" style="background-image: url('images/activity1.jpg');">
+            <span class="category-tag">${task.district}</span>
+          </div>
+          <div class="card-content">
+            <span class="district-tag"><i class="fa-solid fa-location-dot"></i> ${task.district}</span>
+            <h3>${task.title}</h3>
+            <p>${task.description}</p>
+            <a href="login.html" class="card-link">Взяти участь →</a>
+          </div>
         </div>
-        <div class="card-content">
-          <span class="district-tag"><i class="fa-solid fa-location-dot"></i> Самарський район</span>
-          <h3>Плетіння маскувальних сіток</h3>
-          <p>Виготовлення захисних сіток для військових підрозділів на передовій.</p>
-          <a href="login.html" class="card-link">Взяти участь →</a>
-        </div>
-      </div>
-
-    </div>
+      `).join('');
+    } catch (e) {
+      console.error("Помилка завантаження:", e);
+    }
+  }
+  loadHomeTasks();
+</script>
   </section>
 
   <!-- Футер -->

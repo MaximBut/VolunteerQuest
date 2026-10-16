@@ -6,8 +6,8 @@
   <title>Кабінет Волонтера — VolunQuest</title>
   <link rel="stylesheet" href="style1.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    /* Додаткові стилі кабінету (префікс vq-), щоб не чіпати style.css */
     .vq-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
     .vq-tab{padding:10px 20px;border-radius:20px;border:2px solid transparent;background:#fff;font:inherit;font-weight:bold;color:#555;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:color .2s,transform .2s}
     .vq-tab:hover{color:#8144fa;transform:translateY(-2px)}
@@ -35,7 +35,6 @@
     .vq-empty b{display:block;color:#120924;margin-bottom:6px}
     .vq-h{margin:30px 0 14px;font-size:1.2rem}
 
-    /* профіль */
     .vq-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,.05)}
     .vq-prof{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
     .vq-ava{width:72px;height:72px;border-radius:22px;background:#8144fa;color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none;box-shadow:6px 6px 0 #05eb40}
@@ -63,7 +62,6 @@
     .vq-reset{margin-top:26px;text-align:center}
     .vq-reset button{border:1.5px solid #e4def5;background:#fff;border-radius:999px;padding:8px 16px;font:inherit;cursor:pointer;color:#65617c}
 
-    /* модальні вікна */
     .vq-ov{position:fixed;inset:0;background:rgba(23,20,43,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
     .vq-sheet{background:#fff;width:100%;max-width:540px;max-height:90vh;overflow:auto;border-radius:24px;padding:24px}
     .vq-sheet h2{margin:8px 0}
@@ -86,7 +84,7 @@
     </div>
     <div class="nav-auth">
       <span class="user-greeting" id="greet">Привіт, Волонтере!</span>
-      <a href="home1.html" class="auth-btn" style="background: #ff5c5c;">Вийти</a>
+      <a href="login.html" class="auth-btn" style="background: #ff5c5c;" onclick="localStorage.clear()">Вийти</a>
     </div>
   </header>
 
@@ -106,7 +104,9 @@
 (function () {
   'use strict';
 
-  var KEY = 'volunquest.volunteer.v1';
+  var userId = localStorage.getItem('userId') || 1;
+  var username = localStorage.getItem('username') || 'Волонтер';
+  
   var LEVELS = ['Новачок', 'Помічник', 'Активіст', 'Герой міста', 'Легенда Дніпра'];
   var CATS = {
     animals: { n: 'Тварини', e: '🐾' },
@@ -115,46 +115,14 @@
     city:    { n: 'Місто', e: '🗺️' }
   };
 
-  var QUESTS = [
-    { id: 1, img: 1, title: 'Фасування продуктових наборів', cat: 'aid', district: 'Соборний район', hours: 3, xp: 55, pts: 45, slots: 12, joined: 5, lvl: 'Легко',
-      short: 'Допомога у зборі та пакуванні гуманітарної допомоги для переселенців та літніх людей.',
-      desc: 'Збираємо набори для переселенців і літніх людей: крупи, консерви, олія. Працюємо за конвеєром, вистачить будь-якого темпу.',
-      steps: ['Прийдіть на пункт пакування', 'Станьте до свого етапу конвеєра', 'Перевірте комплектність наборів'] },
-    { id: 2, img: 2, title: 'Плетіння маскувальних сіток', cat: 'aid', district: 'Шевченківський район', hours: 3, xp: 60, pts: 50, slots: 20, joined: 11, lvl: 'Середньо',
-      short: 'Плетіння захисних сіток для підрозділів ТрО. Запрошуємо всіх охочих.',
-      desc: 'Допомагаємо виготовляти маскувальні сітки для військових. Навчимо на місці, потрібні лише вільні руки та бажання допомогти.',
-      steps: ['Прийдіть у майстерню та отримайте інструктаж', 'Сплетіть свою ділянку сітки', 'Здайте готову ділянку координатору'] },
-    { id: 3, img: 3, title: 'Адресна доставка допомоги', cat: 'aid', district: 'Самарський район', hours: 2, xp: 80, pts: 70, slots: 10, joined: 7, lvl: 'Складно',
-      short: 'Потрібні волонтери з авто для доставки важких пакунків маломобільним мешканцям.',
-      desc: 'Розвозимо пакунки з допомогою за списком адрес. Потрібне авто та фізична витривалість: пакунки важкі.',
-      steps: ['Заберіть пакунки та список адрес на складі', 'Доставте допомогу за маршрутом', 'Відмітьте кожну доставку в списку'] },
-    { id: 4, img: 1, title: 'Вигуляти собаку з притулку', cat: 'animals', district: 'Самарський район', hours: 2, xp: 40, pts: 30, slots: 6, joined: 3, lvl: 'Легко',
-      short: 'Притулку бракує рук, щоб кожен собака щодня виходив на прогулянку.',
-      desc: 'Ви берете одного пса на повідку й гуляєте з ним близько двох годин у вказаній зоні.',
-      steps: ['Прийдіть до притулку й отримайте собаку та повідок', 'Вигуляйте його у вказаній зоні', 'Поверніть собаку й повідомте волонтерам, як усе минуло'] },
-    { id: 5, img: 2, title: 'Прибрати парк', cat: 'eco', district: 'Центр', hours: 3, xp: 60, pts: 50, slots: 20, joined: 11, lvl: 'Середньо',
-      short: 'Спільне прибирання алей і газонів. Рукавички та мішки видаємо на місці.',
-      desc: 'Спільне прибирання парку. Рукавички та мішки на місці, потрібен лише зручний одяг.',
-      steps: ['Зустріч на вході в парк', 'Отримайте рукавички та мішки', 'Прибирайте свою ділянку', 'Здайте повні мішки координатору'] },
-    { id: 6, img: 3, title: 'Висадити дерева на набережній', cat: 'eco', district: 'Амур-Нижньодніпровський район', hours: 4, xp: 75, pts: 65, slots: 25, joined: 9, lvl: 'Середньо',
-      short: 'Висаджуємо саджанці вздовж набережної. Інструктор покаже, як правильно садити.',
-      desc: 'Висаджуємо саджанці вздовж набережної. Лопати видаємо на місці.',
-      steps: ['Інструктаж на місці', 'Посадіть своє дерево', 'Полийте й підпишіть табличку'] },
-    { id: 7, img: 1, title: 'Нагодувати безпритульних котів', cat: 'animals', district: 'Новокодацький район', hours: 1, xp: 25, pts: 20, slots: 8, joined: 2, lvl: 'Легко',
-      short: 'Короткий обхід з кормом за списком точок у дворах. Для тих, хто має лише годину.',
-      desc: 'Короткий обхід з кормом за списком точок у дворах.',
-      steps: ['Заберіть корм і маршрут', 'Обійдіть точки зі списку', 'Позначте, де кіт не прийшов'] },
-    { id: 8, img: 2, title: 'Читання дітям у бібліотеці', cat: 'city', district: 'Чечелівський район', hours: 2, xp: 45, pts: 35, slots: 6, joined: 1, lvl: 'Середньо',
-      short: 'Читаємо вголос казки для дітей з родин, які переїхали до міста.',
-      desc: 'Читаємо вголос казки для дітей з родин, які переїхали до міста. Книжки підготовлені.',
-      steps: ['Оберіть книжку з добірки', 'Прочитайте її групі дітей', 'Проведіть коротке обговорення'] }
-  ];
+  var QUESTS = []; // Динамічно завантажуються з бази даних MySQL через /api/tasks
+  var USER_TASKS = { taken: [], done: [] };
 
   var ACH = [
-    { id: 'a1', e: '🌱', n: 'Перший крок',      d: 'Виконайте перше завдання',       t: function () { return S.done.length >= 1; } },
-    { id: 'a2', e: '🔥', n: 'Тріо добрих справ', d: 'Виконайте 3 завдання',           t: function () { return S.done.length >= 3; } },
-    { id: 'a3', e: '🐕', n: 'Друг тварин',      d: 'Завдання категорії «Тварини»',    t: function () { return hasCat('animals'); } },
-    { id: 'a4', e: '🌍', n: 'Чисте місто',      d: 'Завдання категорії «Екологія»',   t: function () { return hasCat('eco'); } },
+    { id: 'a1', e: '🌱', n: 'Перший крок',     d: 'Виконайте перше завдання',     t: function () { return USER_TASKS.done.length >= 1; } },
+    { id: 'a2', e: '🔥', n: 'Тріо добрих справ', d: 'Виконайте 3 завдання',          t: function () { return USER_TASKS.done.length >= 3; } },
+    { id: 'a3', e: '🐕', n: 'Друг тварин',     d: 'Завдання категорії «Тварини»',   t: function () { return hasCat('animals'); } },
+    { id: 'a4', e: '🌍', n: 'Чисте місто',     d: 'Завдання категорії «Екологія»',  t: function () { return hasCat('eco'); } },
     { id: 'a5', e: '🤝', n: 'Рука допомоги',    d: 'Завдання категорії «Гумдопомога»', t: function () { return hasCat('aid'); } },
     { id: 'a6', e: '⭐', n: 'Активіст',         d: 'Досягніть 3 рівня',              t: function () { return lvl(S.xp) >= 3; } },
     { id: 'a7', e: '⏱️', n: '10 годин добра',   d: '10 годин волонтерської допомоги', t: function () { return hours() >= 10; } }
@@ -165,34 +133,28 @@
     { n: 'Дарина П.', xp: 255 }, { n: 'Артем Л.', xp: 190 }
   ];
 
-  /* ---------- стан ---------- */
-  function fresh() { return { name: 'Волонтер', xp: 0, points: 0, taken: [], done: [], tab: 'tasks', filter: 'all', q: '' }; }
-  function load() {
-    try { var s = localStorage.getItem(KEY); if (s) return Object.assign(fresh(), JSON.parse(s)); } catch (e) {}
-    return fresh();
-  }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
-  var S = load();
+  function fresh() { return { name: username, xp: 0, points: 0, tab: 'tasks', filter: 'all', q: '' }; }
+  var S = fresh();
   var modal = null;
 
-  /* ---------- допоміжні ---------- */
-  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function esc(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function lvl(xp) { return Math.floor(xp / 100) + 1; }
   function lvName(l) { return LEVELS[Math.min(l - 1, LEVELS.length - 1)]; }
   function byId(id) { return QUESTS.filter(function (q) { return String(q.id) === String(id); })[0]; }
-  function isDone(id) { return S.done.some(function (d) { return String(d.id) === String(id); }); }
-  function isTaken(id) { return S.taken.some(function (t) { return String(t) === String(id); }); }
-  function hasCat(c) { return S.done.some(function (d) { var q = byId(d.id); return q && q.cat === c; }); }
-  function hours() { return S.done.reduce(function (a, d) { var q = byId(d.id); return a + (q ? q.hours : 0); }, 0); }
+  function isDone(id) { return USER_TASKS.done.some(function (d) { return String(d.id) === String(id); }); }
+  function isTaken(id) { return USER_TASKS.taken.some(function (t) { return String(t.task_id) === String(id) || String(t) === String(id); }); }
+  function hasCat(c) { return USER_TASKS.done.some(function (d) { var q = byId(d.id); return q && q.cat === c; }); }
+  function hours() { return USER_TASKS.done.reduce(function (a, d) { var q = byId(d.id); return a + (q ? (q.hours || 2) : 0); }, 0); }
   function unlocked() { return ACH.filter(function (a) { return a.t(); }).map(function (a) { return a.id; }); }
   function $(id) { return document.getElementById(id); }
 
   function toast(msg) {
     var t = document.createElement('div');
-    t.className = 'vq-toast'; t.setAttribute('role', 'status'); t.textContent = msg;
+    t.className = 'vq-toast'; t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(function () { t.remove(); }, 2300);
   }
+
   function burst() {
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var cols = ['#05eb40', '#8144fa', '#05eb40', '#b99aff'];
@@ -208,7 +170,53 @@
     }
   }
 
-  /* ---------- відображення ---------- */
+  // Завантаження завдань та прогресу волонтера з бази даних
+  async function syncWithDatabase() {
+    try {
+      // 1. Отримуємо всі завдання з бази (які створюють і організатори, і дефолтні)[cite: 13]
+      var resTasks = await fetch('/api/tasks');
+      var tasksData = await resTasks.json();
+
+      QUESTS = tasksData.map(function(t) {
+        return {
+          id: t.id,
+          img: (t.id % 3) + 1,
+          title: t.title,
+          cat: t.category || 'aid',
+          district: t.district || 'Соборний район',
+          hours: 2,
+          xp: t.reward_points || 50,
+          pts: t.reward_coins || 10,
+          slots: 15,
+          joined: 4,
+          lvl: 'Середньо',
+          short: t.description ? t.description.slice(0, 90) + '...' : 'Волонтерська ініціатива у Дніпрі.',
+          desc: t.description,
+          steps: ['Прибути на місце у вказаний час', 'Виконати поставлене завдання', 'Звітувати координатору']
+        };
+      });
+
+      // 2. Отримуємо профіль та взяті завдання поточного користувача з бази[cite: 13]
+      var resUser = await fetch('/api/users/' + userId);
+      if (resUser.ok) {
+        var userData = await resUser.json();
+        S.xp = userData.xp || 0;
+        S.points = userData.coins || 0;
+      }
+
+      var resUserTasks = await fetch('/api/user-tasks?user_id=' + userId);
+      if (resUserTasks.ok) {
+        var utData = await resUserTasks.json();
+        USER_TASKS.taken = utData.filter(function(x) { return x.status === 'in_progress'; });
+        USER_TASKS.done = utData.filter(function(x) { return x.status === 'completed'; });
+      }
+
+      render();
+    } catch (e) {
+      console.error("Помилка синхронізації з базою даних:", e);
+    }
+  }
+
   function greet() {
     var l = lvl(S.xp);
     $('greet').textContent = 'Привіт, ' + S.name + '! · Рівень ' + l + ' · ' + S.points + ' балів';
@@ -217,7 +225,7 @@
   function tabs() {
     var items = [['tasks', 'Завдання'], ['mine', 'Мої завдання'], ['profile', 'Профіль']];
     $('tabs').innerHTML = items.map(function (i) {
-      var cnt = (i[0] === 'mine' && S.taken.length) ? '<span class="vq-count">' + S.taken.length + '</span>' : '';
+      var cnt = (i[0] === 'mine' && USER_TASKS.taken.length) ? '<span class="vq-count">' + USER_TASKS.taken.length + '</span>' : '';
       return '<button type="button" class="vq-tab" data-a="tab" data-t="' + i[0] + '"' + (S.tab === i[0] ? ' aria-current="page"' : '') + '>' + i[1] + cnt + '</button>';
     }).join('');
   }
@@ -228,9 +236,8 @@
     return '';
   }
 
-  // Картка у тому ж стилі, що й на головній сторінці
   function card(q, mode) {
-    var c = CATS[q.cat];
+    var c = CATS[q.cat] || CATS.aid;
     var img = "background-image:url('images/activity" + q.img + ".jpg'),linear-gradient(135deg,#8144fa,#05eb40);";
     var btns;
     if (mode === 'active') {
@@ -278,7 +285,7 @@
   }
 
   function mineView() {
-    var act = S.taken.map(byId).filter(Boolean);
+    var act = USER_TASKS.taken.map(function(t) { return byId(t.task_id || t); }).filter(Boolean);
     var h = '<h3 class="vq-h" style="margin-top:0">Активні завдання</h3>';
     if (!act.length) {
       h += '<div class="vq-empty"><b>Активних завдань немає</b>Оберіть ініціативу у розділі «Завдання» й візьміть її в роботу.<br><br>' +
@@ -286,11 +293,11 @@
     } else {
       h += '<div class="activities-grid">' + act.map(function (q) { return card(q, 'active'); }).join('') + '</div>';
     }
-    h += '<h3 class="vq-h">Виконано (' + S.done.length + ')</h3>';
-    var done = S.done.slice().reverse().map(function (d) { var q = byId(d.id); return q ? { q: q, d: d } : null; }).filter(Boolean);
+    h += '<h3 class="vq-h">Виконано (' + USER_TASKS.done.length + ')</h3>';
+    var done = USER_TASKS.done.slice().reverse().map(function (d) { var q = byId(d.task_id || d.id); return q ? { q: q, d: d } : null; }).filter(Boolean);
     if (!done.length) h += '<div class="vq-empty">Тут з’являтимуться виконані завдання.</div>';
     else h += '<div class="activities-grid">' + done.map(function (x) {
-      return card(x.q, 'done').replace('<div class="vq-meta">', '<div class="vq-meta"><span>📅 ' + esc(x.d.date) + '</span>');
+      return card(x.q, 'done');
     }).join('') + '</div>';
     return h;
   }
@@ -307,7 +314,7 @@
           '<div class="vq-sub">' + inl + ' / 100 XP · до рівня ' + (l + 1) + ': ' + (100 - inl) + ' XP</div>' +
         '</div></div>' +
         '<div class="vq-stats">' +
-          '<div class="vq-stat"><b>' + S.done.length + '</b><span>завдань</span></div>' +
+          '<div class="vq-stat"><b>' + USER_TASKS.done.length + '</b><span>завдань</span></div>' +
           '<div class="vq-stat"><b>' + hours() + '</b><span>годин допомоги</span></div>' +
           '<div class="vq-stat"><b>' + S.xp + '</b><span>XP усього</span></div>' +
           '<div class="vq-stat"><b>' + S.points + '</b><span>балів</span></div>' +
@@ -319,15 +326,14 @@
       }).join('') + '</div>' +
       '<h3 class="vq-h">Рейтинг волонтерів</h3><div class="vq-card">' +
         board.map(function (b, i) { return '<div class="vq-lb' + (b.you ? ' you' : '') + '"><span class="n">' + (i + 1) + '</span><span class="nm">' + esc(b.n) + '</span><span>' + b.xp + ' XP</span></div>'; }).join('') +
-      '</div>' +
-      '<div class="vq-reset"><button type="button" data-a="reset">Скинути прогрес</button></div>';
+      '</div>';
   }
 
   function modalHtml() {
     if (!modal) return '';
     if (modal.t === 'quest') {
       var q = byId(modal.id); if (!q) return '';
-      var c = CATS[q.cat];
+      var c = CATS[q.cat] || CATS.aid;
       var btn = isDone(q.id) ? '<button type="button" class="submit-btn" disabled style="width:100%;padding:12px">Завдання виконано</button>'
               : isTaken(q.id) ? '<button type="button" class="submit-btn" data-a="complete" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer;background:#05eb40;color:#120924">Завершити завдання</button>'
               : '<button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer">Взяти в роботу</button>';
@@ -335,7 +341,7 @@
         '<button type="button" class="vq-x" data-a="close" aria-label="Закрити">✕</button>' +
         '<span class="district-tag"><i class="fa-solid fa-location-dot"></i> ' + esc(q.district) + '</span>' +
         '<h2>' + esc(q.title) + '</h2>' +
-        '<div class="vq-meta"><span>' + c.e + ' ' + c.n + '</span><span>⚡ ' + q.lvl + '</span><span>⏱ ' + q.hours + ' год</span><span>👥 ' + (q.joined + (isTaken(q.id) || isDone(q.id) ? 1 : 0)) + ' / ' + q.slots + '</span></div>' +
+        '<div class="vq-meta"><span>' + c.e + ' ' + c.n + '</span><span>⚡ ' + q.lvl + '</span><span>⏱ ' + q.hours + ' год</span></div>' +
         '<p style="margin:14px 0">' + esc(q.desc) + '</p>' +
         '<b>Що робити</b><ol>' + q.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
         '<div class="vq-meta" style="margin:12px 0 18px"><span class="vq-rw">+' + q.xp + ' XP</span><span class="vq-rw">+' + q.pts + ' балів</span></div>' +
@@ -347,12 +353,6 @@
         '<div style="font-size:3rem" aria-hidden="true">🎉</div><h2>Завдання виконано!</h2>' +
         '<p style="color:#65617c">Дякуємо за допомогу: «' + esc(r.title) + '»</p>' +
         '<div class="vq-big">+' + r.xp + ' XP</div><p><b>+' + r.pts + ' балів</b> на рахунку</p>' +
-        (modal.up ? '<div class="vq-note">Новий рівень: ' + lvl(S.xp) + ' · ' + lvName(lvl(S.xp)) + '</div>'
-                  : '<div class="vq-bar"><i style="width:' + (S.xp % 100) + '%"></i></div><div class="vq-sub">До наступного рівня: ' + (100 - S.xp % 100) + ' XP</div>') +
-        (modal.ach.length ? '<div style="margin-top:16px"><b>Нові досягнення</b>' + modal.ach.map(function (id) {
-          var a = ACH.filter(function (x) { return x.id === id; })[0];
-          return '<div class="vq-ach" style="margin-top:8px;justify-content:center"><div class="vq-ai">' + a.e + '</div><span>' + a.n + '</span></div>';
-        }).join('') + '</div>' : '') +
         '<div style="display:grid;gap:10px;margin-top:20px">' +
           '<button type="button" class="submit-btn" data-a="toProfile" style="padding:12px;cursor:pointer">Переглянути профіль</button>' +
           '<button type="button" class="submit-btn vq-ghost" data-a="close" style="padding:12px;cursor:pointer;background:#fff;color:#8144fa;border:1.5px solid #8144fa">До завдань</button>' +
@@ -369,40 +369,55 @@
     $('modal-root').innerHTML = modalHtml();
   }
 
-  /* ---------- дії ---------- */
   var A = {
-    tab: function (d) { S.tab = d.t; save(); render(); window.scrollTo(0, 0); },
-    filter: function (d) { S.filter = d.f; save(); render(); },
+    tab: function (d) { S.tab = d.t; render(); window.scrollTo(0, 0); },
+    filter: function (d) { S.filter = d.f; render(); },
     open: function (d) { modal = { t: 'quest', id: d.id }; render(); },
     close: function () { modal = null; render(); },
     closeBg: function (d, ev) { if (ev.target.classList.contains('vq-ov')) { modal = null; render(); } },
-    take: function (d) {
-      var q = byId(d.id); if (!q || isTaken(q.id) || isDone(q.id)) return;
-      S.taken.push(q.id); save(); modal = null; render();
-      toast('Завдання додано до «Мої завдання». Приємної допомоги!');
+    take: async function (d) {
+      var q = byId(d.id); if (!q) return;
+      try {
+        await fetch('/api/user-tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: userId, task_id: q.id, status: 'in_progress' })
+        });
+        modal = null;
+        await syncWithDatabase();
+        toast('Завдання додано до «Мої завдання».');
+      } catch (e) {
+        console.error(e);
+      }
     },
-    drop: function (d) {
-      S.taken = S.taken.filter(function (x) { return String(x) !== String(d.id); });
-      save(); render(); toast('Завдання скасовано');
+    drop: async function (d) {
+      try {
+        await fetch('/api/user-tasks/' + userId + '/' + d.id, { method: 'DELETE' });
+        await syncWithDatabase();
+        toast('Завдання скасовано');
+      } catch (e) {
+        console.error(e);
+      }
     },
-    complete: function (d) {
-      var q = byId(d.id); if (!q || isDone(q.id)) return;
-      var before = lvl(S.xp), had = unlocked();
-      S.xp += q.xp; S.points += q.pts;
-      S.taken = S.taken.filter(function (x) { return String(x) !== String(q.id); });
-      S.done.push({ id: q.id, date: new Date().toLocaleDateString('uk-UA') });
-      var fresh = unlocked().filter(function (x) { return had.indexOf(x) < 0; });
-      save();
-      modal = { t: 'result', id: q.id, up: lvl(S.xp) > before, ach: fresh };
-      render(); burst();
+    complete: async function (d) {
+      var q = byId(d.id); if (!q) return;
+      try {
+        await fetch('/api/complete-task', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: userId, task_id: q.id })
+        });
+        modal = { t: 'result', id: q.id };
+        await syncWithDatabase();
+        burst();
+      } catch (e) {
+        console.error(e);
+      }
     },
-    toProfile: function () { modal = null; S.tab = 'profile'; save(); render(); window.scrollTo(0, 0); },
+    toProfile: function () { modal = null; S.tab = 'profile'; render(); window.scrollTo(0, 0); },
     rename: function () {
       var n = prompt('Ваше ім’я:', S.name);
-      if (n && n.trim()) { S.name = n.trim().slice(0, 40); save(); render(); }
-    },
-    reset: function () {
-      if (confirm('Скинути весь прогрес (XP, бали, виконані завдання)?')) { S = fresh(); modal = null; save(); render(); window.scrollTo(0, 0); }
+      if (n && n.trim()) { S.name = n.trim().slice(0, 40); render(); }
     }
   };
 
@@ -417,7 +432,8 @@
     if (e.target.id === 'srch') { S.q = e.target.value; var l = $('list'); if (l) l.innerHTML = listHtml(); }
   });
 
-  render();
+  // Запускаємо первинну синхронізацію при завантаженні сторінки
+  syncWithDatabase();
 })();
 </script>
 </body>

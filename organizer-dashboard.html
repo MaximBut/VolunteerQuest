@@ -6,6 +6,7 @@
   <title>Кабінет Організатора — ДоброРазом</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="dashboard-body">
 
@@ -14,44 +15,149 @@
       <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>ДоброРазом | Організатор</span>
     </div>
     <div class="nav-auth">
-      <span class="user-greeting">Кабінет створення завдань</span>
-      <a href="index.html" class="auth-btn" style="background: #ff5c5c;">Вийти</a>
+      <span class="user-greeting" id="orgGreeting">Кабінет створення завдань</span>
+      <a href="index.html" class="auth-btn" style="background: #ff5c5c;" onclick="localStorage.clear()">Вийти</a>
     </div>
   </header>
 
-  <main class="dashboard-container" style="max-width: 600px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-    <h2 style="color: #120924; margin-bottom: 10px;">Створити нове волонтерське завдання</h2>
-    <p style="color: #666; margin-bottom: 20px;">Опишіть потребу, щоб залучити волонтерів у Дніпрі.</p>
+  <main class="dashboard-container" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
+    
+    <!-- Форма створення завдання -->
+    <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px;">
+      <h2 style="color: #120924; margin-bottom: 10px;">Створити нове волонтерське завдання</h2>
+      <p style="color: #666; margin-bottom: 20px;">Опишіть потребу, щоб залучити волонтерів у Дніпрі.</p>
 
-    <form id="createTaskForm" onsubmit="event.preventDefault(); alert('Завдання успішно створено та опубліковано!');">
-      <div style="margin-bottom: 15px;">
-        <label style="display:block; margin-bottom:5px; font-weight:600;">Назва завдання:</label>
-        <input type="text" class="input-field" placeholder="Наприклад: Роздача гарячих обідів" required style="border-bottom: 1px solid #ccc; width:100%;">
+      <form id="createTaskForm">
+        <div style="margin-bottom: 15px;">
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Назва завдання:</label>
+          <input type="text" name="title" class="input-field" placeholder="Наприклад: Роздача гарячих обідів" required style="border-bottom: 1px solid #ccc; width:100%;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Район Дніпра:</label>
+          <select name="district" class="input-field select-field" required style="border-bottom: 1px solid #ccc; width:100%; background:white; color:#333;">
+            <option value="" disabled selected>Оберіть район...</option>
+            <option value="Соборний район">Соборний район</option>
+            <option value="Шевченківський район">Шевченківський район</option>
+            <option value="Самарський район">Самарський район</option>
+            <option value="Центральний район">Центральний район</option>
+            <option value="Чечелівський район">Чечелівський район</option>
+            <option value="Новокодацький район">Новокодацький район</option>
+            <option value="Амур-Нижньодніпровський район">Амур-Нижньодніпровський район</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+          <label style="display:block; margin-bottom:5px; font-weight:600;">Детальний опис та адреса:</label>
+          <textarea name="description" class="input-field" rows="4" placeholder="Розкажіть, що потрібно робити і де..." required style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; width:100%; outline:none;"></textarea>
+        </div>
+
+        <!-- Приховані поля за замовчуванням для бази даних -->
+        <input type="hidden" name="date" value="Сьогодні">
+        <input type="hidden" name="duration" value="2 години">
+        <input type="hidden" name="reward_points" value="50">
+        <input type="hidden" name="reward_coins" value="10">
+
+        <button type="submit" class="submit-btn" style="width: 100%;">Опублікувати завдання</button>
+      </form>
+    </div>
+
+    <!-- Список створених завдань організатора -->
+    <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+      <h3 style="color: #120924; margin-bottom: 20px;">Мої опубліковані ініціативи</h3>
+      <div class="activities-grid" id="orgTasksGrid">
+        <p style="color: #666;">Завантаження ваших завдань...</p>
       </div>
+    </div>
 
-      <div style="margin-bottom: 15px;">
-        <label style="display:block; margin-bottom:5px; font-weight:600;">Район Дніпра:</label>
-        <select class="input-field select-field" required style="border-bottom: 1px solid #ccc; width:100%; background:white; color:#333;">
-          <option value="" disabled selected>Оберіть район...</option>
-          <option value="sobornyi">Соборний район</option>
-          <option value="shevchenkivskyi">Шевченківський район</option>
-          <option value="samarskyi">Самарський район</option>
-          <option value="tsentralnyi">Центральний район</option>
-          <option value="chechelivskyi">Чечелівський район</option>
-          <option value="novokodatskyi">Новокодацький район</option>
-          <option value="amur-niżynśkyi">Амур-Нижньодніпровський район</option>
-          <option value="samarskyi">Самарський район</option>
-        </select>
-      </div>
-
-      <div style="margin-bottom: 15px;">
-        <label style="display:block; margin-bottom:5px; font-weight:600;">Детальний опис та адреса:</label>
-        <textarea class="input-field" rows="4" placeholder="Розкажіть, що потрібно робити і де..." required style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; width:100%; outline:none;"></textarea>
-      </div>
-
-      <button type="submit" class="submit-btn" style="width: 100%;">Опублікувати завдання</button>
-    </form>
   </main>
+
+  <script>
+    // Перевірка авторизації при завантаженні
+    const userId = localStorage.getItem('userId');
+    const username = localStorage.getItem('username');
+    const userRole = localStorage.getItem('userRole');
+
+    if (!userId || userRole !== 'organizer') {
+      window.location.href = 'login.html';
+    } else {
+      document.getElementById('orgGreeting').textContent = `Привіт, ${username} (Організатор)`;
+    }
+
+    // Завантаження створених завдань
+    async function loadOrganizerTasks() {
+      try {
+        const response = await fetch('/api/tasks');
+        const tasks = await response.json();
+        const grid = document.getElementById('orgTasksGrid');
+
+        // Фільтруємо завдання конкретного організатора (або показуємо всі, залежно від логіки)
+        const myTasks = tasks.filter(t => String(t.organizer_id) === String(userId));
+
+        if (!myTasks.length) {
+          grid.innerHTML = '<p style="color: #666; grid-column: 1/-1;">Ви ще не створили жодного завдання.</p>';
+          return;
+        }
+
+        grid.innerHTML = myTasks.map(task => `
+          <div class="activity-card" style="margin-bottom: 20px; background: #f9f9fb; border: 1px solid #eaeaea;">
+            <div class="card-content">
+              <span class="district-tag"><i class="fa-solid fa-location-dot"></i> ${task.district}</span>
+              <h3>${task.title}</h3>
+              <p>${task.description}</p>
+              <div style="font-size: 0.85rem; color: #8144fa; margin-bottom: 10px;">
+                Нагорода: +${task.reward_points} XP / +${task.reward_coins} монет
+              </div>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error("Помилка завантаження завдань:", error);
+      }
+    }
+
+    loadOrganizerTasks();
+
+    // Відправка форми створення завдання на сервер
+    document.getElementById('createTaskForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+      data.organizer_id = userId; // прив'язуємо до ID поточного організатора[cite: 13]
+
+      try {
+        const response = await fetch('/api/tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Успішно!',
+            text: 'Завдання успішно створено та опубліковано в загальній базі!',
+            confirmButtonColor: '#8144fa'
+          }).then(() => {
+            e.target.reset();
+            loadOrganizerTasks(); // оновлюємо список
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Помилка',
+            text: 'Не вдалося створити завдання.',
+            confirmButtonColor: '#8144fa'
+          });
+        }
+      } catch (error) {
+        console.error("Помилка мережі:", error);
+      }
+    });
+  </script>
 
 </body>
 </html>
