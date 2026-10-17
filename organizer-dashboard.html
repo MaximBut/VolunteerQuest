@@ -4,9 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Кабінет Організатора — ДоброРазом</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet" href="pages.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    .dashboard-container { max-width: 1200px; margin: 0 auto; padding: 30px 40px; }
+    .dashboard-intro { margin-bottom: 25px; }
+    .dashboard-intro h2 { font-size: 2rem; color: #120924; margin-bottom: 8px; }
+    .dashboard-intro p { color: #666; font-size: 1.05rem; }
+
+    .vq-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+    .vq-tab { padding: 10px 22px; border-radius: 20px; border: 2px solid transparent; background: #fff; font: inherit; font-weight: bold; color: #555; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.05); transition: color .2s, transform .2s; }
+    .vq-tab:hover { color: #8144fa; transform: translateY(-2px); }
+    .vq-tab[aria-current="page"] { background: linear-gradient(135deg, #8144fa, #05eb40); color: #fff; box-shadow: 0 4px 15px rgba(129,68,250,.3); }
+
+    .org-card { background: #fff; border-radius: 16px; padding: 30px; box-shadow: 0 5px 20px rgba(0,0,0,.05); margin-bottom: 25px; }
+    .input-field { width: 100%; padding: 12px 16px; border-radius: 12px; border: 1.5px solid #e4def5; font: inherit; background: #fff; outline: none; box-sizing: border-box; }
+    .input-field:focus { border-color: #8144fa; }
+
+    .submit-btn { padding: 12px 24px; cursor: pointer; background: linear-gradient(135deg, #8144fa, #05eb40); border: 0; border-radius: 30px; color: #ffffff; font-weight: bold; font-size: 15px; box-shadow: 0 4px 15px rgba(129, 68, 250, 0.3); text-align: center; display: inline-block; text-decoration: none; }
+    .submit-btn:hover { transform: translateY(-2px); }
+
+    .vq-green { background: #05eb40; color: #120924; border: none; padding: 8px 18px; border-radius: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 12px rgba(5,235,64,.35); transition: transform 0.2s; }
+    .vq-green:hover { transform: translateY(-2px); }
+
+    .vq-red { background: #fff; color: #e03e3e; border: 2px solid #ff5c5c; padding: 6px 16px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+    .vq-red:hover { background: #ff5c5c; color: #fff; }
+    .applicant-box { background: #fdfdfd; border: 1.5px solid #e4def5; border-radius: 14px; padding: 16px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .vq-rw { background: #e8fff0; color: #056a1f; padding: 4px 12px; border-radius: 999px; font-weight: 700; font-size: 0.85rem; }
+
+    .vq-prof { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    .vq-ava { width: 80px; height: 80px; border-radius: 24px; background: #8144fa; color: #fff; display: grid; place-items: center; font-size: 2rem; font-weight: 700; box-shadow: 6px 6px 0 #05eb40; }
+    .vq-prof-main { flex: 1; min-width: 220px; }
+    .vq-name { font-size: 1.4rem; font-weight: 700; color: #120924; }
+    .vq-bar { height: 12px; border-radius: 999px; background: #f1ebff; overflow: hidden; margin-top: 10px; }
+    .vq-bar i { display: block; height: 100%; background: linear-gradient(90deg, #8144fa, #05eb40); border-radius: 999px; }
+    .vq-sub { color: #65617c; font-size: .9rem; margin-top: 6px; }
+    .vq-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 25px; background: #120924; border-radius: 14px; padding: 20px; }
+    .vq-stat { text-align: center; }
+    .vq-stat b { display: block; font-size: 2.2rem; color: #05eb40; }
+    .vq-stat span { font-size: .9rem; color: rgba(255,255,255,.8); }
+
+    .shp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .shp-grid .wide { grid-column: 1 / -1; }
+    .shp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 18px; }
+    .shp-item { border: 1.5px solid #eee9f8; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 6px; background: #fff; }
+    .shp-item.off { opacity: .55; background: #fafafa; }
+    .shp-top { display: flex; gap: 12px; align-items: center; }
+    .shp-em { width: 52px; height: 52px; border-radius: 14px; background: #e8fff0; display: grid; place-items: center; font-size: 1.7rem; flex: none; }
+    .shp-meta { color: #65617c; font-size: .88rem; }
+    .shp-price { font-weight: 800; color: #8144fa; }
+    .shp-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .75rem; font-weight: 700; background: #e8fff0; color: #056a1f; }
+    .shp-badge.off { background: #f0f0f0; color: #777; }
+    .shp-actions { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .shp-btn { padding: 7px 14px; border-radius: 20px; border: 2px solid #8144fa; background: #fff; color: #8144fa; font-weight: 700; cursor: pointer; font: inherit; font-size: .85rem; }
+    .shp-btn:hover { background: #8144fa; color: #fff; }
+    .activities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; }
+    @media(max-width: 768px) { .dashboard-container { padding: 20px; } }
+  </style>
 </head>
 <body class="dashboard-body">
 
@@ -15,149 +71,390 @@
       <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>ДоброРазом | Організатор</span>
     </div>
     <div class="nav-auth">
-      <span class="user-greeting" id="orgGreeting">Кабінет створення завдань</span>
-      <a href="index.html" class="auth-btn" style="background: #ff5c5c;" onclick="localStorage.clear()">Вийти</a>
+      <span class="user-greeting" id="orgGreeting">Привіт, Організаторе!</span>
+      <a href="login.html" class="auth-btn" style="background: #ff5c5c;" onclick="event.preventDefault(); localStorage.clear(); window.location.href='index.html';">Вийти</a>
     </div>
   </header>
 
-  <main class="dashboard-container" style="max-width: 800px; margin: 40px auto; padding: 0 20px;">
-    
-    <!-- Форма створення завдання -->
-    <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 40px;">
-      <h2 style="color: #120924; margin-bottom: 10px;">Створити нове волонтерське завдання</h2>
-      <p style="color: #666; margin-bottom: 20px;">Опишіть потребу, щоб залучити волонтерів у Дніпрі.</p>
+  <main class="dashboard-container">
+    <section class="dashboard-intro">
+      <h2>Панель керування організатора</h2>
+      <p>Переглядайте всі ініціативи міста, керуйте своїми заходами та підтверджуйте звітність волонтерів.</p>
+    </section>
 
-      <form id="createTaskForm">
-        <div style="margin-bottom: 15px;">
-          <label style="display:block; margin-bottom:5px; font-weight:600;">Назва завдання:</label>
-          <input type="text" name="title" class="input-field" placeholder="Наприклад: Роздача гарячих обідів" required style="border-bottom: 1px solid #ccc; width:100%;">
-        </div>
+    <nav class="vq-tabs" id="tabs">
+      <button type="button" class="vq-tab" id="tab-tasks" onclick="switchTab('tasks')">Усі ініціативи міста</button>
+      <button type="button" class="vq-tab" id="tab-create" onclick="switchTab('create')">Створити завдання</button>
+      <button type="button" class="vq-tab" id="tab-shop" onclick="switchTab('shop')">Подарунки</button>
+      <button type="button" class="vq-tab" id="tab-profile" onclick="switchTab('profile')">Профіль</button>
+    </nav>
 
-        <div style="margin-bottom: 15px;">
-          <label style="display:block; margin-bottom:5px; font-weight:600;">Район Дніпра:</label>
-          <select name="district" class="input-field select-field" required style="border-bottom: 1px solid #ccc; width:100%; background:white; color:#333;">
-            <option value="" disabled selected>Оберіть район...</option>
-            <option value="Соборний район">Соборний район</option>
-            <option value="Шевченківський район">Шевченківський район</option>
-            <option value="Самарський район">Самарський район</option>
-            <option value="Центральний район">Центральний район</option>
-            <option value="Чечелівський район">Чечелівський район</option>
-            <option value="Новокодацький район">Новокодацький район</option>
-            <option value="Амур-Нижньодніпровський район">Амур-Нижньодніпровський район</option>
-          </select>
-        </div>
-
-        <div style="margin-bottom: 15px;">
-          <label style="display:block; margin-bottom:5px; font-weight:600;">Детальний опис та адреса:</label>
-          <textarea name="description" class="input-field" rows="4" placeholder="Розкажіть, що потрібно робити і де..." required style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; width:100%; outline:none;"></textarea>
-        </div>
-
-        <!-- Приховані поля за замовчуванням для бази даних -->
-        <input type="hidden" name="date" value="Сьогодні">
-        <input type="hidden" name="duration" value="2 години">
-        <input type="hidden" name="reward_points" value="50">
-        <input type="hidden" name="reward_coins" value="10">
-
-        <button type="submit" class="submit-btn" style="width: 100%;">Опублікувати завдання</button>
-      </form>
-    </div>
-
-    <!-- Список створених завдань організатора -->
-    <div style="background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
-      <h3 style="color: #120924; margin-bottom: 20px;">Мої опубліковані ініціативи</h3>
-      <div class="activities-grid" id="orgTasksGrid">
-        <p style="color: #666;">Завантаження ваших завдань...</p>
-      </div>
-    </div>
-
+    <div id="tab-content"></div>
   </main>
 
   <script>
-    // Перевірка авторизації при завантаженні
-    const userId = localStorage.getItem('userId');
-    const username = localStorage.getItem('username');
-    const userRole = localStorage.getItem('userRole');
+    var userId = localStorage.getItem('userId') || 1;
+    var username = localStorage.getItem('username') || 'Організатор';
+    var userRole = localStorage.getItem('userRole');
 
     if (!userId || userRole !== 'organizer') {
       window.location.href = 'login.html';
     } else {
-      document.getElementById('orgGreeting').textContent = `Привіт, ${username} (Організатор)`;
+      document.getElementById('orgGreeting').textContent = 'Привіт, ' + username + '!';
     }
 
-    // Завантаження створених завдань
-    async function loadOrganizerTasks() {
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+    var currentTab = 'tasks';
+    var tasksData = [];
+    var allUserTasks = [];
+    var shopItems = [];
+    var shopError = '';
+    var token = localStorage.getItem('token') || '';
+
+    async function loadData() {
       try {
-        const response = await fetch('/api/tasks');
-        const tasks = await response.json();
-        const grid = document.getElementById('orgTasksGrid');
+        var resTasks = await fetch('/api/tasks');
+        tasksData = await resTasks.json();
 
-        // Фільтруємо завдання конкретного організатора (або показуємо всі, залежно від логіки)
-        const myTasks = tasks.filter(t => String(t.organizer_id) === String(userId));
+        var resUt = await fetch('/api/all-user-tasks');
+        allUserTasks = resUt.ok ? await resUt.json() : [];
 
-        if (!myTasks.length) {
-          grid.innerHTML = '<p style="color: #666; grid-column: 1/-1;">Ви ще не створили жодного завдання.</p>';
-          return;
+        shopError = '';
+        if (!token) {
+          shopError = 'Увійдіть в акаунт знову, щоб керувати подарунками.';
+        } else {
+          var resShop = await fetch('/api/manage/shop', { headers: { 'Authorization': 'Bearer ' + token } });
+          var shopData = await resShop.json().catch(function() { return {}; });
+          if (resShop.ok) shopItems = shopData;
+          else shopError = shopData.message || 'Не вдалося завантажити подарунки.';
         }
 
-        grid.innerHTML = myTasks.map(task => `
-          <div class="activity-card" style="margin-bottom: 20px; background: #f9f9fb; border: 1px solid #eaeaea;">
-            <div class="card-content">
-              <span class="district-tag"><i class="fa-solid fa-location-dot"></i> ${task.district}</span>
-              <h3>${task.title}</h3>
-              <p>${task.description}</p>
-              <div style="font-size: 0.85rem; color: #8144fa; margin-bottom: 10px;">
-                Нагорода: +${task.reward_points} XP / +${task.reward_coins} монет
-              </div>
-            </div>
-          </div>
-        `).join('');
-      } catch (error) {
-        console.error("Помилка завантаження завдань:", error);
+        render();
+      } catch (e) {
+        console.error("Помилка завантаження даних:", e);
       }
     }
 
-    loadOrganizerTasks();
+    function switchTab(tab) {
+      currentTab = tab;
+      render();
+    }
 
-    // Відправка форми створення завдання на сервер
-    document.getElementById('createTaskForm').addEventListener('submit', async (e) => {
+    function renderTabsUI() {
+      document.querySelectorAll('.vq-tab').forEach(function(btn) {
+        btn.removeAttribute('aria-current');
+      });
+      var activeBtn = document.getElementById('tab-' + currentTab);
+      if (activeBtn) activeBtn.setAttribute('aria-current', 'page');
+    }
+
+    function renderTasksView() {
+      if (!tasksData.length) {
+        return '<div class="org-card" style="text-align:center; padding:50px; color:#666;"><b>У базі поки немає жодних ініціатив</b></div>';
+      }
+
+      return '<div class="activities-grid">' + tasksData.map(function(task) {
+        var isMyTask = String(task.organizer_id) === String(userId);
+        var applicants = allUserTasks.filter(function(ut) { return String(ut.task_id) === String(task.id); });
+
+        var applicantsHtml = '';
+        if (!applicants.length) {
+          applicantsHtml = '<p style="color:#888; font-size:0.9rem; margin-top:8px;">Поки що жоден волонтер не записався.</p>';
+        } else {
+          applicantsHtml = applicants.map(function(app) {
+            var statusBadge = '';
+            var actionBtns = '';
+
+            if (app.status === 'in_progress') {
+              statusBadge = '<span style="color:#3b82f6; font-weight:600;">У роботі</span>';
+            } else if (app.status === 'pending_approval') {
+              statusBadge = '<span style="color:#d97706; font-weight:600;">Чекає на підтвердження ⏳</span>';
+              if (isMyTask) {
+                actionBtns = '<button class="vq-green" onclick="approveTask(' + app.user_id + ', ' + task.id + ')">Підтвердити виконання</button> ' +
+                  '<button class="vq-red" onclick="rejectTask(' + app.user_id + ', ' + task.id + ')">Повернути</button>';
+              }
+            } else if (app.status === 'completed') {
+              statusBadge = '<span style="color:#056a1f; font-weight:600;">Виконано та зараховано ✓</span>';
+            }
+
+            return '<div class="applicant-box">' +
+              '<div><b>Волонтер: ' + esc(app.username || ('ID ' + app.user_id)) + '</b><br>' + statusBadge + '</div>' +
+              '<div>' + actionBtns + '</div>' +
+            '</div>';
+          }).join('');
+        }
+
+        var badgeOwner = isMyTask 
+          ? '<span style="background: #e8fff0; color: #056a1f; padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; float: right;">Моє завдання</span>'
+          : '<span style="background: #f1ebff; color: #8144fa; padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: bold; float: right;">Ініціатива міста</span>';
+
+        return '<div class="org-card" style="margin-bottom:0;">' +
+          badgeOwner +
+          '<span style="color: #666; font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ' + esc(task.district) + '</span>' +
+          '<h3 style="font-size: 1.25rem; margin: 12px 0 6px; color: #120924;">' + esc(task.title) + '</h3>' +
+          '<p style="color: #555; font-size: 0.95rem; margin-bottom: 14px;">' + esc(task.description) + '</p>' +
+          '<div style="display: flex; gap: 10px; margin-bottom: 15px;">' +
+            '<span class="vq-rw">+' + task.reward_points + ' XP</span>' +
+            '<span class="vq-rw">+' + task.reward_coins + ' балів</span>' +
+          '</div>' +
+          '<div style="border-top: 1px solid #eee; padding-top: 12px;">' +
+            '<b style="font-size: 0.95rem; color: #120924;">Волонтери:</b>' +
+            applicantsHtml +
+          '</div>' +
+        '</div>';
+      }).join('') + '</div>';
+    }
+
+    function renderCreateView() {
+      return '<div class="org-card" style="max-width:700px; margin:0 auto;">' +
+        '<h3 style="color: #120924; margin-bottom: 8px;">Створити нову волонтерську ініціативу</h3>' +
+        '<p style="color: #666; margin-bottom: 20px;">Заповніть форму, щоб опублікувати завдання для волонтерів Дніпра.</p>' +
+        '<form id="createTaskForm" onsubmit="handleCreateTask(event)">' +
+          '<div style="margin-bottom: 15px;">' +
+            '<label style="display:block; margin-bottom:5px; font-weight:600;">Назва завдання:</label>' +
+            '<input type="text" name="title" class="input-field" placeholder="Наприклад: Прибирання парку Шевченка" required>' +
+          '</div>' +
+          '<div style="margin-bottom: 15px;">' +
+            '<label style="display:block; margin-bottom:5px; font-weight:600;">Район Дніпра:</label>' +
+            '<select name="district" class="input-field" required>' +
+              '<option value="" disabled selected>Оберіть район...</option>' +
+              '<option value="Соборний район">Соборний район</option>' +
+              '<option value="Шевченківський район">Шевченківський район</option>' +
+              '<option value="Самарський район">Самарський район</option>' +
+              '<option value="Центральний район">Центральний район</option>' +
+              '<option value="Чечелівський район">Чечелівський район</option>' +
+              '<option value="Новокодацький район">Новокодацький район</option>' +
+              '<option value="Амур-Нижньодніпровський район">Амур-Нижньодніпровський район</option>' +
+            '</select>' +
+          '</div>' +
+          '<div style="margin-bottom: 15px;">' +
+            '<label style="display:block; margin-bottom:5px; font-weight:600;">Детальний опис та адреса:</label>' +
+            '<textarea name="description" class="input-field" rows="4" placeholder="Що саме потрібно зробити..." required></textarea>' +
+          '</div>' +
+          '<div style="display: flex; gap: 15px; margin-bottom: 20px;">' +
+            '<div style="flex: 1;">' +
+              '<label style="display:block; margin-bottom:5px; font-weight:600;">Нагорода (XP):</label>' +
+              '<input type="number" name="reward_points" class="input-field" value="50" required>' +
+            '</div>' +
+            '<div style="flex: 1;">' +
+              '<label style="display:block; margin-bottom:5px; font-weight:600;">Нагорода (Балів):</label>' +
+              '<input type="number" name="reward_coins" class="input-field" value="10" required>' +
+            '</div>' +
+          '</div>' +
+          '<button type="submit" class="submit-btn" style="width: 100%;">Опублікувати завдання</button>' +
+        '</form>' +
+      '</div>';
+    }
+
+    function renderProfileView() {
+      var myTasks = tasksData.filter(function(t) { return String(t.organizer_id) === String(userId); });
+      var totalOrgCount = myTasks.length;
+      var level = Math.floor(totalOrgCount / 2) + 1;
+
+      return '<div class="org-card">' +
+        '<div class="vq-prof">' +
+          '<div class="vq-ava">' + username.charAt(0).toUpperCase() + '</div>' +
+          '<div class="vq-prof-main">' +
+            '<div class="vq-name">' + username + ' (Організатор)</div>' +
+            '<div class="vq-sub">Рівень ' + level + ' · Активний організатор Дніпра</div>' +
+            '<div class="vq-bar"><i style="width: ' + Math.min(totalOrgCount * 25, 100) + '%"></i></div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vq-stats">' +
+          '<div class="vq-stat"><b>' + totalOrgCount + '</b><span>завдань створено</span></div>' +
+          '<div class="vq-stat"><b>' + level + '</b><span>рівень довіри</span></div>' +
+          '<div class="vq-stat"><b>' + tasksData.length + '</b><span>усіх завдань у місті</span></div>' +
+        '</div>' +
+      '</div>';
+    }
+
+    var SHOP_CATS = { food: '🍽️ Їжа та кава', merch: '👕 Мерч', fun: '🎬 Розваги', sport: '🏃 Спорт', edu: '📚 Навчання' };
+
+    function renderShopView() {
+      var form = '<div class="org-card">' +
+        '<h3 style="color:#120924; margin:0 0 6px;">Додати подарунок у магазин</h3>' +
+        '<p style="color:#666; margin:0 0 18px;">Волонтери обмінюють на нього бали, зароблені виконанням завдань.</p>' +
+        '<form id="shopForm" class="shp-grid" onsubmit="addShopItem(event)">' +
+          '<div><label style="display:block;margin-bottom:5px;font-weight:600;">Назва</label><input class="input-field" id="shp-name" name="name" maxlength="120" placeholder="Наприклад: Кава в подарунок" required></div>' +
+          '<div><label style="display:block;margin-bottom:5px;font-weight:600;">Партнер</label><input class="input-field" id="shp-partner" name="partner" maxlength="120" placeholder="Наприклад: Кав’ярня «Зерно»" required></div>' +
+          '<div><label style="display:block;margin-bottom:5px;font-weight:600;">Категорія</label><select class="input-field" id="shp-cat" name="category">' +
+            Object.keys(SHOP_CATS).map(function(k) { return '<option value="' + k + '">' + SHOP_CATS[k] + '</option>'; }).join('') + '</select></div>' +
+          '<div><label style="display:block;margin-bottom:5px;font-weight:600;">Ціна (балів)</label><input class="input-field" id="shp-cost" name="cost" type="number" min="1" max="100000" value="50" required></div>' +
+          '<div><label style="display:block;margin-bottom:5px;font-weight:600;">Емодзі-значок</label><input class="input-field" id="shp-emoji" name="emoji" maxlength="8" value="🎁"></div>' +
+          '<div class="wide"><label style="display:block;margin-bottom:5px;font-weight:600;">Опис</label><textarea class="input-field" id="shp-desc" name="description" rows="2" maxlength="300" placeholder="Що отримає волонтер і які є умови"></textarea></div>' +
+          '<div class="wide"><button type="submit" class="submit-btn" style="width:100%;">Додати в магазин</button></div>' +
+        '</form></div>';
+
+      var list;
+      if (shopError) {
+        list = '<div style="text-align:center; padding:30px; color:#a33;"><b>' + esc(shopError) + '</b></div>';
+      } else if (!shopItems.length) {
+        list = '<div style="text-align:center; padding:30px; color:#666;"><b>Подарунків ще немає</b><br>Додайте перший за допомогою форми вище.</div>';
+      } else {
+        list = '<div class="shp-list">' + shopItems.map(function(x) {
+          var on = !!x.is_active;
+          return '<div class="shp-item' + (on ? '' : ' off') + '">' +
+            '<div class="shp-top"><div class="shp-em">' + esc(x.emoji) + '</div><div><b>' + esc(x.name) + '</b><div class="shp-meta">' + esc(x.partner) + '</div></div></div>' +
+            '<div class="shp-meta">' + esc(SHOP_CATS[x.category] || x.category) + '</div>' +
+            '<div class="shp-meta">' + esc(x.description) + '</div>' +
+            '<div><span class="shp-price">' + x.cost + ' балів</span> · <span class="shp-badge' + (on ? '' : ' off') + '">' + (on ? 'У магазині' : 'Прихований') + '</span> · <span class="shp-meta">обмінів: ' + x.purchases + '</span></div>' +
+            '<div class="shp-actions">' +
+              '<button type="button" class="shp-btn" data-act="toggle" onclick="toggleShopItem(' + x.id + ')">' + (on ? 'Сховати' : 'Показати') + '</button>' +
+              '<button type="button" class="shp-btn" data-act="price" onclick="changeShopPrice(' + x.id + ')">Змінити ціну</button>' +
+            '</div></div>';
+        }).join('') + '</div>';
+      }
+
+      return form + '<div class="org-card"><h3 style="color:#120924; margin:0 0 16px;">Подарунки в магазині (' + shopItems.length + ')</h3>' + list + '</div>';
+    }
+
+    async function shopApi(method, url, body) {
+      var res = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      var data = await res.json().catch(function() { return {}; });
+      if (res.status === 401) {
+        await Swal.fire({ icon: 'warning', title: 'Сесія завершилась', text: 'Увійдіть знову.', confirmButtonColor: '#8144fa' });
+        window.location.href = 'login.html';
+      }
+      return { ok: res.ok && data.success !== false, data: data };
+    }
+
+    window.addShopItem = async function(e) {
       e.preventDefault();
+      var data = Object.fromEntries(new FormData(e.target));
+      var r = await shopApi('POST', '/api/manage/shop', data);
+      if (!r.ok) {
+        Swal.fire({ icon: 'error', title: 'Не вдалося додати', text: r.data.message || '', confirmButtonColor: '#8144fa' });
+        return;
+      }
+      await Swal.fire({ icon: 'success', title: 'Готово', text: 'Подарунок додано. Волонтери вже бачать його в магазині.', confirmButtonColor: '#8144fa' });
+      loadData();
+    };
 
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData);
-      data.organizer_id = userId; // прив'язуємо до ID поточного організатора[cite: 13]
+    window.toggleShopItem = async function(id) {
+      var it = shopItems.filter(function(x) { return String(x.id) === String(id); })[0];
+      if (!it) return;
+      var r = await shopApi('PUT', '/api/manage/shop/' + id, { is_active: !it.is_active });
+      if (!r.ok) { Swal.fire({ icon: 'error', title: 'Помилка', text: r.data.message || '', confirmButtonColor: '#8144fa' }); return; }
+      loadData();
+    };
+
+    window.changeShopPrice = async function(id) {
+      var it = shopItems.filter(function(x) { return String(x.id) === String(id); })[0];
+      if (!it) return;
+      var ask = await Swal.fire({
+        title: 'Нова ціна в балах', input: 'number', inputValue: it.cost,
+        inputAttributes: { min: 1, max: 100000 }, showCancelButton: true,
+        confirmButtonText: 'Зберегти', cancelButtonText: 'Скасувати', confirmButtonColor: '#8144fa'
+      });
+      if (!ask.isConfirmed) return;
+      var r = await shopApi('PUT', '/api/manage/shop/' + id, { cost: ask.value });
+      if (!r.ok) { Swal.fire({ icon: 'error', title: 'Помилка', text: r.data.message || '', confirmButtonColor: '#8144fa' }); return; }
+      loadData();
+    };
+
+    function render() {
+      renderTabsUI();
+      var container = document.getElementById('tab-content');
+      if (currentTab === 'tasks') container.innerHTML = renderTasksView();
+      else if (currentTab === 'create') container.innerHTML = renderCreateView();
+      else if (currentTab === 'shop') container.innerHTML = renderShopView();
+      else if (currentTab === 'profile') container.innerHTML = renderProfileView();
+    }
+
+    window.approveTask = async function(targetUserId, taskId) {
+      try {
+        var response = await fetch('/api/complete-task', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: targetUserId, task_id: taskId, organizer_id: userId })
+        });
+        var data = await response.json().catch(function() { return {}; });
+
+        if (response.ok && data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Успішно підтверджено!',
+            text: 'Волонтеру нараховано +' + data.gained.xp + ' XP та +' + data.gained.coins + ' балів.',
+            confirmButtonColor: '#8144fa'
+          });
+          loadData();
+        } else {
+          Swal.fire({ icon: 'error', title: 'Помилка', text: data.message || 'Не вдалося підтвердити виконання.', confirmButtonColor: '#8144fa' });
+        }
+      } catch (e) {
+        console.error(e);
+        Swal.fire({ icon: 'error', title: 'Помилка мережі', text: 'Не вдалося зв’язатися з сервером.', confirmButtonColor: '#8144fa' });
+      }
+    };
+
+    window.rejectTask = async function(targetUserId, taskId) {
+      var ask = await Swal.fire({
+        title: 'Повернути на доопрацювання?',
+        input: 'text',
+        inputLabel: 'Що потрібно виправити (необов’язково)',
+        showCancelButton: true,
+        confirmButtonText: 'Повернути',
+        cancelButtonText: 'Скасувати',
+        confirmButtonColor: '#8144fa'
+      });
+      if (!ask.isConfirmed) return;
 
       try {
-        const response = await fetch('/api/tasks', {
+        var response = await fetch('/api/reject-task', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ user_id: targetUserId, task_id: taskId, organizer_id: userId, note: ask.value || '' })
+        });
+        var data = await response.json().catch(function() { return {}; });
+
+        if (response.ok && data.success) {
+          Swal.fire({ icon: 'info', title: 'Повернуто волонтеру', text: 'Бали не нараховано.', confirmButtonColor: '#8144fa' });
+          loadData();
+        } else {
+          Swal.fire({ icon: 'error', title: 'Помилка', text: data.message || 'Не вдалося повернути завдання.', confirmButtonColor: '#8144fa' });
+        }
+      } catch (e) {
+        console.error(e);
+        Swal.fire({ icon: 'error', title: 'Помилка мережі', text: 'Не вдалося зв’язатися з сервером.', confirmButtonColor: '#8144fa' });
+      }
+    };
+
+    window.handleCreateTask = async function(e) {
+      e.preventDefault();
+      var formData = new FormData(e.target);
+      var data = Object.fromEntries(formData);
+      data.organizer_id = userId;
+
+      try {
+        var response = await fetch('/api/tasks', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
         });
 
-        const result = await response.json();
-
-        if (response.ok && result.success) {
+        if (response.ok) {
           Swal.fire({
             icon: 'success',
             title: 'Успішно!',
-            text: 'Завдання успішно створено та опубліковано в загальній базі!',
+            text: "Завдання створено та з'явилося у волонтерів!",
             confirmButtonColor: '#8144fa'
-          }).then(() => {
-            e.target.reset();
-            loadOrganizerTasks(); // оновлюємо список
+          }).then(function() {
+            switchTab('tasks');
+            loadData();
           });
         } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Помилка',
-            text: 'Не вдалося створити завдання.',
-            confirmButtonColor: '#8144fa'
-          });
+          var err = await response.json().catch(function() { return {}; });
+          Swal.fire({ icon: 'error', title: 'Помилка', text: err.message || 'Не вдалося створити завдання.', confirmButtonColor: '#8144fa' });
         }
-      } catch (error) {
-        console.error("Помилка мережі:", error);
-      }
-    });
-  </script>
+      } catch (error) { console.error("Помилка створення:", error); }
+    };
 
+    loadData();
+  </script>
 </body>
 </html>

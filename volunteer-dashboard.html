@@ -3,95 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Кабінет Волонтера — VolunQuest</title>
+  <title>Кабінет Волонтера — ДоброРазом</title>
   <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet" href="pages.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
-    .vq-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
-    .vq-tab{padding:10px 20px;border-radius:20px;border:2px solid transparent;background:#fff;font:inherit;font-weight:bold;color:#555;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:color .2s,transform .2s}
-    .vq-tab:hover{color:#8144fa;transform:translateY(-2px)}
-    .vq-tab[aria-current="page"]{background:linear-gradient(135deg,#8144fa,#05eb40);color:#fff;box-shadow:0 4px 15px rgba(129,68,250,.3)}
-    .vq-tab .vq-count{display:inline-block;min-width:20px;margin-left:6px;padding:0 6px;border-radius:999px;background:rgba(0,0,0,.12);font-size:.8rem}
+    .dashboard-container { max-width: 1200px; margin: 0 auto; padding: 30px 40px; }
+    .dashboard-intro { margin-bottom: 25px; }
+    .dashboard-intro h2 { font-size: 2rem; color: #120924; margin-bottom: 8px; }
+    .dashboard-intro p { color: #666; font-size: 1.05rem; }
 
-    .vq-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
-    .vq-search{flex:1;min-width:200px;padding:11px 14px;border-radius:12px;border:1.5px solid #e4def5;font:inherit}
-    .vq-search:focus{outline:none;border-color:#8144fa}
-    .vq-filters{display:flex;gap:8px;flex-wrap:wrap}
-    .vq-fb{padding:8px 14px;border-radius:999px;border:1.5px solid #e4def5;background:#fff;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer}
-    .vq-fb[aria-pressed="true"]{background:#8144fa;border-color:#8144fa;color:#fff}
+    .vq-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+    .vq-tab { padding: 10px 22px; border-radius: 20px; border: 2px solid transparent; background: #fff; font: inherit; font-weight: bold; color: #555; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.05); transition: color .2s, transform .2s; }
+    .vq-tab:hover { color: #8144fa; transform: translateY(-2px); }
+    .vq-tab[aria-current="page"] { background: linear-gradient(135deg, #8144fa, #05eb40); color: #fff; box-shadow: 0 4px 15px rgba(129,68,250,.3); }
+    .vq-tab .vq-count { display: inline-block; min-width: 20px; margin-left: 6px; padding: 0 6px; border-radius: 999px; background: rgba(0,0,0,.12); font-size: .8rem; }
 
-    .vq-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 4px;font-size:.88rem;color:#65617c;font-weight:500}
-    .vq-rw{background:#e8fff0;color:#056a1f;padding:2px 10px;border-radius:999px;font-weight:700}
-    .vq-badge{display:inline-block;margin-left:6px;padding:2px 10px;border-radius:999px;font-size:.78rem;font-weight:700;vertical-align:middle}
-    .vq-badge.go{background:#fff3c9;color:#7a5600}
-    .vq-badge.ok{background:#05eb40;color:#120924}
-    .vq-btns{display:flex;gap:8px;margin-top:10px}
-    .vq-btns .submit-btn{flex:1;padding:10px 12px}
-    .vq-btns .vq-ghost,.vq-ghost{background:#fff;color:#8144fa;border:2px solid #8144fa;box-shadow:none}
-    .vq-btns .vq-ghost:hover,.vq-ghost:hover{background:#8144fa;color:#fff;box-shadow:none}
-    .vq-btns .vq-green,.vq-green{background:#05eb40;color:#120924;box-shadow:0 4px 15px rgba(5,235,64,.35)}
-    .vq-empty{text-align:center;padding:40px 18px;border:1.5px dashed #d9d2ee;border-radius:18px;color:#65617c}
-    .vq-empty b{display:block;color:#120924;margin-bottom:6px}
-    .vq-h{margin:30px 0 14px;font-size:1.2rem}
+    .vq-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 25px; }
+    .vq-search { flex: 1; min-width: 250px; padding: 12px 16px; border-radius: 12px; border: 1.5px solid #e4def5; font: inherit; background: #fff; }
+    .vq-search:focus { outline: none; border-color: #8144fa; }
 
-    .vq-card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 5px 15px rgba(0,0,0,.05)}
-    .vq-prof{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-    .vq-ava{width:72px;height:72px;border-radius:22px;background:#8144fa;color:#fff;display:grid;place-items:center;font-size:1.8rem;font-weight:700;flex:none;box-shadow:6px 6px 0 #05eb40}
-    .vq-prof-main{flex:1;min-width:220px}
-    .vq-name{font-size:1.25rem;font-weight:700}
-    .vq-edit{margin-left:8px;border:0;background:none;color:#8144fa;cursor:pointer;font:inherit;font-size:.85rem;text-decoration:underline}
-    .vq-bar{height:12px;border-radius:999px;background:#f1ebff;overflow:hidden;margin-top:10px}
-    .vq-bar i{display:block;height:100%;background:linear-gradient(90deg,#8144fa,#05eb40);border-radius:999px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
-    .vq-sub{color:#65617c;font-size:.85rem;margin-top:5px}
-    .vq-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:20px;background:#120924;border-radius:12px;padding:20px 10px}
-    .vq-stat{text-align:center;padding:4px}
-    .vq-stat b{display:block;font-size:2rem;color:#05eb40}
-    .vq-stat span{font-size:.85rem;color:rgba(255,255,255,.8)}
-    .vq-grid2{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
-    .vq-ach{display:flex;gap:12px;align-items:center}
-    .vq-ach .vq-ai{width:44px;height:44px;border-radius:50%;background:#05eb40;display:grid;place-items:center;font-size:1.25rem;flex:none}
-    .vq-ach.lock{opacity:.45}
-    .vq-ach.lock .vq-ai{background:#eceaf3;filter:grayscale(1)}
-    .vq-ach small{display:block;color:#65617c}
-    .vq-lb{display:flex;gap:12px;padding:10px 6px;border-bottom:1px solid #eee9f8}
-    .vq-lb:last-child{border:0}
-    .vq-lb .n{width:26px;font-weight:700;color:#65617c}
-    .vq-lb .nm{flex:1;font-weight:600}
-    .vq-lb.you{background:#e8fff0;border-radius:12px;border:0}
-    .vq-reset{margin-top:26px;text-align:center}
-    .vq-reset button{border:1.5px solid #e4def5;background:#fff;border-radius:999px;padding:8px 16px;font:inherit;cursor:pointer;color:#65617c}
+    .activities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+    .vq-meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 12px 0 16px; font-size: .9rem; font-weight: 600; }
+    .vq-rw { background: #e8fff0; color: #056a1f; padding: 4px 12px; border-radius: 999px; font-weight: 700; }
 
-    .vq-ov{position:fixed;inset:0;background:rgba(23,20,43,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
-    .vq-sheet{background:#fff;width:100%;max-width:540px;max-height:90vh;overflow:auto;border-radius:24px;padding:24px}
-    .vq-sheet h2{margin:8px 0}
-    .vq-x{float:right;width:36px;height:36px;border-radius:50%;border:0;background:#f3f2f7;cursor:pointer;font-size:1.1rem}
-    .vq-sheet ol{padding-left:20px}
-    .vq-res{text-align:center}
-    .vq-big{display:inline-block;margin:14px 0 6px;padding:2px 16px;border-radius:14px;background:#05eb40;color:#120924;font-size:2.2rem;font-weight:800}
-    .vq-note{margin-top:14px;padding:12px 14px;border-radius:14px;background:#e8fff0;color:#055a1b;font-weight:600}
-    .vq-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#120924;color:#fff;padding:12px 18px;border-radius:14px;font-weight:600;z-index:120;max-width:90vw}
-    .vq-conf{position:fixed;top:-20px;width:10px;height:14px;border-radius:3px;z-index:130;pointer-events:none;animation:vqfall 1.8s ease-in forwards}
-    @keyframes vqfall{to{transform:translateY(105vh) rotate(540deg);opacity:.9}}
-    @media(prefers-reduced-motion:reduce){.vq-conf{display:none}.vq-bar i{transition:none}}
+    .vq-btns { display: flex; gap: 10px; margin-top: 15px; }
+    .submit-btn { padding: 10px 20px; cursor: pointer; background: linear-gradient(135deg, #8144fa, #05eb40); border: 0; border-radius: 30px; color: #ffffff; font-weight: bold; font-size: 14px; box-shadow: 0 4px 15px rgba(129, 68, 250, 0.3); transition: transform 0.2s; text-align: center; text-decoration: none; display: inline-block; }
+    .submit-btn:hover { transform: translateY(-2px); }
+    .vq-btns .vq-ghost { background: #fff; color: #8144fa; border: 2px solid #8144fa; box-shadow: none; }
+    .vq-btns .vq-ghost:hover { background: #8144fa; color: #fff; }
+    .vq-green { background: #05eb40 !important; color: #120924 !important; box-shadow: 0 4px 15px rgba(5,235,64,.35) !important; }
+
+    .vq-empty { text-align: center; padding: 50px 20px; border: 1.5px dashed #d9d2ee; border-radius: 18px; color: #65617c; background: #fff; grid-column: 1/-1; }
+    .vq-empty b { display: block; color: #120924; margin-bottom: 6px; font-size: 1.1rem; }
+    .vq-h { margin: 30px 0 14px; font-size: 1.3rem; color: #120924; }
+
+    .vq-card { background: #fff; border-radius: 16px; padding: 25px; box-shadow: 0 5px 20px rgba(0,0,0,.05); }
+    .vq-prof { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+    .vq-ava { width: 80px; height: 80px; border-radius: 24px; background: #8144fa; color: #fff; display: grid; place-items: center; font-size: 2rem; font-weight: 700; box-shadow: 6px 6px 0 #05eb40; }
+    .vq-prof-main { flex: 1; min-width: 220px; }
+    .vq-name { font-size: 1.4rem; font-weight: 700; color: #120924; }
+    .vq-edit { margin-left: 10px; border: 0; background: none; color: #8144fa; cursor: pointer; font: inherit; font-size: .85rem; text-decoration: underline; }
+    .vq-bar { height: 12px; border-radius: 999px; background: #f1ebff; overflow: hidden; margin-top: 10px; }
+    .vq-bar i { display: block; height: 100%; background: linear-gradient(90deg, #8144fa, #05eb40); border-radius: 999px; }
+    .vq-sub { color: #65617c; font-size: .9rem; margin-top: 6px; }
+    .vq-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-top: 25px; background: #120924; border-radius: 14px; padding: 20px; }
+    .vq-stat { text-align: center; }
+    .vq-stat b { display: block; font-size: 2.2rem; color: #05eb40; }
+    .vq-stat span { font-size: .9rem; color: rgba(255,255,255,.8); }
+    .vq-grid2 { display: grid; gap: 15px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .vq-ach { display: flex; gap: 15px; align-items: center; }
+    .vq-ach .vq-ai { width: 50px; height: 50px; border-radius: 50%; background: #05eb40; display: grid; place-items: center; font-size: 1.4rem; flex: none; }
+    .vq-ach.lock { opacity: .45; }
+    .vq-ach.lock .vq-ai { background: #eceaf3; filter: grayscale(1); }
+
+    .vq-ov { position: fixed; inset: 0; background: rgba(23,20,43,.6); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .vq-sheet { background: #fff; width: 100%; max-width: 580px; max-height: 90vh; overflow: auto; border-radius: 20px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .vq-x { float: right; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #f3f2f7; cursor: pointer; font-size: 1.2rem; }
+    .vq-toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); background: #120924; color: #fff; padding: 14px 22px; border-radius: 14px; font-weight: 600; z-index: 120; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+    /* --- магазин --- */
+    .vq-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .vq-fb { padding: 8px 14px; border-radius: 999px; border: 1.5px solid #e4def5; background: #fff; font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; }
+    .vq-fb[aria-pressed="true"] { background: #8144fa; border-color: #8144fa; color: #fff; }
+    .vq-bal { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; background: #120924; color: #fff; border-radius: 14px; padding: 20px 24px; margin-bottom: 20px; }
+    .vq-bal b { font-size: 2.4rem; color: #05eb40; line-height: 1; }
+    .vq-bal small { display: block; color: rgba(255,255,255,.75); margin: 4px 0; }
+    .vq-sel { padding: 9px 12px; border-radius: 12px; border: 1.5px solid #e4def5; background: #fff; font: inherit; cursor: pointer; }
+    .vq-chk { display: flex; gap: 6px; align-items: center; font-weight: 600; color: #555; cursor: pointer; }
+    .vq-prod { display: flex; align-items: center; justify-content: center; font-size: 4.2rem; }
+    .vq-price { display: flex; align-items: baseline; gap: 6px; margin: 6px 0 10px; color: #65617c; }
+    .vq-price b { font-size: 1.5rem; color: #8144fa; }
+    .vq-code { display: inline-block; font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; letter-spacing: .06em; background: #f4efff; color: #6a2fe0; padding: 6px 12px; border-radius: 10px; }
+    .vq-buy { display: flex; gap: 14px; align-items: center; }
+    .vq-em { width: 52px; height: 52px; border-radius: 14px; background: #e8fff0; display: grid; place-items: center; font-size: 1.6rem; flex: none; }
+    .vq-foot { margin-top: 30px; text-align: center; color: #65617c; font-size: .85rem; }
+    .vq-res { text-align: center; }
+    .vq-conf { position: fixed; top: -20px; width: 10px; height: 14px; border-radius: 3px; z-index: 130; pointer-events: none; animation: vqfall 1.8s ease-in forwards; }
+    @keyframes vqfall { to { transform: translateY(105vh) rotate(540deg); opacity: .9; } }
+    @media (prefers-reduced-motion: reduce) { .vq-conf { display: none; } }
   </style>
 </head>
 <body class="dashboard-body">
 
   <header class="navbar">
     <div class="logo">
-      <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>VolunQuest | Волонтер</span>
+      <i class="fa-solid fa-heart" style="color: #8144fa;"></i> <span>ДоброРазом | Волонтер</span>
     </div>
     <div class="nav-auth">
       <span class="user-greeting" id="greet">Привіт, Волонтере!</span>
-      <a href="login.html" class="auth-btn" style="background: #ff5c5c;" onclick="localStorage.clear()">Вийти</a>
+      <a href="login.html" class="auth-btn" style="background: #ff5c5c;" onclick="event.preventDefault(); localStorage.clear(); window.location.href='index.html';">Вийти</a>
     </div>
   </header>
 
   <main class="dashboard-container">
     <section class="dashboard-intro">
-      <h2>Доступні завдання у Дніпрі</h2>
-      <p>Обирайте ініціативу, допомагайте місту та заробляйте бали активності. Кожне виконане завдання підвищує ваш рівень.</p>
+      <h2>Можливості для волонтерів</h2>
+      <p>Обирайте те, що вам до душі, за категоріями або районами міста</p>
     </section>
 
     <nav class="vq-tabs" id="tabs" aria-label="Розділи кабінету"></nav>
@@ -106,6 +115,7 @@
 
   var userId = localStorage.getItem('userId') || 1;
   var username = localStorage.getItem('username') || 'Волонтер';
+  var token = localStorage.getItem('token') || '';
   
   var LEVELS = ['Новачок', 'Помічник', 'Активіст', 'Герой міста', 'Легенда Дніпра'];
   var CATS = {
@@ -115,8 +125,17 @@
     city:    { n: 'Місто', e: '🗺️' }
   };
 
-  var QUESTS = []; // Динамічно завантажуються з бази даних MySQL через /api/tasks
+  var QUESTS = [];
   var USER_TASKS = { taken: [], done: [] };
+  var SHOP = [];        // подарунки з бази (/api/shop)
+  var PURCHASES = [];   // мої покупки з бази (/api/shop/my)
+  var SHOP_CATS = {
+    food:  { n: 'Їжа та кава', e: '🍽️', g: 'linear-gradient(135deg,#ffb36b,#ff6b6b)' },
+    merch: { n: 'Мерч',        e: '👕', g: 'linear-gradient(135deg,#8144fa,#b99aff)' },
+    fun:   { n: 'Розваги',     e: '🎬', g: 'linear-gradient(135deg,#1f1138,#8144fa)' },
+    sport: { n: 'Спорт',       e: '🏃', g: 'linear-gradient(135deg,#05eb40,#03a52d)' },
+    edu:   { n: 'Навчання',    e: '📚', g: 'linear-gradient(135deg,#4facfe,#8144fa)' }
+  };
 
   var ACH = [
     { id: 'a1', e: '🌱', n: 'Перший крок',     d: 'Виконайте перше завдання',     t: function () { return USER_TASKS.done.length >= 1; } },
@@ -125,7 +144,8 @@
     { id: 'a4', e: '🌍', n: 'Чисте місто',     d: 'Завдання категорії «Екологія»',  t: function () { return hasCat('eco'); } },
     { id: 'a5', e: '🤝', n: 'Рука допомоги',    d: 'Завдання категорії «Гумдопомога»', t: function () { return hasCat('aid'); } },
     { id: 'a6', e: '⭐', n: 'Активіст',         d: 'Досягніть 3 рівня',              t: function () { return lvl(S.xp) >= 3; } },
-    { id: 'a7', e: '⏱️', n: '10 годин добра',   d: '10 годин волонтерської допомоги', t: function () { return hours() >= 10; } }
+    { id: 'a7', e: '⏱️', n: '10 годин добра',   d: '10 годин волонтерської допомоги', t: function () { return hours() >= 10; } },
+    { id: 'a8', e: '🎁', n: 'Перша покупка',    d: 'Обміняйте бали в магазині',       t: function () { return PURCHASES.length >= 1; } }
   ];
 
   var BOARD = [
@@ -133,18 +153,31 @@
     { n: 'Дарина П.', xp: 255 }, { n: 'Артем Л.', xp: 190 }
   ];
 
-  function fresh() { return { name: username, xp: 0, points: 0, tab: 'tasks', filter: 'all', q: '' }; }
+  function fresh() { return { name: username, xp: 0, points: 0, tab: 'tasks', filter: 'all', q: '', shopCat: 'all', shopSort: 'default', afford: false }; }
   var S = fresh();
   var modal = null;
+  var lastXp = null;
 
   function esc(s) { return String(s || '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function lvl(xp) { return Math.floor(xp / 100) + 1; }
   function lvName(l) { return LEVELS[Math.min(l - 1, LEVELS.length - 1)]; }
   function byId(id) { return QUESTS.filter(function (q) { return String(q.id) === String(id); })[0]; }
-  function isDone(id) { return USER_TASKS.done.some(function (d) { return String(d.id) === String(id); }); }
-  function isTaken(id) { return USER_TASKS.taken.some(function (t) { return String(t.task_id) === String(id) || String(t) === String(id); }); }
-  function hasCat(c) { return USER_TASKS.done.some(function (d) { var q = byId(d.id); return q && q.cat === c; }); }
-  function hours() { return USER_TASKS.done.reduce(function (a, d) { var q = byId(d.id); return a + (q ? (q.hours || 2) : 0); }, 0); }
+  
+  // Проверяем статусы из базы
+  function getTaskStatus(id) {
+    var found = USER_TASKS.taken.concat(USER_TASKS.done).find(function(t) {
+      return String(t.task_id) === String(id);
+    });
+    return found ? found.status : null;
+  }
+
+  function getTaskNote(id) {
+    var f = USER_TASKS.taken.filter(function (t) { return String(t.task_id) === String(id); })[0];
+    return f && f.review_note ? f.review_note : '';
+  }
+
+  function hasCat(c) { return USER_TASKS.done.some(function (d) { var q = byId(d.task_id); return q && q.cat === c; }); }
+  function hours() { return USER_TASKS.done.reduce(function (a, d) { var q = byId(d.task_id); return a + (q ? (q.hours || 2) : 0); }, 0); }
   function unlocked() { return ACH.filter(function (a) { return a.t(); }).map(function (a) { return a.id; }); }
   function $(id) { return document.getElementById(id); }
 
@@ -155,6 +188,67 @@
     setTimeout(function () { t.remove(); }, 2300);
   }
 
+  async function syncWithDatabase() {
+    try {
+      var resTasks = await fetch('/api/tasks');
+      var tasksData = await resTasks.json();
+
+      QUESTS = tasksData.map(function(t) {
+        return {
+          id: t.id,
+          img: (t.id % 3) + 1,
+          title: t.title,
+          cat: t.category || 'aid',
+          district: t.district || 'Соборний район',
+          hours: 2,
+          xp: t.reward_points || 50,
+          pts: t.reward_coins || 10,
+          short: t.description || 'Волонтерська ініціатива у Дніпрі.',
+          desc: t.description,
+          steps: ['Прибути на місце у вказаний час', 'Виконати поставлене завдання', 'Звітувати координатору']
+        };
+      });
+
+      var resUser = await fetch('/api/users/' + userId);
+      if (resUser.ok) {
+        var userData = await resUser.json();
+        var newXp = userData.xp || 0;
+        if (lastXp !== null && newXp > lastXp) toast('Організатор підтвердив завдання! +' + (newXp - lastXp) + ' XP');
+        lastXp = newXp;
+        S.xp = newXp;
+        S.points = userData.coins || 0;
+      }
+
+      var resUserTasks = await fetch('/api/user-tasks?user_id=' + userId);
+      if (resUserTasks.ok) {
+        var utData = await resUserTasks.json();
+        // Разделяем на активные/на проверке и завершенные
+        USER_TASKS.taken = utData.filter(function(x) { return x.status === 'in_progress' || x.status === 'pending_approval'; });
+        USER_TASKS.done = utData.filter(function(x) { return x.status === 'completed'; });
+      }
+
+      var resShop = await fetch('/api/shop');
+      if (resShop.ok) SHOP = await resShop.json();
+
+      if (token) {
+        var resMy = await fetch('/api/shop/my', { headers: authHeaders() });
+        if (resMy.ok) PURCHASES = await resMy.json();
+      }
+
+      render();
+    } catch (e) {
+      console.error("Помилка синхронізації:", e);
+    }
+  }
+
+  /* ---------- магазин ---------- */
+  function authHeaders() { return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }; }
+  function shopItem(id) { return SHOP.filter(function (x) { return String(x.id) === String(id); })[0]; }
+  function shopCatOf(x) { return SHOP_CATS[x.category] || { n: 'Інше', e: '🎁', g: 'linear-gradient(135deg,#8144fa,#05eb40)' }; }
+  function sessionExpired() {
+    toast('Сесія завершилась. Увійдіть знову, щоб обміняти бали.');
+    setTimeout(function () { window.location.href = 'login.html'; }, 1800);
+  }
   function burst() {
     if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     var cols = ['#05eb40', '#8144fa', '#05eb40', '#b99aff'];
@@ -170,51 +264,63 @@
     }
   }
 
-  // Завантаження завдань та прогресу волонтера з бази даних
-  async function syncWithDatabase() {
-    try {
-      // 1. Отримуємо всі завдання з бази (які створюють і організатори, і дефолтні)[cite: 13]
-      var resTasks = await fetch('/api/tasks');
-      var tasksData = await resTasks.json();
+  function shopCard(x) {
+    var can = S.points >= x.cost;
+    return '<div class="activity-card">' +
+      '<div class="card-img vq-prod" style="background:' + shopCatOf(x).g + '"><span aria-hidden="true">' + esc(x.emoji) + '</span></div>' +
+      '<div class="card-content">' +
+        '<span class="district-tag">' + esc(x.partner) + '</span>' +
+        '<h3>' + esc(x.name) + '</h3>' +
+        '<p>' + esc(x.description) + '</p>' +
+        '<div class="vq-price"><b>' + x.cost + '</b> балів</div>' +
+        (can
+          ? '<button type="button" class="submit-btn" style="width:100%" data-a="buy" data-id="' + x.id + '">Обміняти</button>'
+          : '<button type="button" class="submit-btn" style="width:100%" disabled>Не вистачає ' + (x.cost - S.points) + ' балів</button>' +
+            '<div class="vq-bar" aria-hidden="true"><i style="width:' + Math.min(100, Math.round(S.points / x.cost * 100)) + '%"></i></div>') +
+      '</div></div>';
+  }
 
-      QUESTS = tasksData.map(function(t) {
-        return {
-          id: t.id,
-          img: (t.id % 3) + 1,
-          title: t.title,
-          cat: t.category || 'aid',
-          district: t.district || 'Соборний район',
-          hours: 2,
-          xp: t.reward_points || 50,
-          pts: t.reward_coins || 10,
-          slots: 15,
-          joined: 4,
-          lvl: 'Середньо',
-          short: t.description ? t.description.slice(0, 90) + '...' : 'Волонтерська ініціатива у Дніпрі.',
-          desc: t.description,
-          steps: ['Прибути на місце у вказаний час', 'Виконати поставлене завдання', 'Звітувати координатору']
-        };
-      });
+  function shopView() {
+    var cats = [['all', 'Усі']].concat(Object.keys(SHOP_CATS).map(function (k) { return [k, SHOP_CATS[k].e + ' ' + SHOP_CATS[k].n]; }));
+    var list = SHOP.filter(function (x) {
+      if (S.shopCat !== 'all' && x.category !== S.shopCat) return false;
+      if (S.afford && x.cost > S.points) return false;
+      return true;
+    });
+    if (S.shopSort === 'asc') list.sort(function (a, b) { return a.cost - b.cost; });
+    if (S.shopSort === 'desc') list.sort(function (a, b) { return b.cost - a.cost; });
 
-      // 2. Отримуємо профіль та взяті завдання поточного користувача з бази[cite: 13]
-      var resUser = await fetch('/api/users/' + userId);
-      if (resUser.ok) {
-        var userData = await resUser.json();
-        S.xp = userData.xp || 0;
-        S.points = userData.coins || 0;
-      }
+    var h = '<div class="vq-bal"><div><small>Ваш баланс</small><b>' + S.points + '</b> балів<small>Виконуйте завдання, щоб заробляти більше</small></div>' +
+      '<button type="button" class="submit-btn" data-a="tab" data-t="tasks">Заробити бали</button></div>';
 
-      var resUserTasks = await fetch('/api/user-tasks?user_id=' + userId);
-      if (resUserTasks.ok) {
-        var utData = await resUserTasks.json();
-        USER_TASKS.taken = utData.filter(function(x) { return x.status === 'in_progress'; });
-        USER_TASKS.done = utData.filter(function(x) { return x.status === 'completed'; });
-      }
+    h += '<div class="vq-filters" role="group" aria-label="Категорії магазину" style="margin-bottom:14px">' +
+      cats.map(function (x) { return '<button type="button" class="vq-fb" data-a="shopCat" data-f="' + x[0] + '" aria-pressed="' + (S.shopCat === x[0]) + '">' + x[1] + '</button>'; }).join('') + '</div>';
 
-      render();
-    } catch (e) {
-      console.error("Помилка синхронізації з базою даних:", e);
+    h += '<div class="vq-toolbar">' +
+      '<select class="vq-sel" id="shop-sort" aria-label="Сортування">' +
+        '<option value="default"' + (S.shopSort === 'default' ? ' selected' : '') + '>За замовчуванням</option>' +
+        '<option value="asc"' + (S.shopSort === 'asc' ? ' selected' : '') + '>Спочатку дешевші</option>' +
+        '<option value="desc"' + (S.shopSort === 'desc' ? ' selected' : '') + '>Спочатку дорожчі</option>' +
+      '</select>' +
+      '<label class="vq-chk"><input type="checkbox" id="shop-afford"' + (S.afford ? ' checked' : '') + '> Лише те, що я можу собі дозволити</label>' +
+    '</div>';
+
+    if (!SHOP.length) h += '<div class="vq-empty"><b>Магазин поки порожній</b>Організатори ще не додали подарунки.</div>';
+    else if (!list.length) h += '<div class="vq-empty"><b>Нічого не знайдено</b>Змініть категорію або вимкніть фільтр «Лише те, що я можу собі дозволити».</div>';
+    else h += '<div class="activities-grid">' + list.map(shopCard).join('') + '</div>';
+
+    h += '<h3 class="vq-h">Мої покупки (' + PURCHASES.length + ')</h3>';
+    if (!PURCHASES.length) {
+      h += '<div class="vq-empty">Тут з’являтимуться ваші промокоди після обміну балів.</div>';
+    } else {
+      h += '<div class="vq-grid2">' + PURCHASES.map(function (p) {
+        return '<div class="vq-card"><div class="vq-buy"><div class="vq-em" aria-hidden="true">' + esc(p.emoji) + '</div><div><b>' + esc(p.name) + '</b>' +
+               '<div class="vq-sub">' + esc(p.partner) + ' · ' + esc(new Date(p.created_at).toLocaleDateString('uk-UA')) + ' · −' + p.cost + ' балів</div></div></div>' +
+               '<div style="margin-top:12px"><span class="vq-code">' + esc(p.code) + '</span></div></div>';
+      }).join('') + '</div>';
     }
+    h += '<p class="vq-foot">Партнери та подарунки в магазині — демонстраційні дані прототипу.</p>';
+    return h;
   }
 
   function greet() {
@@ -223,69 +329,75 @@
   }
 
   function tabs() {
-    var items = [['tasks', 'Завдання'], ['mine', 'Мої завдання'], ['profile', 'Профіль']];
+    var activeCount = USER_TASKS.taken.length;
+    var items = [['tasks', 'Завдання'], ['mine', 'Мої завдання', activeCount], ['shop', 'Магазин'], ['profile', 'Профіль']];
     $('tabs').innerHTML = items.map(function (i) {
-      var cnt = (i[0] === 'mine' && USER_TASKS.taken.length) ? '<span class="vq-count">' + USER_TASKS.taken.length + '</span>' : '';
+      var cnt = (i[2] && i[2] > 0) ? '<span class="vq-count">' + i[2] + '</span>' : '';
       return '<button type="button" class="vq-tab" data-a="tab" data-t="' + i[0] + '"' + (S.tab === i[0] ? ' aria-current="page"' : '') + '>' + i[1] + cnt + '</button>';
     }).join('');
   }
 
-  function badge(q) {
-    if (isDone(q.id)) return '<span class="vq-badge ok">Виконано</span>';
-    if (isTaken(q.id)) return '<span class="vq-badge go">У роботі</span>';
-    return '';
-  }
-
   function card(q, mode) {
-    var c = CATS[q.cat] || CATS.aid;
-    var img = "background-image:url('images/activity" + q.img + ".jpg'),linear-gradient(135deg,#8144fa,#05eb40);";
-    var btns;
+    var img = "background-image:url('images/activity" + q.img + ".jpg');";
+    var btns = '';
+    var status = getTaskStatus(q.id);
+    var note = getTaskNote(q.id);
+    var noteHtml = note ? '<div style="background:#fff3c9;color:#7a5600;padding:8px 12px;border-radius:10px;font-size:.9rem;margin-bottom:10px;">Організатор повернув на доопрацювання: ' + esc(note) + '</div>' : '';
+
     if (mode === 'active') {
-      btns = '<div class="vq-btns"><button type="button" class="submit-btn vq-green" data-a="complete" data-id="' + q.id + '">Завершити</button>' +
-             '<button type="button" class="submit-btn vq-ghost" data-a="drop" data-id="' + q.id + '">Відмовитись</button></div>';
+      if (status === 'pending_approval') {
+        btns = '<span style="color: #d97706; font-weight: 600;">Очікує підтвердження організатором ⏳</span>';
+      } else {
+        btns = '<div class="vq-btns"><button type="button" class="submit-btn vq-green" data-a="complete" data-id="' + q.id + '">Завершити</button>' +
+               '<button type="button" class="submit-btn vq-ghost" data-a="drop" data-id="' + q.id + '">Відмовитись</button></div>';
+      }
     } else if (mode === 'done') {
-      btns = '';
+      btns = '<span style="color: #05eb40; font-weight: 600;">Виконано ✓</span>';
     } else {
-      var main = isDone(q.id) ? '<button type="button" class="submit-btn" disabled>Виконано</button>'
-               : isTaken(q.id) ? '<button type="button" class="submit-btn vq-green" data-a="complete" data-id="' + q.id + '">Завершити</button>'
-               : '<button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '">Взяти в роботу</button>';
-      btns = '<div class="vq-btns">' + main + '<button type="button" class="submit-btn vq-ghost" data-a="open" data-id="' + q.id + '">Деталі</button></div>';
+      if (status === 'completed') {
+        btns = '<span style="color: #666; font-weight: 600;">Виконано</span>';
+      } else if (status === 'pending_approval') {
+        btns = '<span style="color: #d97706; font-weight: 600;">На перевірці ⏳</span>';
+      } else if (status === 'in_progress') {
+        btns = '<div class="vq-btns"><button type="button" class="submit-btn vq-green" data-a="complete" data-id="' + q.id + '">Завершити</button></div>';
+      } else {
+        btns = '<div class="vq-btns"><button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '">Взяти в роботу</button>' +
+               '<button type="button" class="submit-btn vq-ghost" data-a="open" data-id="' + q.id + '">Деталі</button></div>';
+      }
     }
+
     return '<div class="activity-card">' +
-      '<div class="card-img" style="' + img + '"></div>' +
+      '<div class="card-img" style="' + img + '">' +
+        '<span class="category-tag">' + esc(q.district) + '</span>' +
+      '</div>' +
       '<div class="card-content">' +
-        '<span class="district-tag"><i class="fa-solid fa-location-dot"></i> ' + esc(q.district) + '</span>' + badge(q) +
+        '<span class="district-tag"><i class="fa-solid fa-location-dot"></i> ' + esc(q.district) + '</span>' +
         '<h3>' + esc(q.title) + '</h3>' +
         '<p>' + esc(q.short) + '</p>' +
-        '<div class="vq-meta"><span>' + c.e + ' ' + c.n + '</span><span>⏱ ' + q.hours + ' год</span><span class="vq-rw">+' + q.xp + ' XP</span><span class="vq-rw">+' + q.pts + ' балів</span></div>' +
-        btns +
+        '<div class="vq-meta"><span class="vq-rw">+' + q.xp + ' XP</span><span class="vq-rw">+' + q.pts + ' балів</span></div>' +
+        noteHtml + btns +
       '</div></div>';
   }
 
   function listHtml() {
     var q = S.q.trim().toLowerCase();
     var list = QUESTS.filter(function (x) {
-      if (S.filter !== 'all' && x.cat !== S.filter) return false;
       if (q && (x.title + ' ' + x.district + ' ' + x.short).toLowerCase().indexOf(q) < 0) return false;
       return true;
     });
-    if (!list.length) return '<div class="vq-empty"><b>Нічого не знайдено</b>Спробуйте іншу категорію або очистіть пошук.</div>';
+    if (!list.length) return '<div class="vq-empty"><b>Нічого не знайдено</b>Спробуйте інший пошуковий запит.</div>';
     return '<div class="activities-grid">' + list.map(function (x) { return card(x, 'list'); }).join('') + '</div>';
   }
 
   function tasksView() {
-    var f = [['all', 'Усі']].concat(Object.keys(CATS).map(function (k) { return [k, CATS[k].e + ' ' + CATS[k].n]; }));
     return '<div class="vq-toolbar">' +
         '<input class="vq-search" id="srch" type="search" placeholder="Пошук за назвою чи районом" value="' + esc(S.q) + '" aria-label="Пошук завдань">' +
-      '</div>' +
-      '<div class="vq-filters" role="group" aria-label="Категорії" style="margin-bottom:18px">' +
-        f.map(function (x) { return '<button type="button" class="vq-fb" data-a="filter" data-f="' + x[0] + '" aria-pressed="' + (S.filter === x[0]) + '">' + x[1] + '</button>'; }).join('') +
       '</div>' +
       '<div id="list">' + listHtml() + '</div>';
   }
 
   function mineView() {
-    var act = USER_TASKS.taken.map(function(t) { return byId(t.task_id || t); }).filter(Boolean);
+    var act = USER_TASKS.taken.map(function(t) { return byId(t.task_id); }).filter(Boolean);
     var h = '<h3 class="vq-h" style="margin-top:0">Активні завдання</h3>';
     if (!act.length) {
       h += '<div class="vq-empty"><b>Активних завдань немає</b>Оберіть ініціативу у розділі «Завдання» й візьміть її в роботу.<br><br>' +
@@ -294,11 +406,9 @@
       h += '<div class="activities-grid">' + act.map(function (q) { return card(q, 'active'); }).join('') + '</div>';
     }
     h += '<h3 class="vq-h">Виконано (' + USER_TASKS.done.length + ')</h3>';
-    var done = USER_TASKS.done.slice().reverse().map(function (d) { var q = byId(d.task_id || d.id); return q ? { q: q, d: d } : null; }).filter(Boolean);
+    var done = USER_TASKS.done.slice().reverse().map(function (d) { var q = byId(d.task_id); return q ? { q: q, d: d } : null; }).filter(Boolean);
     if (!done.length) h += '<div class="vq-empty">Тут з’являтимуться виконані завдання.</div>';
-    else h += '<div class="activities-grid">' + done.map(function (x) {
-      return card(x.q, 'done');
-    }).join('') + '</div>';
+    else h += '<div class="activities-grid">' + done.map(function (x) { return card(x.q, 'done'); }).join('') + '</div>';
     return h;
   }
 
@@ -333,30 +443,44 @@
     if (!modal) return '';
     if (modal.t === 'quest') {
       var q = byId(modal.id); if (!q) return '';
-      var c = CATS[q.cat] || CATS.aid;
-      var btn = isDone(q.id) ? '<button type="button" class="submit-btn" disabled style="width:100%;padding:12px">Завдання виконано</button>'
-              : isTaken(q.id) ? '<button type="button" class="submit-btn" data-a="complete" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer;background:#05eb40;color:#120924">Завершити завдання</button>'
-              : '<button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer">Взяти в роботу</button>';
       return '<div class="vq-ov" data-a="closeBg"><div class="vq-sheet" role="dialog" aria-modal="true" aria-label="' + esc(q.title) + '">' +
         '<button type="button" class="vq-x" data-a="close" aria-label="Закрити">✕</button>' +
         '<span class="district-tag"><i class="fa-solid fa-location-dot"></i> ' + esc(q.district) + '</span>' +
         '<h2>' + esc(q.title) + '</h2>' +
-        '<div class="vq-meta"><span>' + c.e + ' ' + c.n + '</span><span>⚡ ' + q.lvl + '</span><span>⏱ ' + q.hours + ' год</span></div>' +
         '<p style="margin:14px 0">' + esc(q.desc) + '</p>' +
         '<b>Що робити</b><ol>' + q.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
         '<div class="vq-meta" style="margin:12px 0 18px"><span class="vq-rw">+' + q.xp + ' XP</span><span class="vq-rw">+' + q.pts + ' балів</span></div>' +
-        btn + '</div></div>';
+        '<button type="button" class="submit-btn" data-a="take" data-id="' + q.id + '" style="width:100%;padding:12px;cursor:pointer">Взяти в роботу</button></div></div>';
     }
-    if (modal.t === 'result') {
-      var r = byId(modal.id);
-      return '<div class="vq-ov" data-a="closeBg"><div class="vq-sheet vq-res" role="dialog" aria-modal="true" aria-label="Завдання виконано">' +
-        '<div style="font-size:3rem" aria-hidden="true">🎉</div><h2>Завдання виконано!</h2>' +
-        '<p style="color:#65617c">Дякуємо за допомогу: «' + esc(r.title) + '»</p>' +
-        '<div class="vq-big">+' + r.xp + ' XP</div><p><b>+' + r.pts + ' балів</b> на рахунку</p>' +
+    if (modal.t === 'buy') {
+      var it = shopItem(modal.id); if (!it) return '';
+      return '<div class="vq-ov" data-a="closeBg"><div class="vq-sheet" role="dialog" aria-modal="true" aria-label="Підтвердження обміну">' +
+        '<button type="button" class="vq-x" data-a="close" aria-label="Закрити">✕</button>' +
+        '<div class="vq-buy"><div class="vq-em" aria-hidden="true">' + esc(it.emoji) + '</div><div><h2 style="margin:0">' + esc(it.name) + '</h2><div class="vq-sub">' + esc(it.partner) + '</div></div></div>' +
+        '<p style="margin:14px 0">' + esc(it.description) + '</p>' +
+        '<div class="vq-stats" style="margin-top:0">' +
+          '<div class="vq-stat"><b>' + S.points + '</b><span>зараз</span></div>' +
+          '<div class="vq-stat"><b>−' + it.cost + '</b><span>ціна</span></div>' +
+          '<div class="vq-stat"><b>' + (S.points - it.cost) + '</b><span>залишиться</span></div>' +
+        '</div>' +
         '<div style="display:grid;gap:10px;margin-top:20px">' +
-          '<button type="button" class="submit-btn" data-a="toProfile" style="padding:12px;cursor:pointer">Переглянути профіль</button>' +
-          '<button type="button" class="submit-btn vq-ghost" data-a="close" style="padding:12px;cursor:pointer;background:#fff;color:#8144fa;border:1.5px solid #8144fa">До завдань</button>' +
+          '<button type="button" class="submit-btn" data-a="confirmBuy" data-id="' + it.id + '" style="padding:12px">Підтвердити обмін</button>' +
+          '<button type="button" class="submit-btn vq-ghost" data-a="close" style="padding:12px">Скасувати</button>' +
         '</div></div></div>';
+    }
+    if (modal.t === 'bought') {
+      var b = modal.item;
+      return '<div class="vq-ov" data-a="closeBg"><div class="vq-sheet vq-res" role="dialog" aria-modal="true" aria-label="Обмін виконано">' +
+        '<div style="font-size:3rem" aria-hidden="true">' + esc(b.emoji) + '</div><h2>' + esc(b.name) + '</h2>' +
+        '<p style="color:#65617c">' + esc(b.partner) + '</p>' +
+        '<p style="margin:16px 0"><span class="vq-code" style="font-size:1.3rem">' + esc(modal.code) + '</span></p>' +
+        '<p style="color:#65617c">Покажіть цей код партнеру. Він також збережений у розділі «Магазин» → «Мої покупки».</p>' +
+        (modal.ach.length ? '<div style="margin-top:16px"><b>Нові досягнення</b>' + modal.ach.map(function (id) {
+          var a = ACH.filter(function (x) { return x.id === id; })[0];
+          return '<div class="vq-ach" style="margin-top:8px;justify-content:center"><div class="vq-ai">' + a.e + '</div><span>' + a.n + '</span></div>';
+        }).join('') + '</div>' : '') +
+        '<button type="button" class="submit-btn" data-a="close" style="width:100%;padding:12px;margin-top:20px">Готово</button>' +
+      '</div></div>';
     }
     return '';
   }
@@ -364,55 +488,74 @@
   function render() {
     tabs();
     greet();
-    var body = S.tab === 'mine' ? mineView() : S.tab === 'profile' ? profileView() : tasksView();
+    var body = S.tab === 'mine' ? mineView() : S.tab === 'shop' ? shopView() : S.tab === 'profile' ? profileView() : tasksView();
     $('view').innerHTML = body;
     $('modal-root').innerHTML = modalHtml();
   }
 
+  async function api(method, url, body) {
+    var opt = { method: method, headers: { 'Content-Type': 'application/json' } };
+    if (body) opt.body = JSON.stringify(body);
+    var r = await fetch(url, opt);
+    var data = {};
+    try { data = await r.json(); } catch (e) {}
+    return { ok: r.ok && data.success !== false, message: data.message };
+  }
+
   var A = {
     tab: function (d) { S.tab = d.t; render(); window.scrollTo(0, 0); },
-    filter: function (d) { S.filter = d.f; render(); },
     open: function (d) { modal = { t: 'quest', id: d.id }; render(); },
     close: function () { modal = null; render(); },
     closeBg: function (d, ev) { if (ev.target.classList.contains('vq-ov')) { modal = null; render(); } },
     take: async function (d) {
       var q = byId(d.id); if (!q) return;
       try {
-        await fetch('/api/user-tasks', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: userId, task_id: q.id, status: 'in_progress' })
-        });
+        var r = await api('POST', '/api/user-tasks', { user_id: userId, task_id: q.id, status: 'in_progress' });
         modal = null;
         await syncWithDatabase();
-        toast('Завдання додано до «Мої завдання».');
-      } catch (e) {
-        console.error(e);
-      }
+        toast(r.ok ? 'Завдання додано до «Мої завдання».' : (r.message || 'Не вдалося взяти завдання.'));
+      } catch (e) { console.error(e); toast('Помилка зв’язку з сервером.'); }
     },
     drop: async function (d) {
       try {
-        await fetch('/api/user-tasks/' + userId + '/' + d.id, { method: 'DELETE' });
+        var r = await api('DELETE', '/api/user-tasks/' + userId + '/' + d.id);
         await syncWithDatabase();
-        toast('Завдання скасовано');
-      } catch (e) {
-        console.error(e);
-      }
+        toast(r.ok ? 'Завдання скасовано' : (r.message || 'Не вдалося скасувати.'));
+      } catch (e) { console.error(e); toast('Помилка зв’язку з сервером.'); }
     },
     complete: async function (d) {
       var q = byId(d.id); if (!q) return;
       try {
-        await fetch('/api/complete-task', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: userId, task_id: q.id })
-        });
-        modal = { t: 'result', id: q.id };
+        var r = await api('POST', '/api/user-tasks', { user_id: userId, task_id: q.id, status: 'pending_approval' });
         await syncWithDatabase();
-        burst();
-      } catch (e) {
-        console.error(e);
-      }
+        toast(r.ok ? 'Надіслано організатору на перевірку. Бали з’являться після підтвердження.' : (r.message || 'Не вдалося надіслати.'));
+      } catch (e) { console.error(e); toast('Помилка зв’язку з сервером.'); }
+    },
+    shopCat: function (d) { S.shopCat = d.f; render(); },
+    buy: function (d) {
+      var it = shopItem(d.id); if (!it) return;
+      if (S.points < it.cost) { toast('Не вистачає балів'); return; }
+      modal = { t: 'buy', id: it.id }; render();
+    },
+    confirmBuy: async function (d) {
+      var it = shopItem(d.id); if (!it) return;
+      if (!token) { sessionExpired(); return; }
+      try {
+        var res = await fetch('/api/shop/buy', { method: 'POST', headers: authHeaders(), body: JSON.stringify({ item_id: it.id }) });
+        var data = await res.json().catch(function () { return {}; });
+        if (res.status === 401) { sessionExpired(); return; }
+        if (!res.ok || !data.success) {
+          modal = null;
+          await syncWithDatabase();
+          toast(data.message || 'Не вдалося обміняти бали.');
+          return;
+        }
+        var had = unlocked();
+        modal = { t: 'bought', code: data.code, item: data.item, ach: [] };
+        await syncWithDatabase();          // оновлює баланс і список покупок із бази
+        modal.ach = unlocked().filter(function (x) { return had.indexOf(x) < 0; });
+        render(); burst();
+      } catch (e) { console.error(e); toast('Помилка зв’язку з сервером.'); }
     },
     toProfile: function () { modal = null; S.tab = 'profile'; render(); window.scrollTo(0, 0); },
     rename: function () {
@@ -430,10 +573,15 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal) { modal = null; render(); } });
   document.addEventListener('input', function (e) {
     if (e.target.id === 'srch') { S.q = e.target.value; var l = $('list'); if (l) l.innerHTML = listHtml(); }
+    else if (e.target.id === 'shop-sort') { S.shopSort = e.target.value; render(); }
+    else if (e.target.id === 'shop-afford') { S.afford = e.target.checked; render(); }
   });
 
-  // Запускаємо первинну синхронізацію при завантаженні сторінки
   syncWithDatabase();
+  // Раз на 10 с оновлюємо дані, щоб після підтвердження організатором бали з’явились самі
+  setInterval(function () {
+    if (!modal && !(document.activeElement && document.activeElement.id === 'srch')) syncWithDatabase();
+  }, 10000);
 })();
 </script>
 </body>

@@ -29,6 +29,7 @@ loginForm.addEventListener('submit', async (e) => {
       localStorage.setItem('userId', result.userId);
       localStorage.setItem('username', result.username);
       localStorage.setItem('userRole', result.role);
+      localStorage.setItem('token', result.token || '');
 
       Swal.fire({
         icon: 'success',
