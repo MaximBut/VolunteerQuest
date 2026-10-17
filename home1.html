@@ -55,10 +55,10 @@
         <label><i class="fa-solid fa-filter" style="color:#8144fa;"></i> Категорія:</label>
         <select id="categoryFilter" class="filter-select" onchange="filterActivities()" style="border:none; outline:none; background:transparent; font-size:0.95rem; cursor:pointer;">
           <option value="all">Усі категорії</option>
-          <option value="pets">🐾 Пітомці / Тварини</option>
-          <option value="cleaning">🧹 Прибирання / Уборка</option>
-          <option value="humanitarian">📦 Гуманітарна допомога</option>
-          <option value="military">🪖 Допомога армії</option>
+          <option value="pets">Пітомці / Тварини</option>
+          <option value="cleaning">Прибирання / Уборка</option>
+          <option value="humanitarian">Гуманітарна допомога</option>
+          <option value="military">Допомога армії</option>
         </select>
       </div>
 
@@ -87,10 +87,10 @@
   <script>
     let allTasks = [];
     const catLabels = {
-      pets: '🐾 Пітомці / Тварини',
-      cleaning: '🧹 Прибирання / Уборка',
-      humanitarian: '📦 Гуманітарна допомога',
-      military: '🪖 Допомога армії'
+      pets: ' Пітомці / Тварини',
+      cleaning: 'Прибирання / Уборка',
+      humanitarian: 'Гуманітарна допомога',
+      military: 'Допомога армії'
     };
 
     async function loadHomeTasks() {
