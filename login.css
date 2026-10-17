@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: #f4f5f8; /* Світлий фон сторінки */
+  background: #f4f5f8; 
   font-family: 'Segoe UI', sans-serif;
   display: flex;
   flex-direction: column;
@@ -41,8 +41,8 @@ body {
 
 .container {
   width: 380px;
-  height: 480px; /* Збільшено висоту під випадаючий список */
-  background: #ffffff; /* Білий фон картки */
+  height: 480px; 
+  background: #ffffff; 
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   position: relative;
@@ -116,7 +116,7 @@ body {
   border-bottom: 1px solid #8144fa;
 }
 
-/* Стилізація випадаючого списку */
+
 .select-field {
   cursor: pointer;
   color: #333333;
@@ -221,13 +221,13 @@ body {
   }
 }
 
-/* =========================================================
+
    АДАПТИВ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ
    Картка має фіксовані координати (left у px змінюється з JS),
    тому на вузьких екранах її масштабуємо, а не перебудовуємо.
    ========================================================= */
 
-/* iOS не зумить сторінку при фокусі в поле */
+
 @media (max-width: 768px) {
   .input-field { font-size: 16px; }
   .toggle-btn, .toggle-btn-reg { min-height: 44px; }
@@ -239,7 +239,7 @@ body {
   .container {
     transform: scale(0.88);
     transform-origin: top center;
-    margin-bottom: -58px;   /* компенсує місце, яке залишає scale */
+    margin-bottom: -58px;   
   }
 }
 
@@ -250,7 +250,7 @@ body {
   }
 }
 
-/* Низькі екрани (телефон у горизонтальному положенні) */
+
 @media (max-height: 560px) {
   body {
     justify-content: flex-start;

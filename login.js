@@ -2,7 +2,6 @@ const loginForm = document.getElementById("login");
 const registerForm = document.getElementById("register");
 const btn = document.getElementById("btn");
 
-// Обробка ВХОДУ через сервер та базу даних MySQL
 loginForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -60,7 +59,6 @@ loginForm.addEventListener('submit', async (e) => {
   }
 });
 
-// Обробка РЕЄСТРАЦІЇ через сервер та запис в MySQL
 registerForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 

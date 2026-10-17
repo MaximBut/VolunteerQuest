@@ -63,7 +63,7 @@
     .vq-x { float: right; width: 38px; height: 38px; border-radius: 50%; border: 0; background: #f3f2f7; cursor: pointer; font-size: 1.2rem; }
     .vq-toast { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); background: #120924; color: #fff; padding: 14px 22px; border-radius: 14px; font-weight: 600; z-index: 120; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
-    /* --- магазин --- */
+    
     .vq-filters { display: flex; gap: 8px; flex-wrap: wrap; }
     .vq-fb { padding: 8px 14px; border-radius: 999px; border: 1.5px solid #e4def5; background: #fff; font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; }
     .vq-fb[aria-pressed="true"] { background: #8144fa; border-color: #8144fa; color: #fff; }
@@ -127,8 +127,8 @@
 
   var QUESTS = [];
   var USER_TASKS = { taken: [], done: [] };
-  var SHOP = [];        // подарунки з бази (/api/shop)
-  var PURCHASES = [];   // мої покупки з бази (/api/shop/my)
+  var SHOP = [];
+  var PURCHASES = [];
   var SHOP_CATS = {
     food:  { n: 'Їжа та кава', e: '', g: 'linear-gradient(135deg,#ffb36b,#ff6b6b)' },
     merch: { n: 'Мерч',        e: '', g: 'linear-gradient(135deg,#8144fa,#b99aff)' },

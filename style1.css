@@ -7,7 +7,7 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Навігація */
+
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -63,7 +63,7 @@ body {
 .hero-interactive {
   position: relative;
   height: 90vh;
-  background: linear-gradient(135deg, #120924, #1f1138); /* запасний фон, якщо відео не завантажилось */
+  background: linear-gradient(135deg, #120924, #1f1138); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,7 +91,7 @@ body {
   z-index: 1;
 }
 
-/* Плаваючі фрази фон */
+
 .floating-phrase {
   position: absolute;
   background: rgba(255, 255, 255, 0.08);
@@ -111,7 +111,7 @@ body {
   100% { transform: translateY(15px) translateX(-15px); }
 }
 
-/* Центральна картка на першому екрані */
+
 .hero-card {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -169,7 +169,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Секція можливостей */
+
 .opportunities-section {
   padding: 60px 80px;
 }
@@ -189,7 +189,7 @@ body {
   color: #666;
 }
 
-/* Панель сортування та фільтрів */
+
 .filter-panel {
   display: flex;
   justify-content: center;
@@ -223,7 +223,7 @@ body {
   cursor: pointer;
 }
 
-/* Сітка карток */
+
 .activities-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
@@ -300,7 +300,7 @@ body {
   color: #05eb40;
 }
 
-/* Футер */
+
 footer {
   text-align: center;
   padding: 20px;
@@ -309,26 +309,26 @@ footer {
   border-top: 1px solid #eaeaea;
 }
 
-/* =========================================================
+
    АДАПТИВ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ
    ========================================================= */
 
-/* Сенсорні екрани: прибираємо «залипання» hover-ефектів */
+
 @media (hover: none) {
   .activity-card:hover,
   .auth-btn:hover,
   .btn-hero:hover { transform: none; }
 }
 
-/* Планшети */
+
 @media (max-width: 1024px) {
   .navbar { padding: 16px 30px; }
   .opportunities-section { padding: 50px 30px; }
 }
 
-/* Телефони та малі планшети */
+
 @media (max-width: 768px) {
-  /* Шапка: логотип і кнопка в першому рядку, меню — у другому */
+  
   .navbar {
     flex-wrap: wrap;
     gap: 10px;
@@ -342,22 +342,22 @@ footer {
     justify-content: space-between;
     font-size: 0.9rem;
   }
-  .nav-links a { padding: 8px 0; }          /* зручна зона дотику */
+  .nav-links a { padding: 8px 0; }          
   .auth-btn {
     padding: 10px 16px;
     font-size: 0.9rem;
     white-space: nowrap;
   }
 
-  /* Перший екран */
+  
   .hero-interactive {
     height: auto;
     min-height: 80vh;
     min-height: 80svh;
     padding: 40px 16px;
   }
-  .hero-video { display: none; }            /* економія трафіку; лишається градієнт */
-  .floating-phrase { display: none; }       /* щоб не налізали на картку */
+  .hero-video { display: none; }            
+  .floating-phrase { display: none; }       
   .hero-overlay { display: none; }
   .hero-card {
     padding: 28px 22px;
@@ -367,13 +367,13 @@ footer {
   .hero-card p { font-size: 1rem; }
   .btn-hero { padding: 14px 28px; }
 
-  /* Секція завдань */
+  
   .opportunities-section { padding: 40px 16px; }
   .section-header h2 { font-size: 1.6rem; }
   .activities-grid { gap: 20px; }
   .card-img { height: 160px; }
 
-  /* Фільтри — на всю ширину */
+  
   .filter-panel {
     flex-direction: column;
     gap: 12px;
@@ -386,12 +386,12 @@ footer {
   .filter-select {
     flex: 1;
     min-width: 0;
-    font-size: 16px;                        /* iOS не зумить сторінку при фокусі */
+    font-size: 16px;                        
     min-height: 40px;
   }
 }
 
-/* Дуже вузькі екрани */
+
 @media (max-width: 400px) {
   .logo span { font-size: 1.1rem; }
   .hero-card h1 { font-size: 1.55rem; }
@@ -399,12 +399,12 @@ footer {
   .card-content { padding: 16px; }
 }
 
-/* Горизонтальна орієнтація на телефоні */
+
 @media (max-height: 500px) and (orientation: landscape) {
   .hero-interactive { min-height: 100vh; }
 }
 
-/* Користувачі, які вимкнули анімації */
+
 @media (prefers-reduced-motion: reduce) {
   .floating-phrase,
   .hero-card { animation: none; }
