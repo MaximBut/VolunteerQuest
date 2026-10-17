@@ -1,18 +1,10 @@
--- =====================================================
--- ДоброРазом: повна схема бази даних (MySQL 5.7+ / 8 / MariaDB)
--- Для НОВОЇ бази з нуля. Якщо база вже є з даними, запустіть
--- замість цього файл migration_review.sql.
--- =====================================================
-
 CREATE DATABASE IF NOT EXISTS volunteer_db
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-SET NAMES utf8mb4;    -- щоб кирилиця й емодзі зберігались правильно з консолі mysql
+SET NAMES utf8mb4;
 USE volunteer_db;
 
--- УВАГА: наступні три рядки ВИДАЛЯЮТЬ усі дані (користувачів, завдання, прогрес).
--- Після появи реальних користувачів закоментуйте їх (поставте -- на початку).
 DROP TABLE IF EXISTS purchases;
 DROP TABLE IF EXISTS shop_items;
 DROP TABLE IF EXISTS user_tasks;
@@ -35,7 +27,7 @@ CREATE TABLE users (
 CREATE TABLE tasks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
-    category VARCHAR(50) NOT NULL,               -- <--- Поле категорії для фільтрації
+    category VARCHAR(50) NOT NULL,
     description TEXT NOT NULL,
     district VARCHAR(100) NOT NULL,
     date VARCHAR(50) NOT NULL,
@@ -49,9 +41,9 @@ CREATE TABLE tasks (
 ) ENGINE=InnoDB;
 
 -- 3. «Мої завдання»: зв'язок волонтерів із завданнями
---    in_progress      -> волонтер взяв завдання
---    pending_approval -> волонтер натиснув "Завершити", чекає перевірки організатора
---    completed        -> організатор підтвердив, бали нараховано
+--    in_progress - волонтер взяв завдання
+--    pending_approval - волонтер натиснув "Завершити", чекає перевірки організатора
+--    completed - організатор підтвердив, бали нараховано
 CREATE TABLE user_tasks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -69,13 +61,13 @@ CREATE TABLE user_tasks (
 -- 4. Каталог подарунків (додають організатори у вкладці «Подарунки»)
 CREATE TABLE shop_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    category VARCHAR(20) NOT NULL,                -- food, merch, fun, sport, edu
+    category VARCHAR(20) NOT NULL,
     emoji VARCHAR(16) NOT NULL DEFAULT '🎁',
     name VARCHAR(120) NOT NULL,
     partner VARCHAR(120) NOT NULL,
     description VARCHAR(300) NOT NULL DEFAULT '',
-    cost INT NOT NULL,                            -- ціна в балах (users.coins)
-    is_active TINYINT(1) NOT NULL DEFAULT 1,      -- 0 = прихований
+    cost INT NOT NULL,
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
     created_by INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL,
@@ -88,7 +80,7 @@ CREATE TABLE purchases (
     user_id INT NOT NULL,
     item_id INT NOT NULL,
     code VARCHAR(20) NOT NULL UNIQUE,
-    cost INT NOT NULL,                            -- ціна на момент покупки
+    cost INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES shop_items(id) ON DELETE RESTRICT

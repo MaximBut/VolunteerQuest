@@ -7,7 +7,6 @@ const crypto = require('crypto');
 
 const app = express();
 
-// --- БАЗА ДАНИХ ---
 const pool = mysql.createPool({
   host: '127.0.0.1',
   port: 3306,
@@ -32,7 +31,6 @@ pool.getConnection((err, conn) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- ЗАХИСТ СЛУЖБОВИХ ФАЙЛІВ ---
 const BLOCKED = /^\/(server\.js|package(-lock)?\.json|\.env.*|.*\.sql|node_modules(\/.*)?)$/i;
 app.use((req, res, next) => {
   let p = req.path;
@@ -44,11 +42,9 @@ app.use((req, res, next) => {
 app.get('/index.html', (req, res) => res.redirect('/'));
 app.use(express.static(path.join(__dirname), { dotfiles: 'deny' }));
 
-// --- ДОПОМІЖНЕ ---
 const levelOf = (xp) => Math.floor(xp / 100) + 1;
 const fail = (res, code, message) => res.status(code).json({ success: false, message });
 
-// --- СЕСІЇ (токени) ---
 const sessions = new Map();
 const SESSION_TTL = 24 * 60 * 60 * 1000;
 
@@ -73,18 +69,15 @@ function auth(...roles) {
 const redirectFor = (role) =>
   role === 'organizer' ? '/organizer-dashboard.html' : '/volunteer-dashboard.html';
 
-// --- МАГАЗИН: НАЛАШТУВАННЯ ---
 const SHOP_MANAGER_ROLES = ['organizer'];
 const SHOP_CATEGORIES = ['food', 'merch', 'fun', 'sport', 'edu'];
 const clamp = (v, min, max, def) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : def; };
 
-// --- МАРШРУТИ ДЛЯ СТОРІНОК (HTML) ---
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'home1.html')));
 app.get('/login.html', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 app.get('/volunteer-dashboard.html', (req, res) => res.sendFile(path.join(__dirname, 'volunteer-dashboard.html')));
 app.get('/organizer-dashboard.html', (req, res) => res.sendFile(path.join(__dirname, 'organizer-dashboard.html')));
 
-// --- АВТОРИЗАЦІЯ ТА РЕЄСТРАЦІЯ ---
 app.post('/register', async (req, res) => {
   const { username, email, password, role } = req.body;
   if (!username || !email || !password) {
@@ -139,7 +132,6 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// --- ПРОФІЛЬ ---
 app.get('/api/users/:id', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -155,7 +147,6 @@ app.get('/api/users/:id', async (req, res) => {
   }
 });
 
-// --- РОБОТА З ЗАВДАННЯМИ ---
 app.get('/api/tasks', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -170,7 +161,6 @@ app.get('/api/tasks', async (req, res) => {
   }
 });
 
-// Створити завдання (тільки організатор, з підтримкою category)
 app.post('/api/tasks', async (req, res) => {
   const { title, category, description, district, date, duration, reward_points, reward_coins, organizer_id } = req.body;
 
@@ -360,9 +350,6 @@ app.post('/api/reject-task', async (req, res) => {
   }
 });
 
-// =====================================================
-// МАГАЗИН ПОДАРУНКІВ
-// =====================================================
 const shopManager = auth(...SHOP_MANAGER_ROLES);
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const makeCode = () => {
@@ -515,5 +502,5 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущено! Відкрийте у браузері: http://localhost:${PORT}`);
+  console.log(`Сервер запущено! Відкрийте у браузері: http://localhost:${PORT}`);
 });

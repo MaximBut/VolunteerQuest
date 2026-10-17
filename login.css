@@ -7,8 +7,9 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
   color: #333333;
 }
 
@@ -218,4 +219,45 @@ body {
     transform: translateY(0);
     filter: blur(0);
   }
+}
+
+/* =========================================================
+   АДАПТИВ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ
+   Картка має фіксовані координати (left у px змінюється з JS),
+   тому на вузьких екранах її масштабуємо, а не перебудовуємо.
+   ========================================================= */
+
+/* iOS не зумить сторінку при фокусі в поле */
+@media (max-width: 768px) {
+  .input-field { font-size: 16px; }
+  .toggle-btn, .toggle-btn-reg { min-height: 44px; }
+  .page-header { padding: 0 16px; margin-bottom: 12px; }
+  .page-subtitle { font-size: 0.95rem; }
+}
+
+@media (max-width: 400px) {
+  .container {
+    transform: scale(0.88);
+    transform-origin: top center;
+    margin-bottom: -58px;   /* компенсує місце, яке залишає scale */
+  }
+}
+
+@media (max-width: 340px) {
+  .container {
+    transform: scale(0.8);
+    margin-bottom: -96px;
+  }
+}
+
+/* Низькі екрани (телефон у горизонтальному положенні) */
+@media (max-height: 560px) {
+  body {
+    justify-content: flex-start;
+    padding: 16px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg, .page-header { animation: none; }
 }
