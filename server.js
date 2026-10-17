@@ -8,15 +8,13 @@ const crypto = require('crypto');
 const app = express();
 
 // --- БАЗА ДАНИХ ---
-// Pool замість одного connection: одне з'єднання MySQL закривається після
-// простою, і після цього всі запити падають. Pool перепідключається сам.
 const pool = mysql.createPool({
   host: '127.0.0.1',
   port: 3306,
   user: 'dobro',
   password: 'dobro123',
   database: 'volunteer_db',
-  charset: 'utf8mb4',   // щоб емодзі в подарунках зберігались коректно
+  charset: 'utf8mb4',
   waitForConnections: true,
   connectionLimit: 10
 });
@@ -35,8 +33,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- ЗАХИСТ СЛУЖБОВИХ ФАЙЛІВ ---
-// Раніше через express.static(__dirname) можна було відкрити
-// http://localhost:3000/server.js і побачити пароль від БД.
 const BLOCKED = /^\/(server\.js|package(-lock)?\.json|\.env.*|.*\.sql|node_modules(\/.*)?)$/i;
 app.use((req, res, next) => {
   let p = req.path;
@@ -45,26 +41,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// Кнопка «Вийти» веде на index.html, якого немає: перенаправляємо на головну
 app.get('/index.html', (req, res) => res.redirect('/'));
-
 app.use(express.static(path.join(__dirname), { dotfiles: 'deny' }));
 
 // --- ДОПОМІЖНЕ ---
 const levelOf = (xp) => Math.floor(xp / 100) + 1;
 const fail = (res, code, message) => res.status(code).json({ success: false, message });
+
 // --- СЕСІЇ (токени) ---
-// Після входу сервер видає токен. Дії з балами (магазин) і керування подарунками
-// перевіряють токен, а не "user_id" з запиту, тож чужі бали витратити не можна.
-// Токени живуть у пам'яті сервера: після перезапуску потрібно увійти знову.
-const sessions = new Map();               // token -> { userId, role, exp }
-const SESSION_TTL = 24 * 60 * 60 * 1000;  // 24 години
+const sessions = new Map();
+const SESSION_TTL = 24 * 60 * 60 * 1000;
 
 function createSession(user) {
   const token = crypto.randomBytes(24).toString('hex');
   sessions.set(token, { userId: user.id, role: user.role, exp: Date.now() + SESSION_TTL });
   return token;
 }
+
 function auth(...roles) {
   return (req, res, next) => {
     const m = /^Bearer (.+)$/.exec(req.headers.authorization || '');
@@ -76,13 +69,11 @@ function auth(...roles) {
     next();
   };
 }
+
 const redirectFor = (role) =>
   role === 'organizer' ? '/organizer-dashboard.html' : '/volunteer-dashboard.html';
 
 // --- МАГАЗИН: НАЛАШТУВАННЯ ---
-// Хто може додавати подарунки в магазин. Зараз це організатори
-// (вкладка «Подарунки» в organizer-dashboard.html).
-// Рішення, хто саме керує магазином, можна змінити тут одним рядком.
 const SHOP_MANAGER_ROLES = ['organizer'];
 const SHOP_CATEGORIES = ['food', 'merch', 'fun', 'sport', 'edu'];
 const clamp = (v, min, max, def) => { const n = parseInt(v, 10); return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : def; };
@@ -94,11 +85,8 @@ app.get('/volunteer-dashboard.html', (req, res) => res.sendFile(path.join(__dirn
 app.get('/organizer-dashboard.html', (req, res) => res.sendFile(path.join(__dirname, 'organizer-dashboard.html')));
 
 // --- АВТОРИЗАЦІЯ ТА РЕЄСТРАЦІЯ ---
-
-// Реєстрація (помилки текстом, щоб працював поточний login.js)
 app.post('/register', async (req, res) => {
   const { username, email, password, role } = req.body;
-
   if (!username || !email || !password) {
     return res.status(400).send('Заповніть усі поля.');
   }
@@ -120,7 +108,6 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// Вхід: тепер ЗАВЖДИ відповідає JSON
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return fail(res, 400, 'Введіть логін і пароль.');
@@ -152,7 +139,7 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// --- ПРОФІЛЬ (XP, монети, рівень) ---
+// --- ПРОФІЛЬ ---
 app.get('/api/users/:id', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -169,8 +156,6 @@ app.get('/api/users/:id', async (req, res) => {
 });
 
 // --- РОБОТА З ЗАВДАННЯМИ ---
-
-// 1. Усі завдання (для головної та волонтерського кабінету)
 app.get('/api/tasks', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -185,12 +170,12 @@ app.get('/api/tasks', async (req, res) => {
   }
 });
 
-// 2. Створити завдання (тільки організатор)
+// Створити завдання (тільки організатор, з підтримкою category)
 app.post('/api/tasks', async (req, res) => {
-  const { title, description, district, date, duration, reward_points, reward_coins, organizer_id } = req.body;
+  const { title, category, description, district, date, duration, reward_points, reward_coins, organizer_id } = req.body;
 
-  if (!title || !description || !district || !organizer_id) {
-    return fail(res, 400, 'Заповніть назву, опис, район та вкажіть організатора.');
+  if (!title || !category || !description || !district || !organizer_id) {
+    return fail(res, 400, 'Заповніть назву, категорію, опис, район та вкажіть організатора.');
   }
 
   try {
@@ -200,10 +185,19 @@ app.post('/api/tasks', async (req, res) => {
     }
 
     await db.query(
-      `INSERT INTO tasks (title, description, district, date, duration, reward_points, reward_coins, organizer_id)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [title.trim(), description.trim(), district, date || 'Уточнюється', duration || 'Уточнюється',
-       clamp(reward_points, 1, 500, 50), clamp(reward_coins, 1, 200, 10), organizer_id]
+      `INSERT INTO tasks (title, category, description, district, date, duration, reward_points, reward_coins, organizer_id)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        title.trim(),
+        category,
+        description.trim(),
+        district,
+        date || 'Уточнюється',
+        duration || 'Уточнюється',
+        clamp(reward_points, 1, 500, 50),
+        clamp(reward_coins, 1, 200, 10),
+        organizer_id
+      ]
     );
     res.json({ success: true, message: 'Завдання успішно створено!' });
   } catch (err) {
@@ -212,10 +206,6 @@ app.post('/api/tasks', async (req, res) => {
   }
 });
 
-// 3. Волонтер бере завдання АБО надсилає його на перевірку організатору
-//    body: { user_id, task_id, status? }
-//    status = 'in_progress' (за замовчуванням)  -> взяти завдання
-//    status = 'pending_approval'                -> "Я виконав", відправити на перевірку
 app.post('/api/user-tasks', async (req, res) => {
   const { user_id, task_id } = req.body;
   const status = req.body.status || 'in_progress';
@@ -230,7 +220,6 @@ app.post('/api/user-tasks', async (req, res) => {
     if (t.length === 0) return fail(res, 404, 'Завдання не знайдено.');
 
     if (status === 'pending_approval') {
-      // Можна відправити лише те, що вже "в роботі"
       const [upd] = await db.query(
         `UPDATE user_tasks SET status = 'pending_approval', submitted_at = NOW(), review_note = NULL
          WHERE user_id = ? AND task_id = ? AND status = 'in_progress'`, [user_id, task_id]);
@@ -249,7 +238,6 @@ app.post('/api/user-tasks', async (req, res) => {
   }
 });
 
-// 4. Мої завдання волонтера (для кабінету волонтера: /api/user-tasks?user_id=5)
 async function getUserTasks(userId) {
   const [rows] = await db.query(
     `SELECT ut.id AS user_task_id, ut.user_id, ut.task_id, ut.status, ut.taken_at,
@@ -259,17 +247,18 @@ async function getUserTasks(userId) {
      WHERE ut.user_id = ? ORDER BY ut.id DESC`, [userId]);
   return rows;
 }
+
 app.get('/api/user-tasks', async (req, res) => {
   if (!req.query.user_id) return fail(res, 400, 'Потрібен user_id.');
   try { res.json(await getUserTasks(req.query.user_id)); }
   catch (err) { console.error('my tasks:', err.message); fail(res, 500, 'Помилка отримання ваших завдань'); }
 });
+
 app.get('/api/user-tasks/:userId', async (req, res) => {
   try { res.json(await getUserTasks(req.params.userId)); }
   catch (err) { console.error('my tasks:', err.message); fail(res, 500, 'Помилка отримання ваших завдань'); }
 });
 
-// 5. Відмовитись від завдання (лише поки воно "в роботі")
 app.delete('/api/user-tasks/:userId/:taskId', async (req, res) => {
   try {
     const [del] = await db.query(
@@ -283,7 +272,6 @@ app.delete('/api/user-tasks/:userId/:taskId', async (req, res) => {
   }
 });
 
-// 6. Усі записи волонтерів на завдання (для кабінету організатора)
 app.get('/api/all-user-tasks', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -298,8 +286,6 @@ app.get('/api/all-user-tasks', async (req, res) => {
   }
 });
 
-// 7. ОРГАНІЗАТОР ПІДТВЕРДЖУЄ виконання -> тільки тут нараховуються XP і бали
-//    body: { user_id (волонтер), task_id, organizer_id }
 app.post('/api/complete-task', async (req, res) => {
   const { user_id, task_id, organizer_id } = req.body;
   if (!user_id || !task_id || !organizer_id) return fail(res, 400, 'Потрібні user_id, task_id і organizer_id.');
@@ -320,8 +306,6 @@ app.post('/api/complete-task', async (req, res) => {
     const [before] = await conn.query('SELECT xp FROM users WHERE id = ?', [user_id]);
     if (before.length === 0) { await conn.rollback(); return fail(res, 404, 'Волонтера не знайдено.'); }
 
-    // Умова status='pending_approval' не дає нарахувати нагороду двічі
-    // і не дає зарахувати завдання, яке волонтер ще не надіслав на перевірку.
     const [upd] = await conn.query(
       `UPDATE user_tasks SET status = 'completed', reviewed_at = NOW(), review_note = NULL
        WHERE user_id = ? AND task_id = ? AND status = 'pending_approval'`, [user_id, task_id]);
@@ -353,8 +337,6 @@ app.post('/api/complete-task', async (req, res) => {
   }
 });
 
-// 8. ОРГАНІЗАТОР ПОВЕРТАЄ завдання на доопрацювання (бали не нараховуються)
-//    body: { user_id, task_id, organizer_id, note? }
 app.post('/api/reject-task', async (req, res) => {
   const { user_id, task_id, organizer_id } = req.body;
   const note = String(req.body.note || '').trim().slice(0, 255) || null;
@@ -390,7 +372,6 @@ const makeCode = () => {
 };
 const cleanEmoji = (e) => Array.from(String(e || '').trim()).slice(0, 4).join('') || '🎁';
 
-// 1. Каталог для волонтерів: лише активні подарунки
 app.get('/api/shop', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -403,7 +384,6 @@ app.get('/api/shop', async (req, res) => {
   }
 });
 
-// 2. Мої покупки (лише для залогіненого волонтера)
 app.get('/api/shop/my', auth('volunteer'), async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -417,8 +397,6 @@ app.get('/api/shop/my', auth('volunteer'), async (req, res) => {
   }
 });
 
-// 3. Обміняти бали на подарунок. Бали списуються однією атомарною умовою
-//    "coins >= ціна", тому подвійні кліки не уводять баланс у мінус.
 app.post('/api/shop/buy', auth('volunteer'), async (req, res) => {
   const itemId = parseInt(req.body.item_id, 10);
   if (!itemId) return fail(res, 400, 'Не вказано подарунок.');
@@ -464,9 +442,6 @@ app.post('/api/shop/buy', auth('volunteer'), async (req, res) => {
   }
 });
 
-// --- Керування подарунками (див. SHOP_MANAGER_ROLES) ---
-
-// 4. Усі подарунки, включно з прихованими
 app.get('/api/manage/shop', shopManager, async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -480,7 +455,6 @@ app.get('/api/manage/shop', shopManager, async (req, res) => {
   }
 });
 
-// 5. Додати подарунок
 app.post('/api/manage/shop', shopManager, async (req, res) => {
   const name = String(req.body.name || '').trim();
   const partner = String(req.body.partner || '').trim();
@@ -504,8 +478,6 @@ app.post('/api/manage/shop', shopManager, async (req, res) => {
   }
 });
 
-// 6. Змінити подарунок: сховати/показати (is_active), ціна, назва тощо.
-//    Видалення немає навмисно: покупки посилаються на подарунок, його лише ховають.
 app.put('/api/manage/shop/:id', shopManager, async (req, res) => {
   const sets = [], vals = [];
   const b = req.body;
@@ -535,7 +507,6 @@ app.put('/api/manage/shop/:id', shopManager, async (req, res) => {
   }
 });
 
-// Невідомі API-маршрути та помилки: завжди JSON
 app.use('/api', (req, res) => fail(res, 404, 'Маршрут не знайдено.'));
 app.use((err, req, res, next) => {
   console.error('unhandled:', err);

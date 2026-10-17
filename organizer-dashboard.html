@@ -112,6 +112,13 @@
     var shopError = '';
     var token = localStorage.getItem('token') || '';
 
+    var categoryNames = {
+      pets: '🐾 Пітомці / Тварини',
+      cleaning: '🧹 Прибирання / Уборка',
+      humanitarian: '📦 Гуманітарна допомога',
+      military: '🪖 Допомога армії'
+    };
+
     async function loadData() {
       try {
         var resTasks = await fetch('/api/tasks');
@@ -157,6 +164,7 @@
       return '<div class="activities-grid">' + tasksData.map(function(task) {
         var isMyTask = String(task.organizer_id) === String(userId);
         var applicants = allUserTasks.filter(function(ut) { return String(ut.task_id) === String(task.id); });
+        var catLabel = categoryNames[task.category] || task.category || 'Загальне';
 
         var applicantsHtml = '';
         if (!applicants.length) {
@@ -191,8 +199,12 @@
 
         return '<div class="org-card" style="margin-bottom:0;">' +
           badgeOwner +
-          '<span style="color: #666; font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ' + esc(task.district) + '</span>' +
-          '<h3 style="font-size: 1.25rem; margin: 12px 0 6px; color: #120924;">' + esc(task.title) + '</h3>' +
+          '<span style="color: #666; font-size: 0.85rem;"><i class="fa-solid fa-location-dot"></i> ' + esc(task.district) + ' • <b>' + esc(catLabel) + '</b></span>' +
+          '<h3 style="font-size: 1.25rem; margin: 12px 0 4px; color: #120924;">' + esc(task.title) + '</h3>' +
+          '<div style="color: #65617c; font-size: 0.85rem; margin-bottom: 10px;">' +
+            '<span><i class="fa-regular fa-calendar-check"></i> ' + esc(task.date || 'Дата за домовленістю') + '</span> · ' +
+            '<span><i class="fa-regular fa-clock"></i> ' + esc(task.duration || '2 години') + '</span>' +
+          '</div>' +
           '<p style="color: #555; font-size: 0.95rem; margin-bottom: 14px;">' + esc(task.description) + '</p>' +
           '<div style="display: flex; gap: 10px; margin-bottom: 15px;">' +
             '<span class="vq-rw">+' + task.reward_points + ' XP</span>' +
@@ -216,6 +228,16 @@
             '<input type="text" name="title" class="input-field" placeholder="Наприклад: Прибирання парку Шевченка" required>' +
           '</div>' +
           '<div style="margin-bottom: 15px;">' +
+            '<label style="display:block; margin-bottom:5px; font-weight:600;">Категорія:</label>' +
+            '<select name="category" class="input-field" required>' +
+              '<option value="" disabled selected>Оберіть категорію...</option>' +
+              '<option value="pets">Пітомці / Тварини</option>' +
+              '<option value="cleaning">Прибирання / Уборка</option>' +
+              '<option value="humanitarian">Гуманітарна допомога</option>' +
+              '<option value="military">Допомога армії</option>' +
+            '</select>' +
+          '</div>' +
+          '<div style="margin-bottom: 15px;">' +
             '<label style="display:block; margin-bottom:5px; font-weight:600;">Район Дніпра:</label>' +
             '<select name="district" class="input-field" required>' +
               '<option value="" disabled selected>Оберіть район...</option>' +
@@ -227,6 +249,16 @@
               '<option value="Новокодацький район">Новокодацький район</option>' +
               '<option value="Амур-Нижньодніпровський район">Амур-Нижньодніпровський район</option>' +
             '</select>' +
+          '</div>' +
+          '<div style="display: flex; gap: 15px; margin-bottom: 15px;">' +
+            '<div style="flex: 1;">' +
+              '<label style="display:block; margin-bottom:5px; font-weight:600;">Дата та час проведення:</label>' +
+              '<input type="text" name="date" class="input-field" placeholder="Наприклад: 20 жовтня, 14:00" required>' +
+            '</div>' +
+            '<div style="flex: 1;">' +
+              '<label style="display:block; margin-bottom:5px; font-weight:600;">Тривалість:</label>' +
+              '<input type="text" name="duration" class="input-field" placeholder="Наприклад: 2 години" required>' +
+            '</div>' +
           '</div>' +
           '<div style="margin-bottom: 15px;">' +
             '<label style="display:block; margin-bottom:5px; font-weight:600;">Детальний опис та адреса:</label>' +

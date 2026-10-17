@@ -8,7 +8,7 @@ CREATE DATABASE IF NOT EXISTS volunteer_db
   CHARACTER SET utf8mb4
   COLLATE utf8mb4_unicode_ci;
 
-SET NAMES utf8mb4;   -- щоб кирилиця й емодзі зберігались правильно з консолі mysql
+SET NAMES utf8mb4;    -- щоб кирилиця й емодзі зберігались правильно з консолі mysql
 USE volunteer_db;
 
 -- УВАГА: наступні три рядки ВИДАЛЯЮТЬ усі дані (користувачів, завдання, прогрес).
@@ -31,10 +31,11 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
--- 2. Завдання, які створюють організатори
+-- 2. Завдання, які створюють організатори (з полем category)
 CREATE TABLE tasks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(150) NOT NULL,
+    category VARCHAR(50) NOT NULL,               -- <--- Поле категорії для фільтрації
     description TEXT NOT NULL,
     district VARCHAR(100) NOT NULL,
     date VARCHAR(50) NOT NULL,
@@ -92,5 +93,3 @@ CREATE TABLE purchases (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES shop_items(id) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- Стартові подарунки: запустіть seed_shop.sql

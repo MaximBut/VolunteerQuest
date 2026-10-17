@@ -6,11 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VolunQuest — Волонтерська організація Дніпра</title>
   <link rel="stylesheet" href="style1.css">
+  <link rel="stylesheet" href="pages.css">
   <script src="https://kit.fontawesome.com/9ba6466c1d.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-  <!-- Навігаційне меню -->
   <header class="navbar">
     <div class="logo">
       <i class="fa-solid fa-heart"></i> <span>VolunQuest</span>
@@ -26,16 +26,16 @@
     </div>
   </header>
 
-  <!-- Перший екран: Інтерактивна картинка з фразами та центральним квадратом -->
   <section class="hero-interactive">
-    <!-- Плаваючі фрази (інтерактивні елементи фону) -->
+    <video class="hero-video" autoplay muted loop playsinline poster="images/hero-poster.jpg">
+      <source src="volunteering-video.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
     <div class="floating-phrase" style="top: 15%; left: 10%; animation-delay: 0s;">«Творимо добро разом»</div>
     <div class="floating-phrase" style="top: 25%; right: 12%; animation-delay: 2s;">«Допомога біля дому»</div>
     <div class="floating-phrase" style="bottom: 20%; left: 15%; animation-delay: 4s;">«Кожен внесок важливий»</div>
     <div class="floating-phrase" style="bottom: 25%; right: 18%; animation-delay: 1s;">«Дніпро - місто єдності»</div>
-    <div class="floating-phrase" style="top: 50%; left: 5%; animation-delay: 3s;">«Стань волонтером сьогодні»</div>
 
-    <!-- Центральний квадрат-візитка -->
     <div class="hero-card">
       <span class="hero-badge"><i class="fa-solid fa-hands-holding-child"></i> Платформа змін</span>
       <h1>VolunQuest у Дніпрі</h1>
@@ -44,82 +44,95 @@
     </div>
   </section>
 
-  <!-- Основний блок можливостей волонтерства із сортуванням -->
-  <section id="volunteering" class="opportunities-section">
+  <section id="volunteering" class="opportunities-section" style="max-width: 1200px; margin: 0 auto; padding: 60px 40px;">
     <div class="section-header">
       <h2>Можливості для волонтерів</h2>
       <p>Обирайте те, що вам до душі, за категоріями або районами міста</p>
     </div>
 
-    <!-- Панель сортування та фільтрації -->
-    <div class="filter-panel">
-      <div class="filter-group">
-        <label><i class="fa-solid fa-filter"></i> Категорія:</label>
-        <select id="categoryFilter" class="filter-select" onchange="filterActivities()">
+    <div class="filter-panel" style="display: flex; gap: 15px; justify-content: center; margin-bottom: 35px; flex-wrap: wrap;">
+      <div class="filter-group" style="background:#fff; padding:10px 20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.03); display:flex; align-items:center; gap:10px;">
+        <label><i class="fa-solid fa-filter" style="color:#8144fa;"></i> Категорія:</label>
+        <select id="categoryFilter" class="filter-select" onchange="filterActivities()" style="border:none; outline:none; background:transparent; font-size:0.95rem; cursor:pointer;">
           <option value="all">Усі категорії</option>
-          <option value="pets">Пітомці / Тварини</option>
-          <option value="cleaning">Прибирання / Уборка</option>
-          <option value="humanitarian">Гуманітарна допомога</option>
-          <option value="military">Допомога армії</option>
+          <option value="pets">🐾 Пітомці / Тварини</option>
+          <option value="cleaning">🧹 Прибирання / Уборка</option>
+          <option value="humanitarian">📦 Гуманітарна допомога</option>
+          <option value="military">🪖 Допомога армії</option>
         </select>
       </div>
 
-      <div class="filter-group">
-        <label><i class="fa-solid fa-location-dot"></i> Район Дніпра:</label>
-        <select id="districtFilter" class="filter-select" onchange="filterActivities()">
+      <div class="filter-group" style="background:#fff; padding:10px 20px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.03); display:flex; align-items:center; gap:10px;">
+        <label><i class="fa-solid fa-location-dot" style="color:#8144fa;"></i> Район Дніпра:</label>
+        <select id="districtFilter" class="filter-select" onchange="filterActivities()" style="border:none; outline:none; background:transparent; font-size:0.95rem; cursor:pointer;">
           <option value="all">Усі райони</option>
-          <option value="sobornyi">Соборний район</option>
-          <option value="shevchenkivskyi">Шевченківський район</option>
-          <option value="tsentralnyi">Центральний район</option>
-          <option value="samarskyi">Самарський район</option>
-          <option value="novokodatskyi">Чечелівський район</option>
-          <option value="novokodatskyi">Амур-Нижньодніпровський район</option>
+          <option value="Соборний район">Соборний район</option>
+          <option value="Шевченківський район">Шевченківський район</option>
+          <option value="Центральний район">Центральний район</option>
+          <option value="Самарський район">Самарський район</option>
+          <option value="Чечелівський район">Чечелівський район</option>
+          <option value="Новокодацький район">Новокодацький район</option>
+          <option value="Амур-Нижньодніпровський район">Амур-Нижньодніпровський район</option>
         </select>
       </div>
     </div>
 
     <div class="activities-grid" id="activitiesGrid"></div>
-
-<script>
-  async function loadHomeTasks() {
-    try {
-      const res = await fetch('/api/tasks');
-      const tasks = await res.json();
-      const grid = document.getElementById('activitiesGrid');
-
-      if (!tasks.length) {
-        grid.innerHTML = '<p style="text-align:center; grid-column:1/-1; color:#666;">Поки немає активних завдань.</p>';
-        return;
-      }
-
-      grid.innerHTML = tasks.map(task => `
-        <div class="activity-card" data-category="${task.category || 'all'}" data-district="${task.district}">
-          <div class="card-img" style="background-image: url('images/activity1.jpg');">
-            <span class="category-tag">${task.district}</span>
-          </div>
-          <div class="card-content">
-            <span class="district-tag"><i class="fa-solid fa-location-dot"></i> ${task.district}</span>
-            <h3>${task.title}</h3>
-            <p>${task.description}</p>
-            <a href="login.html" class="card-link">Взяти участь →</a>
-          </div>
-        </div>
-      `).join('');
-    } catch (e) {
-      console.error("Помилка завантаження:", e);
-    }
-  }
-  loadHomeTasks();
-</script>
   </section>
 
-  <!-- Футер -->
   <footer>
     <p>2026 VolunQuest. Усі права захищені.</p>
   </footer>
 
-  <!-- Скрипт для фільтрації -->
   <script>
+    let allTasks = [];
+    const catLabels = {
+      pets: '🐾 Пітомці / Тварини',
+      cleaning: '🧹 Прибирання / Уборка',
+      humanitarian: '📦 Гуманітарна допомога',
+      military: '🪖 Допомога армії'
+    };
+
+    async function loadHomeTasks() {
+      try {
+        const res = await fetch('/api/tasks');
+        allTasks = await res.json();
+        renderTasks(allTasks);
+      } catch (e) {
+        console.error("Помилка завантаження:", e);
+      }
+    }
+
+    function renderTasks(tasks) {
+      const grid = document.getElementById('activitiesGrid');
+      if (!tasks.length) {
+        grid.innerHTML = '<div class="vq-empty" style="grid-column:1/-1; text-align:center; padding:40px; background:#fff; border-radius:16px;"><b>Поки немає активних завдань.</b></div>';
+        return;
+      }
+
+      grid.innerHTML = tasks.map(task => {
+        const catName = catLabels[task.category] || task.category || 'Загальне';
+        const imgIdx = (task.id % 3) + 1;
+        return `
+          <div class="activity-card" data-category="${task.category || 'all'}" data-district="${task.district}" style="background:#fff; border-radius:16px; overflow:hidden; box-shadow:0 5px 20px rgba(0,0,0,.05);">
+            <div class="card-img" style="height:180px; background-size:cover; background-position:center; background-image: url('images/activity${imgIdx}.jpg'); position:relative;">
+              <span class="category-tag" style="position:absolute; top:12px; right:12px; background:rgba(18,9,36,0.8); color:#05eb40; padding:4px 12px; border-radius:20px; font-size:0.8rem; font-weight:600;">${task.district}</span>
+            </div>
+            <div class="card-content" style="padding:22px;">
+              <span class="district-tag" style="display:inline-block; font-size:0.85rem; color:#8144fa; background:rgba(129,68,250,0.1); padding:4px 12px; border-radius:20px; margin-bottom:10px; font-weight:600;">${catName}</span>
+              <h3 style="font-size:1.2rem; margin:0 0 8px 0; color:#120924;">${task.title}</h3>
+              <p style="font-size:0.95rem; color:#666; margin-bottom:16px; line-height:1.5;">${task.description}</p>
+              <div style="display:flex; gap:10px; margin-bottom:16px;">
+                <span class="vq-rw" style="background:#e8fff0; color:#056a1f; padding:4px 12px; border-radius:999px; font-weight:700; font-size:0.85rem;">+${task.reward_points || 50} XP</span>
+                <span class="vq-rw" style="background:#e8fff0; color:#056a1f; padding:4px 12px; border-radius:999px; font-weight:700; font-size:0.85rem;">+${task.reward_coins || 10} балів</span>
+              </div>
+              <a href="login.html" class="card-link" style="color:#8144fa; font-weight:bold; text-decoration:none; display:inline-block;">Взяти участь →</a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
     function filterActivities() {
       const selectedCategory = document.getElementById('categoryFilter').value;
       const selectedDistrict = document.getElementById('districtFilter').value;
@@ -128,7 +141,6 @@
       cards.forEach(card => {
         const category = card.getAttribute('data-category');
         const district = card.getAttribute('data-district');
-
         const matchesCategory = (selectedCategory === 'all' || category === selectedCategory);
         const matchesDistrict = (selectedDistrict === 'all' || district === selectedDistrict);
 
@@ -139,7 +151,8 @@
         }
       });
     }
-  </script>
 
+    loadHomeTasks();
+  </script>
 </body>
 </html>
